@@ -1,4 +1,4 @@
-# 蹴球 Cancha Chica ｜ Tabla de Promedios
+# 蹴球 Cancha 6v6 ｜ Tabla de Promedios
 
 <p align="center">
   <sub>( ˘ω˘ ) estadísticas del fuchi</sub>
