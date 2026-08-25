@@ -12,9 +12,9 @@
 
 ## 概要 ｜ Descripción
 
-Cada partido de la cancha grande genera un archivo de estadísticas (`MatchStats_*.txt`, JSON) con pases, tackles, intercepciones, atajadas y goles de cada jugador. Este proyecto toma esos datos, calcula el **score promedio** por jugador sobre los partidos más recientes y lo traduce a una **valoración de 78 a 93** mediante interpolación lineal — la misma lógica de puntuación que usan los juegos de fútbol corte FIFA o PES.
+Cada partido de la cancha grande genera un archivo de estadísticas (`MatchStats_*.txt`, JSON) con pases, tackles, intercepciones, atajadas y goles de cada jugador. Este proyecto toma esos datos, calcula el **score promedio** por jugador sobre los partidos más recientes y lo traduce a una **valoración de 78 a 93** mediante interpolación lineal, la misma lógica de puntuación que usan los juegos de fútbol corte FIFA o PES.
 
-Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, nada de builds — un archivo, abrilo y listo.
+Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, un archivo, abrilo y listo.
 
 ## 特徴 ｜ Características
 
