@@ -44,11 +44,10 @@ Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, n
 ---
 ## 連絡先 ｜ Contacto
 
-¿Bug, sugerencia, o solo pasabas a saludar? (｡•̀ᴗ-)✧
+¿Bug, sugerencia, o solo pasabas a saludar? (｡_-)✧
 
 <div align="center">
   
-| | |
 |---|---|
 | GitHub | [@animosityt](https://github.com/animosityt) |
 | Email | ciromarchiori2@gmail.com |
