@@ -44,17 +44,10 @@ Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, n
 ---
 ## 連絡先 ｜ Contacto
 
-¿Bug, sugerencia, o solo pasabas a saludar? (｡_-)✧
-
-<div align="center">
+¿Bug, sugerencia, o solo pasabas a saludar? ∘ ∘ ∘ ( °ヮ° ) ?✧
   
-|---|---|
-| GitHub | [@animosityt](https://github.com/animosityt) |
-| Email | ciromarchiori2@gmail.com |
-| Discord | Animossiity |
----
+<table align="center"> <tr> <td align="center">GitHub</td> <td align="center"><a href="https://github.com/animosityt">@animosityt</a></td> </tr> <tr> <td align="center">Email</td> <td align="center">ciromarchiori2@gmail.com</td> </tr> <tr> <td align="center">Discord</td> <td align="center">Animossiity</td> </tr> </table>
 
-</div>
 <p align="center">
   <sub>made with love (=｀ω´=) and too many horas mirando JSON de partidos de fulbito</sub>
 </p>
