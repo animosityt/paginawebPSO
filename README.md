@@ -45,13 +45,16 @@ Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, n
 ## 連絡先 ｜ Contacto
 
 ¿Bug, sugerencia, o solo pasabas a saludar? (｡•̀ᴗ-)✧
+
 <div align="center">
+  
 | | |
 |---|---|
 | GitHub | [@animosityt](https://github.com/animosityt) |
 | Email | ciromarchiori2@gmail.com |
 | Discord | Animossiity |
 ---
+
 </div>
 <p align="center">
   <sub>made with love (=｀ω´=) and too many horas mirando JSON de partidos de fulbito</sub>
