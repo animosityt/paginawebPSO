@@ -1,7 +1,7 @@
 # 蹴球 Cancha Chica ｜ Tabla de Promedios
 
 <p align="center">
-  <sub>( ˘ω˘ ) estadísticas de fútbol 5, sin vueltas</sub>
+  <sub>( ˘ω˘ ) estadísticas del fuchi</sub>
 </p>
 
 ![status](https://img.shields.io/badge/estado-activo-2f5233)
@@ -12,7 +12,7 @@
 
 ## 概要 ｜ Descripción
 
-Cada partido de Cancha Chica genera un archivo de estadísticas (`MatchStats_*.txt`, JSON) con pases, tackles, intercepciones, atajadas y goles de cada jugador. Este proyecto toma esos datos, calcula el **score promedio** por jugador sobre los partidos más recientes y lo traduce a una **valoración de 78 a 93** mediante interpolación lineal — la misma lógica de puntuación que usan los videojuegos de fútbol.
+Cada partido de la cancha grande genera un archivo de estadísticas (`MatchStats_*.txt`, JSON) con pases, tackles, intercepciones, atajadas y goles de cada jugador. Este proyecto toma esos datos, calcula el **score promedio** por jugador sobre los partidos más recientes y lo traduce a una **valoración de 78 a 93** mediante interpolación lineal — la misma lógica de puntuación que usan los juegos de fútbol corte FIFA o PES.
 
 Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, nada de builds — un archivo, abrilo y listo.
 
