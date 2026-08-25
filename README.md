@@ -42,7 +42,7 @@ Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, n
 ```
 
 ---
-
+<h1 align="center">
 ## 連絡先 ｜ Contacto
 
 ¿Bug, sugerencia, o solo pasabas a saludar? (｡•̀ᴗ-)✧
@@ -54,7 +54,8 @@ Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, n
 | Discord | Animossiity |
 
 ---
+</h1>
 
 <p align="center">
-  <sub>made with (=｀ω´=) and too many horas mirando JSON de partidos de fulbito</sub>
+  <sub>made with love (=｀ω´=) and too many horas mirando JSON de partidos de fulbito</sub>
 </p>
