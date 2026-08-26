@@ -365,6 +365,7 @@
   .btn-upload:hover{
     background:var(--gold-2);
     color:var(--pitch-1);
+    z-index: 3;
   }
 
   .btn-upload::before{ content:"↑ "; }
