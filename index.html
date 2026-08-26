@@ -116,7 +116,7 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const fmt = (n, d=2) => Number(n).toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d});
 
 /* ============================================================
-   INTERPRETER — lee, transforma y sube los archivos a Supabase
+   ESTO NO LO TOQUES NADA POR FAVOR Q SUBE LAS COSAS A SUPABASE
    ============================================================ */
 
 async function procesarArchivo(file) {
@@ -234,9 +234,9 @@ document.getElementById('fileInput').addEventListener('change', async (event) =>
   renderFieldPlayers(fp);
 });
 
-/* ============================================================
-   RENDER — trae los datos reales de Supabase y los pinta
-   ============================================================ */
+/* =======================================================================================
+   esto tampoco lo toques porque trae lo q le acabamos de mandar a supabase asi corte bien piolita
+   ======================================================================================= */
 
 async function getMatchData() {
   const { data: ratings, error } = await db.from('player_ratings').select('*');
@@ -359,6 +359,13 @@ async function init() {
 }
 
 init();
+
+/* =======================================================================================
+   EN CAMBIO si lo podes tocar porque es tema del boton, y vas a tener q linkear el boton
+   q vos hagas con esta parte del script, en lo posible no cambies los nombres de las funciones
+   ni las clases del css, asi q no se, manejate lompaniero vos sabras gato.
+   ======================================================================================= */
+
 
 document.getElementById('uploadBtn').addEventListener('click', () => {
   document.getElementById('fileInput').click();
