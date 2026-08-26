@@ -357,7 +357,16 @@
     cursor: crosshair;
     opacity:1;
     @supports (hover:hover){ transition:background .15s ease, color .15s ease; }
+    z-index: 1;
+  transition: z-index 0s;
+  position: relative;
   }
+
+  .btn-upload:hover{
+    background:var(--gold-2);
+    color:var(--pitch-1);
+  }
+
   .btn-upload::before{ content:"↑ "; }
 
   /* --- estados de carga / vacío --- */
