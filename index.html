@@ -359,6 +359,22 @@ async function init() {
 }
 
 init();
+
+document.getElementById('uploadBtn').addEventListener('click', () => {
+  document.getElementById('fileInput').click();
+});
+
+document.getElementById('fileInput').addEventListener('change', async (event) => {
+  const resumen = await subirArchivos(event.target.files);
+  console.log('Resumen de carga:', resumen);
+
+  const { gk, fp } = await getMatchData();
+  renderGoalkeepers(gk);
+  renderFieldPlayers(fp);
+
+  event.target.value = '';
+});
+
 </script>
 
 
