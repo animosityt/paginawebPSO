@@ -356,16 +356,16 @@
     padding:9px 16px;
     cursor: crosshair;
     opacity:1;
-    @supports (hover:hover){ transition:background .15s ease, color .15s ease; }
-    z-index: 1;
-  transition: z-index 0s;
-  position: relative;
+    transition:transform .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
   }
 
-  .btn-upload:hover{
-    background:var(--gold-2);
+  .btn-upload:hover,
+  .btn-upload:focus-visible{
+    transform:translateY(-4px);
+    background:var(--gold);
     color:var(--pitch-1);
-    z-index: 3;
+    border-color:var(--gold-2);
+    box-shadow:0 10px 20px rgba(242,181,68,.35);
   }
 
   .btn-upload::before{ content:"↑ "; }
