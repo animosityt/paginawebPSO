@@ -356,6 +356,7 @@
     padding:9px 16px;
     cursor: crosshair;
     opacity:1;
+    @supports (hover:hover){ transition:background .15s ease, color .15s ease; }
   }
   .btn-upload::before{ content:"↑ "; }
 
