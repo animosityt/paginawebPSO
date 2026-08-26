@@ -354,7 +354,7 @@
     border:1px dashed rgba(255,255,255,.18);
     border-radius:10px;
     padding:9px 16px;
-    cursor:not-allowed;
+    cursor: crosshair;
     opacity:.6;
   }
   .btn-upload::before{ content:"↑ "; }
