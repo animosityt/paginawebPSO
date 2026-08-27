@@ -344,6 +344,9 @@
     z-index:1;
   }
   .btn-upload{
+    justify-self:flex-end;
+    align-self:flex-start;
+    display:inline-flex;
     font-family:'Oswald', sans-serif;
     font-size:12px;
     font-weight:600;
