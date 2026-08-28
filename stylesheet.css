@@ -362,6 +362,49 @@
     transition:transform .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
   }
 
+.upload-wrap{
+  position:relative;
+  display:inline-block;
+}
+
+.login-panel{
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+  width:240px;
+  background:linear-gradient(160deg, var(--card) 0%, var(--card-2) 100%);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 20px 40px -10px rgba(0,0,0,.6);
+  z-index:20;
+}
+
+.login-panel input{
+  width:100%;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  padding:9px 11px;
+  font-family:'Rajdhani', sans-serif;
+  font-size:14px;
+  color:var(--ink);
+  margin-bottom:10px;
+  outline:none;
+  transition:border-color .15s ease;
+}
+.login-panel input:focus{
+  border-color:var(--gold);
+}
+.login-panel input::placeholder{
+  color:var(--muted);
+}
+
+.login-submit{
+  width:100%;
+  background:linear-gradient(180deg,#ffe9ad,var(--gold));
+  border:none;
+
   .btn-upload:hover,
   .btn-upload:focus-visible{
     transform:translateY(-4px);

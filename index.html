@@ -14,7 +14,19 @@
 
 <nav class="topbar">
   <input type="file" id="fileInput" multiple accept=".txt" style="display:none">
-  <button class="btn-upload" id="uploadBtn">Subir partido</button>
+
+  <div class="upload-wrap">
+    <button class="btn-upload" id="uploadBtn">Subir partido</button>
+
+    <div class="login-panel" id="loginPanel" hidden>
+      <input type="email" id="loginEmail" placeholder="Email" autocomplete="username">
+      <input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="current-password">
+      <button class="login-submit" id="loginSubmit">Entrar</button>
+      <div class="login-error" id="loginError" hidden></div>
+    </div>
+  </div>
+
+  <span class="session-tag" id="sessionTag" hidden>Cerrar sesión</span>
 </nav>
 
 <div class="wrap">
@@ -367,23 +379,77 @@ init();
    ======================================================================================= */
 
 
+const loginPanel = document.getElementById('loginPanel');
+const loginError = document.getElementById('loginError');
+const sessionTag = document.getElementById('sessionTag');
+
 document.getElementById('uploadBtn').addEventListener('click', async () => {
   const logueado = await estaLogueado();
 
-  if (!logueado) {
-    const email = prompt('Email:');
-    if (!email) return;
-    const password = prompt('Contraseña:');
-    if (!password) return;
-
-    const ok = await login(email, password);
-    if (!ok) {
-      alert('Login incorrecto.');
-      return;
-    }
+  if (logueado) {
+    document.getElementById('fileInput').click();
+    return;
   }
 
+  loginPanel.hidden = !loginPanel.hidden;
+  loginError.hidden = true;
+  if (!loginPanel.hidden) document.getElementById('loginEmail').focus();
+});
+
+document.getElementById('loginSubmit').addEventListener('click', async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  if (!email || !password) {
+    loginError.textContent = 'Completá los dos campos.';
+    loginError.hidden = false;
+    return;
+  }
+
+  const ok = await login(email, password);
+
+  if (!ok) {
+    loginError.textContent = 'Email o contraseña incorrectos.';
+    loginError.hidden = false;
+    return;
+  }
+
+  loginPanel.hidden = true;
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
   document.getElementById('fileInput').click();
+});
+
+// enter en el campo de contraseña también manda el form
+document.getElementById('loginPassword').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('loginSubmit').click();
+});
+
+// cerrar el panel si clickeás afuera
+document.addEventListener('click', (e) => {
+  if (!loginPanel.hidden && !e.target.closest('.upload-wrap')) {
+    loginPanel.hidden = true;
+  }
+});
+
+// reacciona automáticamente a login/logout, en cualquier parte que pase
+db.auth.onAuthStateChange((_event, session) => {
+  sessionTag.hidden = !session;
+});
+
+sessionTag.addEventListener('click', async () => {
+  await logout();
+});
+
+document.getElementById('fileInput').addEventListener('change', async (event) => {
+  const resumen = await subirArchivos(event.target.files);
+  console.log('Resumen de carga:', resumen);
+
+  const { gk, fp } = await getMatchData();
+  renderGoalkeepers(gk);
+  renderFieldPlayers(fp);
+
+  event.target.value = '';
 });
 
 document.getElementById('fileInput').addEventListener('change', async (event) => {
