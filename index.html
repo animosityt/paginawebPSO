@@ -12,21 +12,19 @@
 
 <div class="stripes"></div>
 
-<nav class="topbar">
-  <input type="file" id="fileInput" multiple accept=".txt" style="display:none">
+<nav class="navbar">
+  <div class="navbar-brand">Cancha Chica · Admin</div>
 
-  <div class="upload-wrap">
-    <button class="btn-upload" id="uploadBtn">Subir partido</button>
+  <div class="navbar-right">
+    <input type="email" id="loginEmail" placeholder="Email" autocomplete="username">
+    <input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="current-password">
+    <button class="login-submit" id="loginSubmit">Entrar</button>
+    <span class="login-error" id="loginError" hidden></span>
 
-    <div class="login-panel" id="loginPanel" hidden>
-      <input type="email" id="loginEmail" placeholder="Email" autocomplete="username">
-      <input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="current-password">
-      <button class="login-submit" id="loginSubmit">Entrar</button>
-      <div class="login-error" id="loginError" hidden></div>
-    </div>
+    <input type="file" id="fileInput" multiple accept=".txt" style="display:none">
+    <button class="btn-upload" id="uploadBtn" disabled>Subir partido</button>
+    <span class="session-tag" id="sessionTag" hidden>Cerrar sesión</span>
   </div>
-
-  <span class="session-tag" id="sessionTag" hidden>Cerrar sesión</span>
 </nav>
 
 <div class="wrap">
@@ -379,26 +377,25 @@ init();
    ======================================================================================= */
 
 
-const loginPanel = document.getElementById('loginPanel');
+const loginEmail = document.getElementById('loginEmail');
+const loginPassword = document.getElementById('loginPassword');
+const loginSubmit = document.getElementById('loginSubmit');
 const loginError = document.getElementById('loginError');
+const uploadBtn = document.getElementById('uploadBtn');
 const sessionTag = document.getElementById('sessionTag');
 
-document.getElementById('uploadBtn').addEventListener('click', async () => {
-  const logueado = await estaLogueado();
-
-  if (logueado) {
-    document.getElementById('fileInput').click();
-    return;
-  }
-
-  loginPanel.hidden = !loginPanel.hidden;
+function mostrarLogueado(logueado) {
+  loginEmail.hidden = logueado;
+  loginPassword.hidden = logueado;
+  loginSubmit.hidden = logueado;
   loginError.hidden = true;
-  if (!loginPanel.hidden) document.getElementById('loginEmail').focus();
-});
+  uploadBtn.disabled = !logueado;
+  sessionTag.hidden = !logueado;
+}
 
-document.getElementById('loginSubmit').addEventListener('click', async () => {
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
+loginSubmit.addEventListener('click', async () => {
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value;
 
   if (!email || !password) {
     loginError.textContent = 'Completá los dos campos.';
@@ -414,31 +411,22 @@ document.getElementById('loginSubmit').addEventListener('click', async () => {
     return;
   }
 
-  loginPanel.hidden = true;
-  document.getElementById('loginEmail').value = '';
-  document.getElementById('loginPassword').value = '';
+  loginEmail.value = '';
+  loginPassword.value = '';
+  mostrarLogueado(true);
+});
+
+loginPassword.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') loginSubmit.click();
+});
+
+uploadBtn.addEventListener('click', () => {
   document.getElementById('fileInput').click();
-});
-
-// enter en el campo de contraseña también manda el form
-document.getElementById('loginPassword').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') document.getElementById('loginSubmit').click();
-});
-
-// cerrar el panel si clickeás afuera
-document.addEventListener('click', (e) => {
-  if (!loginPanel.hidden && !e.target.closest('.upload-wrap')) {
-    loginPanel.hidden = true;
-  }
-});
-
-// reacciona automáticamente a login/logout, en cualquier parte que pase
-db.auth.onAuthStateChange((_event, session) => {
-  sessionTag.hidden = !session;
 });
 
 sessionTag.addEventListener('click', async () => {
   await logout();
+  mostrarLogueado(false);
 });
 
 document.getElementById('fileInput').addEventListener('change', async (event) => {
@@ -451,6 +439,9 @@ document.getElementById('fileInput').addEventListener('change', async (event) =>
 
   event.target.value = '';
 });
+
+// al cargar la página, fijarse si ya había una sesión guardada
+estaLogueado().then(mostrarLogueado);
 
 document.getElementById('fileInput').addEventListener('change', async (event) => {
   const resumen = await subirArchivos(event.target.files);

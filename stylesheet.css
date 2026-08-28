@@ -435,3 +435,108 @@
     vertical-align:middle;
     animation:spin .7s linear infinite;
   }
+
+  .navbar{
+  position:sticky;
+  top:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  padding:14px 24px;
+  background:linear-gradient(180deg, var(--pitch-1), var(--pitch-2));
+  border-bottom:1px solid rgba(255,255,255,.08);
+  box-shadow:0 10px 30px -10px rgba(0,0,0,.5);
+  margin:-48px -20px 48px;
+}
+
+.navbar-brand{
+  font-family:'Archivo Black', sans-serif;
+  font-size:14px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:var(--gold-2);
+  white-space:nowrap;
+}
+
+.navbar-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.navbar input{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  padding:8px 12px;
+  font-family:'Rajdhani', sans-serif;
+  font-size:13px;
+  color:var(--ink);
+  outline:none;
+  width:150px;
+  transition:border-color .15s ease;
+}
+.navbar input:focus{ border-color:var(--gold); }
+.navbar input::placeholder{ color:var(--muted); }
+
+.login-submit{
+  background:linear-gradient(180deg,#ffe9ad,var(--gold));
+  border:none;
+  border-radius:8px;
+  padding:8px 16px;
+  font-family:'Oswald', sans-serif;
+  font-weight:600;
+  font-size:12px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--pitch-1);
+  cursor:pointer;
+  white-space:nowrap;
+}
+.login-submit:hover{ filter:brightness(1.05); }
+
+.login-error{
+  color:#e07a7a;
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.btn-upload{
+  font-family:'Oswald', sans-serif;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--pitch-1);
+  background:linear-gradient(180deg,#ffe9ad,var(--gold));
+  border:none;
+  border-radius:10px;
+  padding:9px 16px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.btn-upload[disabled]{
+  background:rgba(255,255,255,.06);
+  color:var(--muted);
+  cursor:not-allowed;
+}
+
+.session-tag{
+  font-family:'Oswald', sans-serif;
+  font-size:11px;
+  color:var(--muted);
+  cursor:pointer;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  white-space:nowrap;
+}
+.session-tag:hover{ color:var(--gold-2); }
+
+@media (max-width:700px){
+  .navbar{ flex-direction:column; align-items:stretch; }
+  .navbar-right{ justify-content:flex-end; }
+}
