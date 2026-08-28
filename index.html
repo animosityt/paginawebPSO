@@ -367,7 +367,22 @@ init();
    ======================================================================================= */
 
 
-document.getElementById('uploadBtn').addEventListener('click', () => {
+document.getElementById('uploadBtn').addEventListener('click', async () => {
+  const logueado = await estaLogueado();
+
+  if (!logueado) {
+    const email = prompt('Email:');
+    if (!email) return;
+    const password = prompt('Contraseña:');
+    if (!password) return;
+
+    const ok = await login(email, password);
+    if (!ok) {
+      alert('Login incorrecto.');
+      return;
+    }
+  }
+
   document.getElementById('fileInput').click();
 });
 
@@ -381,6 +396,24 @@ document.getElementById('fileInput').addEventListener('change', async (event) =>
 
   event.target.value = '';
 });
+
+async function login(email, password) {
+  const { error } = await db.auth.signInWithPassword({ email, password });
+  if (error) {
+    console.error('Error de login:', error.message);
+    return false;
+  }
+  return true;
+}
+
+async function estaLogueado() {
+  const { data: { session } } = await db.auth.getSession();
+  return !!session;
+}
+
+async function logout() {
+  await db.auth.signOut();
+}
 
 </script>
 
