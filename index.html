@@ -23,6 +23,7 @@
 
     <input type="file" id="fileInput" multiple accept=".txt" style="display:none">
     <button class="btn-upload" id="uploadBtn" disabled>Subir partido</button>
+    <button class="btn-upload" id="closeSeasonBtn" disabled style="margin-left:8px;">Cerrar temporada</button>
     <span class="session-tag" id="sessionTag" hidden>Cerrar sesión</span>
   </div>
 </nav>
@@ -49,6 +50,12 @@
       </div>
       <div class="block-hint">solo partidos atajando bajo los tres palos</div>
     </div>
+<div class="methodology" id="seasonPicker">
+  <h3>📁 Temporadas anteriores</h3>
+  <select id="seasonSelect" style="width:100%; padding:9px; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:var(--ink); font-family:'Rajdhani',sans-serif;">
+    <option value="">— Viendo la temporada actual —</option>
+  </select>
+</div>
 
     <div class="table-scroll">
       <table>
@@ -85,6 +92,12 @@
       </div>
       <div class="block-hint">excluye a floral green y sus partidos como arquera</div>
     </div>
+<div class="methodology" id="seasonPicker">
+  <h3>📁 Temporadas anteriores</h3>
+  <select id="seasonSelect" style="width:100%; padding:9px; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:var(--ink); font-family:'Rajdhani',sans-serif;">
+    <option value="">— Viendo la temporada actual —</option>
+  </select>
+</div>
 
     <div class="table-scroll">
       <table>
@@ -175,14 +188,15 @@ async function procesarArchivo(file) {
     });
 
     const { data: matchInsertado, error: errorMatch } = await db
-      .from('matches')
-      .insert({
-        source_filename: file.name,
-        team1_name: partido.team1Stats.teamName,
-        team2_name: partido.team2Stats.teamName
-      })
-      .select()
-      .single();
+  .from('matches')
+  .insert({
+    source_filename: file.name,
+    team1_name: partido.team1Stats.teamName,
+    team2_name: partido.team2Stats.teamName,
+    season_id: await getCurrentSeasonId()   // ← esta línea es la nueva
+  })
+  .select()
+  .single();
 
     if (errorMatch) {
       console.error('Error insertando el partido:', errorMatch);
@@ -248,48 +262,42 @@ document.getElementById('fileInput').addEventListener('change', async (event) =>
    esto tampoco lo toques porque trae lo q le acabamos de mandar a supabase asi corte bien piolita
    ======================================================================================= */
 
-async function getMatchData() {
-  const { data: ratings, error } = await db.from('player_ratings').select('*');
+async function getMatchData(seasonId = null) {
+  const sid = seasonId || await getCurrentSeasonId();
+
+  const { data: ratings, error } = await db
+    .from('player_ratings')
+    .select('*')
+    .eq('season_id', sid);
 
   if (error) {
     console.error('Error trayendo ratings:', error);
     return { gk: [], fp: [] };
   }
 
-  const { data: posiciones } = await db.from('player_last_position').select('*');
+  const { data: posiciones } = await db
+    .from('player_last_position')
+    .select('*')
+    .eq('season_id', sid);
+
   const posMap = Object.fromEntries((posiciones || []).map(p => [p.player_id, p.position]));
 
   const gk = ratings
     .filter(r => r.primary_role === 'GK')
     .map(r => ({
-      name: r.name,
-      pj: r.pj,
-      passes: r.avg_passes,
-      tackles: r.avg_tackles,
-      interceptions: r.avg_interceptions,
-      possessionsLost: r.avg_possessions_lost,
-      gKSaves: r.avg_gk_saves,
-      gKCatches: r.avg_gk_catches,
-      score: r.avg_score,
-      rating: r.rating
+      name: r.name, pj: r.pj, passes: r.avg_passes, tackles: r.avg_tackles,
+      interceptions: r.avg_interceptions, possessionsLost: r.avg_possessions_lost,
+      gKSaves: r.avg_gk_saves, gKCatches: r.avg_gk_catches, score: r.avg_score, rating: r.rating
     }))
     .sort((a, b) => b.score - a.score);
 
   const fp = ratings
     .filter(r => r.primary_role === 'FIELD')
     .map(r => ({
-      name: r.name,
-      pos: posMap[r.player_id] || '',
-      pj: r.pj,
-      passes: r.avg_passes,
-      shots: r.avg_shots,
-      shotsOnTarget: r.avg_shots_on_target,
-      goals: r.avg_goals,
-      tackles: r.avg_tackles,
-      interceptions: r.avg_interceptions,
-      possessionsLost: r.avg_possessions_lost,
-      score: r.avg_score,
-      rating: r.rating
+      name: r.name, pos: posMap[r.player_id] || '', pj: r.pj, passes: r.avg_passes,
+      shots: r.avg_shots, shotsOnTarget: r.avg_shots_on_target, goals: r.avg_goals,
+      tackles: r.avg_tackles, interceptions: r.avg_interceptions, possessionsLost: r.avg_possessions_lost,
+      score: r.avg_score, rating: r.rating
     }))
     .sort((a, b) => b.score - a.score);
 
@@ -366,6 +374,28 @@ async function init() {
       `<tr class="state-row"><td colspan="11">No se pudieron cargar los datos.</td></tr>`;
     console.error(err);
   }
+}
+
+function mostrarLogueado(logueado) {
+  loginEmail.hidden = logueado;
+  loginPassword.hidden = logueado;
+  loginSubmit.hidden = logueado;
+  loginError.hidden = true;
+  uploadBtn.disabled = !logueado;
+  document.getElementById('closeSeasonBtn').disabled = !logueado;  // ← esta línea es nueva
+  sessionTag.hidden = !logueado;
+}
+
+async function init() {
+  try {
+    await cargarSelectorDeTemporadas();
+    const { gk, fp } = await getMatchData();
+    renderGoalkeepers(gk);
+    renderFieldPlayers(fp);
+  } catch (err) {
+    // ... igual que antes
+  }
+  estaLogueado().then(mostrarLogueado);
 }
 
 init();
@@ -471,6 +501,86 @@ async function estaLogueado() {
 async function logout() {
   await db.auth.signOut();
 }
+
+async function getCurrentSeasonId() {
+  const { data } = await db.from('seasons').select('id').eq('is_current', true).single();
+  return data.id;
+}
+
+async function getSeasons() {
+  const { data } = await db.from('seasons').select('*').order('started_at', { ascending: false });
+  return data || [];
+}
+
+async function cerrarTemporada() {
+  const { data: temporadas } = await db.from('seasons').select('name').order('started_at', { ascending: false });
+  const siguienteNumero = temporadas.length; // Temporada 0 ya existe, así que el largo = próximo número
+  const nombreNueva = `Temporada ${siguienteNumero}`;
+
+  const { data: actual } = await db.from('seasons').select('id').eq('is_current', true).single();
+
+  const { error: errorCierre } = await db
+    .from('seasons')
+    .update({ is_current: false, ended_at: new Date().toISOString() })
+    .eq('id', actual.id);
+
+  if (errorCierre) {
+    console.error('Error cerrando temporada:', errorCierre);
+    return null;
+  }
+
+  const { data: nueva, error: errorNueva } = await db
+    .from('seasons')
+    .insert({ name: nombreNueva, is_current: true })
+    .select()
+    .single();
+
+  if (errorNueva) {
+    console.error('Error creando temporada nueva:', errorNueva);
+    return null;
+  }
+
+  return nueva;
+}
+document.getElementById('closeSeasonBtn').addEventListener('click', async () => {
+  const confirmado = confirm('¿Seguro que querés cerrar la temporada? Se archiva todo lo actual y arranca una nueva, vacía.');
+  if (!confirmado) return;
+
+  const nueva = await cerrarTemporada();
+  if (!nueva) {
+    alert('Hubo un error cerrando la temporada.');
+    return;
+  }
+
+  alert(`Temporada cerrada. Arrancó: ${nueva.name}`);
+
+  await cargarSelectorDeTemporadas();
+  const { gk, fp } = await getMatchData();
+  renderGoalkeepers(gk);
+  renderFieldPlayers(fp);
+});
+
+async function cargarSelectorDeTemporadas() {
+  const temporadas = await getSeasons();
+  const select = document.getElementById('seasonSelect');
+  select.innerHTML = '<option value="">— Viendo la temporada actual —</option>';
+
+  temporadas
+    .filter(t => !t.is_current)
+    .forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.id;
+      opt.textContent = t.name;
+      select.appendChild(opt);
+    });
+}
+
+document.getElementById('seasonSelect').addEventListener('change', async (event) => {
+  const seasonId = event.target.value || null;
+  const { gk, fp } = await getMatchData(seasonId);
+  renderGoalkeepers(gk);
+  renderFieldPlayers(fp);
+});
 
 </script>
 
