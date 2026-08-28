@@ -404,6 +404,7 @@
   width:100%;
   background:linear-gradient(180deg,#ffe9ad,var(--gold));
   border:none;
+}
 
   .btn-upload:hover,
   .btn-upload:focus-visible{
