@@ -188,15 +188,15 @@ async function procesarArchivo(file) {
     });
 
     const { data: matchInsertado, error: errorMatch } = await db
-  .from('matches')
-  .insert({
-    source_filename: file.name,
-    team1_name: partido.team1Stats.teamName,
-    team2_name: partido.team2Stats.teamName,
-    season_id: await getCurrentSeasonId()   // ← esta línea es la nueva
-  })
-  .select()
-  .single();
+      .from('matches')
+      .insert({
+        source_filename: file.name,
+        team1_name: partido.team1Stats.teamName,
+        team2_name: partido.team2Stats.teamName,
+        season_id: await getCurrentSeasonId()   // ← esta línea es la nueva
+      })
+      .select()
+      .single();
 
     if (errorMatch) {
       console.error('Error insertando el partido:', errorMatch);
@@ -242,21 +242,6 @@ async function procesarArchivo(file) {
     console.error('Archivo inválido:', file.name, error);
   }
 }
-
-document.getElementById('fileInput').addEventListener('change', async (event) => {
-  const archivos = Array.from(event.target.files);
-
-  for (const file of archivos) {
-    await procesarArchivo(file);
-  }
-
-  console.log('🏁 Todos los archivos procesados.');
-
-  // recargar la tabla con los datos nuevos, sin refrescar la página
-  const { gk, fp } = await getMatchData();
-  renderGoalkeepers(gk);
-  renderFieldPlayers(fp);
-});
 
 /* =======================================================================================
    esto tampoco lo toques porque trae lo q le acabamos de mandar a supabase asi corte bien piolita
@@ -362,20 +347,6 @@ function renderFieldPlayers(fp) {
   });
 }
 
-async function init() {
-  try {
-    const { gk, fp } = await getMatchData();
-    renderGoalkeepers(gk);
-    renderFieldPlayers(fp);
-  } catch (err) {
-    document.getElementById('gk-body').innerHTML =
-      `<tr class="state-row"><td colspan="10">No se pudieron cargar los datos.</td></tr>`;
-    document.getElementById('fp-body').innerHTML =
-      `<tr class="state-row"><td colspan="11">No se pudieron cargar los datos.</td></tr>`;
-    console.error(err);
-  }
-}
-
 function mostrarLogueado(logueado) {
   loginEmail.hidden = logueado;
   loginPassword.hidden = logueado;
@@ -393,7 +364,11 @@ async function init() {
     renderGoalkeepers(gk);
     renderFieldPlayers(fp);
   } catch (err) {
-    // ... igual que antes
+    document.getElementById('gk-body').innerHTML =
+      `<tr class="state-row"><td colspan="10">No se pudieron cargar los datos.</td></tr>`;
+    document.getElementById('fp-body').innerHTML =
+      `<tr class="state-row"><td colspan="11">No se pudieron cargar los datos.</td></tr>`;
+    console.error(err);
   }
   estaLogueado().then(mostrarLogueado);
 }
@@ -406,22 +381,12 @@ init();
    ni las clases del css, asi q no se, manejate lompaniero vos sabras gato.
    ======================================================================================= */
 
-
 const loginEmail = document.getElementById('loginEmail');
 const loginPassword = document.getElementById('loginPassword');
 const loginSubmit = document.getElementById('loginSubmit');
 const loginError = document.getElementById('loginError');
 const uploadBtn = document.getElementById('uploadBtn');
 const sessionTag = document.getElementById('sessionTag');
-
-function mostrarLogueado(logueado) {
-  loginEmail.hidden = logueado;
-  loginPassword.hidden = logueado;
-  loginSubmit.hidden = logueado;
-  loginError.hidden = true;
-  uploadBtn.disabled = !logueado;
-  sessionTag.hidden = !logueado;
-}
 
 loginSubmit.addEventListener('click', async () => {
   const email = loginEmail.value.trim();
@@ -460,22 +425,13 @@ sessionTag.addEventListener('click', async () => {
 });
 
 document.getElementById('fileInput').addEventListener('change', async (event) => {
-  const resumen = await subirArchivos(event.target.files);
-  console.log('Resumen de carga:', resumen);
+  const archivos = Array.from(event.target.files);
 
-  const { gk, fp } = await getMatchData();
-  renderGoalkeepers(gk);
-  renderFieldPlayers(fp);
+  for (const file of archivos) {
+    await procesarArchivo(file);
+  }
 
-  event.target.value = '';
-});
-
-// al cargar la página, fijarse si ya había una sesión guardada
-estaLogueado().then(mostrarLogueado);
-
-document.getElementById('fileInput').addEventListener('change', async (event) => {
-  const resumen = await subirArchivos(event.target.files);
-  console.log('Resumen de carga:', resumen);
+  console.log('🏁 Todos los archivos procesados.');
 
   const { gk, fp } = await getMatchData();
   renderGoalkeepers(gk);
@@ -504,7 +460,7 @@ async function logout() {
 
 async function getCurrentSeasonId() {
   const { data } = await db.from('seasons').select('id').eq('is_current', true).single();
-  return data.id;
+  return data ? data.id : null;
 }
 
 async function getSeasons() {
@@ -514,19 +470,21 @@ async function getSeasons() {
 
 async function cerrarTemporada() {
   const { data: temporadas } = await db.from('seasons').select('name').order('started_at', { ascending: false });
-  const siguienteNumero = temporadas.length; // Temporada 0 ya existe, así que el largo = próximo número
+  const siguienteNumero = temporadas ? temporadas.length : 1; // Temporada 0 ya existe, así que el largo = próximo número
   const nombreNueva = `Temporada ${siguienteNumero}`;
 
   const { data: actual } = await db.from('seasons').select('id').eq('is_current', true).single();
 
-  const { error: errorCierre } = await db
-    .from('seasons')
-    .update({ is_current: false, ended_at: new Date().toISOString() })
-    .eq('id', actual.id);
+  if (actual) {
+    const { error: errorCierre } = await db
+      .from('seasons')
+      .update({ is_current: false, ended_at: new Date().toISOString() })
+      .eq('id', actual.id);
 
-  if (errorCierre) {
-    console.error('Error cerrando temporada:', errorCierre);
-    return null;
+    if (errorCierre) {
+      console.error('Error cerrando temporada:', errorCierre);
+      return null;
+    }
   }
 
   const { data: nueva, error: errorNueva } = await db
@@ -542,6 +500,7 @@ async function cerrarTemporada() {
 
   return nueva;
 }
+
 document.getElementById('closeSeasonBtn').addEventListener('click', async () => {
   const confirmado = confirm('¿Seguro que querés cerrar la temporada? Se archiva todo lo actual y arranca una nueva, vacía.');
   if (!confirmado) return;
