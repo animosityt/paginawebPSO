@@ -12,7 +12,7 @@
 
 ## 概要 ｜ Descripción
 
-Cada partido de la cancha grande genera un archivo de estadísticas (`MatchStats_*.txt`, JSON) con pases, tackles, intercepciones, atajadas y goles de cada jugador. Este proyecto toma esos datos, calcula el **score promedio** por jugador sobre los partidos más recientes y lo traduce a una **valoración de 78 a 99** mediante interpolación lineal, la misma lógica de puntuación que usan los juegos de fútbol corte FIFA o PES.
+Cada partido de la cancha grande genera un archivo de estadísticas (`MatchStats_*.txt`, JSON) con pases, tackles, intercepciones, atajadas y goles de cada jugador. Este proyecto toma esos datos, [...]
 
 Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, un archivo, abrilo y listo.
 
@@ -30,7 +30,7 @@ Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, u
 | 1 | Se toman los archivos de los partidos más recientes — nunca los viejos. |
 | 2 | Se calcula el promedio de `score` por jugador sobre esos partidos. |
 | 3 | Si un jugador atajó en la mayoría de sus apariciones, pasa a la tabla de **Arqueros** y se excluyen sus partidos de campo (y viceversa). |
-| 4 | Se interpola linealmente entre el mínimo y el máximo promedio **de cada tabla por separado**, sobre una escala de 78 (piso) a 99 (techo). Esto para que no quede algo de los que menos juegan en 60 y los que mas juegan en 99 (CAOS!). |
+| 4 | Se interpola linealmente entre el mínimo y el máximo promedio **de cada tabla por separado**, sobre una escala de 78 (piso) a 99 (techo). Esto para que no quede algo de los que menos juega[...]
 
 ## 構成 ｜ Estructura
 
@@ -46,7 +46,12 @@ Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, u
 
 ¿Bug, sugerencia, o solo pasabas a saludar? ∘ ∘ ∘ ( °ヮ° ) ?✧
   
-<table align="center"> <tr> <td align="center">GitHub</td> <td align="center"><a href="https://github.com/animosityt">@animosityt</a> <a href="https://github.com/aitor-byte">@AITOR_REX</td> </tr> <tr> <td align="center">Email</td> <td align="center">ciromarchiori2@gmail.com</td> <td align="center">aitorochoa2010@gmail.com</td> </tr> <tr> <td align="center">Discord</td> <td align="center">Animossiity</td> </tr> </table>
+Por favor contactanos en GitHub:
+
+| Plataforma | Usuario |
+|:---------:|:-------|
+| GitHub | [@animosityt](https://github.com/animosityt) |
+| GitHub | [@AITOR_REX](https://github.com/aitor-byte) |
 
 <p align="center">
   <sub>made with love (=｀ω´=) and too many horas mirando JSON de partidos de fulbito</sub>
