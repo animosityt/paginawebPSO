@@ -53,6 +53,4 @@ Por favor contactanos en GitHub:
 | GitHub | [@animosityt](https://github.com/animosityt) |
 | GitHub | [@AITOR_REX](https://github.com/aitor-byte) |
 
-<p align="center">
-  <sub>made with love (=｀ω´=) and too many horas mirando JSON de partidos de fulbito</sub>
-</p>
+<table align="center"> <tr> <td align="center"> <a href="https://github.com/animosityt"> <img src="https://github.com/animosityt.png" width="90" style="border-radius:50%"><br> <sub><b>@animosityt</b></sub> </a> </td> <td align="center"> <a href="https://github.com/aitor-byte"> <img src="https://github.com/aitor-byte.png" width="90" style="border-radius:50%"><br> <sub><b>@AITOR_REX</b></sub> </a> </td> </tr> </table> <p align="center"> <sub>made with love (=｀ω´=) and too many horas mirando JSON de partidos de fulbito</sub> </p>
