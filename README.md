@@ -46,7 +46,7 @@ Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, u
 
 ¿Bug, sugerencia, o solo pasabas a saludar? ∘ ∘ ∘ ( °ヮ° ) ?✧
   
-<table align="center"> <tr> <td align="center">GitHub</td> <td align="center"><a href="https://github.com/animosityt">@animosityt</a> <a href="https://github.com/aitor-byte">@AITOR_REX</td> </tr> <tr> <td align="center">Email</td> <td align="center">ciromarchiori2@gmail.com</td> </tr> <tr> <td align="center">Discord</td> <td align="center">Animossiity</td> </tr> </table>
+<table align="center"> <tr> <td align="center">GitHub</td> <td align="center"><a href="https://github.com/animosityt">@animosityt</a> <a href="https://github.com/aitor-byte">@AITOR_REX</td> </tr> <tr> <td align="center">Email</td> <td align="center">ciromarchiori2@gmail.com aitorochoa2010@gmail.com</td> <td align="center">Discord</td> <td align="center">Animossiity</td> </tr> </table>
 
 <p align="center">
   <sub>made with love (=｀ω´=) and too many horas mirando JSON de partidos de fulbito</sub>
