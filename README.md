@@ -14,7 +14,7 @@
 
 Cada partido de la cancha grande genera un archivo de estadísticas (`MatchStats_*.txt`, JSON) con pases, tackles, intercepciones, atajadas y goles de cada jugador. Este proyecto toma esos datos, [...]
 
-Es un proyecto chico, hecho por y para el grupo que juega. Nada de frameworks, un archivo, abrilo y listo.
+Es un proyecto chico hecho por y para el grupo que juega. Nada de frameworks y boludeces.
 
 ## 特徴 ｜ Características
 
