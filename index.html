@@ -466,7 +466,7 @@ document.getElementById('fileInput').addEventListener('change', async (event) =>
     statusText.textContent = `Subiendo ${actual}/${tot}... (${resultado.archivo})`;
   });
 
-  statusText.textContent = `✅ ${resumen.exitosos} cargados · ${resumen.saltados} ya existían · ${resumen.fallidos} con error`;
+  statusText.textContent = `:^) ${resumen.exitosos} cargados · ${resumen.saltados} ya existían · ${resumen.fallidos} con error`;
 
   setTimeout(() => { status.hidden = true; }, 6000);
 
