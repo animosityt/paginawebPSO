@@ -23,6 +23,10 @@
 
     <input type="file" id="fileInput" multiple accept=".txt" style="display:none">
     <button class="btn-upload" id="uploadBtn" disabled>Subir partido</button>
+    <span class="upload-status" id="uploadStatus" hidden>
+  <span class="spinner"></span>
+  <span id="uploadStatusText"></span>
+</span>
     <button class="btn-upload" id="closeSeasonBtn" disabled style="margin-left:8px;">Cerrar temporada</button>
     <span class="session-tag" id="sessionTag" hidden>Cerrar sesión</span>
   </div>
@@ -156,7 +160,7 @@ async function procesarArchivo(file) {
 
     if (existente) {
       console.warn(`⚠️ ${file.name} ya fue cargado antes, se salteó.`);
-      return;
+      return { ok: false, motivo: 'duplicado', archivo: file.name };
     }
 
     const todosLosJugadores = [
@@ -193,14 +197,14 @@ async function procesarArchivo(file) {
         source_filename: file.name,
         team1_name: partido.team1Stats.teamName,
         team2_name: partido.team2Stats.teamName,
-        season_id: await getCurrentSeasonId()   // ← esta línea es la nueva
+        season_id: await getCurrentSeasonId()
       })
       .select()
       .single();
 
     if (errorMatch) {
       console.error('Error insertando el partido:', errorMatch);
-      return;
+      return { ok: false, motivo: 'error_match', archivo: file.name };
     }
 
     const matchId = matchInsertado.id;
@@ -233,14 +237,39 @@ async function procesarArchivo(file) {
 
     if (errorStats) {
       console.error('Error insertando stats:', errorStats);
-      return;
+      return { ok: false, motivo: 'error_stats', archivo: file.name };
     }
 
     console.log(`✅ ${file.name}: ${statsInsertadas.length} jugadores insertados.`);
+    return { ok: true, archivo: file.name, jugadores: statsInsertadas.length };
 
   } catch (error) {
     console.error('Archivo inválido:', file.name, error);
+    return { ok: false, motivo: 'json_invalido', archivo: file.name };
   }
+}
+
+async function subirArchivos(files, onProgress) {
+  const archivos = Array.from(files);
+  const detalle = [];
+
+  for (let i = 0; i < archivos.length; i++) {
+    const file = archivos[i];
+    const resultado = await procesarArchivo(file);
+    detalle.push(resultado);
+
+    if (onProgress) onProgress(i + 1, archivos.length, resultado);
+  }
+
+  const resumen = {
+    exitosos: detalle.filter(r => r.ok).length,
+    saltados: detalle.filter(r => !r.ok && r.motivo === 'duplicado').length,
+    fallidos: detalle.filter(r => !r.ok && r.motivo !== 'duplicado').length,
+    detalle
+  };
+
+  console.log('🏁 Resumen de carga:', resumen);
+  return resumen;
 }
 
 /* =======================================================================================
@@ -425,18 +454,27 @@ sessionTag.addEventListener('click', async () => {
 });
 
 document.getElementById('fileInput').addEventListener('change', async (event) => {
-  const archivos = Array.from(event.target.files);
+  const status = document.getElementById('uploadStatus');
+  const statusText = document.getElementById('uploadStatusText');
+  const total = event.target.files.length;
 
-  for (const file of archivos) {
-    await procesarArchivo(file);
-  }
+  uploadBtn.disabled = true;
+  status.hidden = false;
+  statusText.textContent = `Subiendo 0/${total}...`;
 
-  console.log('🏁 Todos los archivos procesados.');
+  const resumen = await subirArchivos(event.target.files, (actual, tot, resultado) => {
+    statusText.textContent = `Subiendo ${actual}/${tot}... (${resultado.archivo})`;
+  });
+
+  statusText.textContent = `✅ ${resumen.exitosos} cargados · ${resumen.saltados} ya existían · ${resumen.fallidos} con error`;
+
+  setTimeout(() => { status.hidden = true; }, 6000);
 
   const { gk, fp } = await getMatchData();
   renderGoalkeepers(gk);
   renderFieldPlayers(fp);
 
+  uploadBtn.disabled = false;
   event.target.value = '';
 });
 
