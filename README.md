@@ -27,10 +27,10 @@ Es un proyecto chico hecho por y para el grupo que juega. Nada de frameworks y b
 
 | Paso | Descripción |
 |:---:|---|
-| 1 | Se toman los archivos de los partidos más recientes — nunca los viejos. |
-| 2 | Se calcula el promedio de `score` por jugador sobre esos partidos. |
+| 1 | Se toman los archivos de los partidos más recientes y procura que no se repitan los viejos. |
+| 2 | Se calcula el promedio del `score` por jugador sobre esos partidos. |
 | 3 | Si un jugador atajó en la mayoría de sus apariciones, pasa a la tabla de **Arqueros** y se excluyen sus partidos de campo (y viceversa). |
-| 4 | Se interpola linealmente entre el mínimo y el máximo promedio **de cada tabla por separado**, sobre una escala de 78 (piso) a 99 (techo). Esto para que no quede algo de los que menos juega[...]
+| 4 | Se interpola linealmente entre el mínimo y el máximo promedio **de cada tabla por separado**, sobre una escala de 78 (piso) a 99 (techo). Esto para que no quede algo de los que menos juegan.
 
 ## 構成 ｜ Estructura
 
@@ -46,4 +46,4 @@ Es un proyecto chico hecho por y para el grupo que juega. Nada de frameworks y b
 
 ¿Bug, sugerencia, o solo pasabas a saludar? ∘ ∘ ∘ ( °ヮ° ) ?✧
 
-<table align="center"> <tr> <td align="center"> <a href="https://github.com/animosityt"> <img src="https://github.com/animosityt.png" width="90" style="border-radius:50%"><br> <sub><b>@animosityt</b></sub> </a> </td> <td align="center"> <a href="https://github.com/aitor-byte"> <img src="https://github.com/aitor-byte.png" width="90" style="border-radius:50%"><br> <sub><b>@AITOR_REX</b></sub> </a> </td> </tr> </table> <p align="center"> <sub>made with love (=｀ω´=) and too many horas mirando JSON de partidos de fulbito</sub> </p>
+<table align="center"> <tr> <td align="center"> <a href="https://github.com/animosityt"> <img src="https://github.com/animosityt.png" width="90" style="border-radius:50%"><br> <sub><b>@animosityt</b></sub> </a> </td> <td align="center"> <a href="https://github.com/aitor-byte"> <img src="https://github.com/aitor-byte.png" width="90" style="border-radius:50%"><br> <sub><b>@AITOR_REX</b></sub> </a> </td> </tr> </table> <p align="center"> <sub>made with love (=｀ω´=) and too many horas mirando JSON de partidos del pro soser</sub> </p>
