@@ -10,24 +10,32 @@
 
 
 
-<div class="stripes"></div>
-
-<nav class="navbar">
-  <div class="navbar-brand">Cancha Chica · Admin</div>
+<nav class="navbar" id="top">
+  <div class="navbar-brand">
+    <div class="brand-title">Cancha Chica · Admin</div>
+    <a href="#top" class="back-top-link" aria-label="Volver al inicio" title="Volver al inicio">Inicio</a>
+  </div>
 
   <div class="navbar-right">
-    <input type="email" id="loginEmail" placeholder="Email" autocomplete="username">
-    <input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="current-password">
-    <button class="login-submit" id="loginSubmit">Entrar</button>
-    <span class="login-error" id="loginError" hidden></span>
+    <div class="nav-login">
+      <div class="nav-login-fields">
+        <input type="email" id="loginEmail" placeholder="Email" autocomplete="username">
+        <input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="current-password">
+      </div>
+      <span class="login-error" id="loginError" hidden></span>
+      <button class="login-submit" id="loginSubmit">Entrar</button>
+    </div>
 
-    <input type="file" id="fileInput" multiple accept=".txt" style="display:none">
-    <button class="btn-upload" id="uploadBtn" disabled>Subir partido</button>
-    <span class="upload-status" id="uploadStatus" hidden>
-  <span class="spinner"></span>
-  <span id="uploadStatusText"></span>
-</span>
-    <button class="btn-upload" id="closeSeasonBtn" disabled style="margin-left:8px;">Cerrar temporada</button>
+    <div class="nav-actions">
+      <input type="file" id="fileInput" multiple accept=".txt" style="display:none">
+      <button class="btn-upload" id="uploadBtn" disabled>Subir partido</button>
+      <button class="btn-upload" id="closeSeasonBtn" disabled>Cerrar temporada</button>
+      <span class="upload-status" id="uploadStatus" hidden>
+        <span class="spinner"></span>
+        <span id="uploadStatusText"></span>
+      </span>
+    </div>
+
     <span class="session-tag" id="sessionTag" hidden>Cerrar sesión</span>
   </div>
 </nav>
@@ -35,29 +43,24 @@
 <div class="wrap">
 
   <header>
-    <div class="eyebrow">Cancha Grande</div>
     <h1>Tabla de Promedios</h1>
-    <div class="subtitle">Ordenado de mayor a menor score promedio · <b>PJ</b> = partidos jugados en ese rol</div>
   </header>
 
   <div class="methodology">
-    <h3>⚖️ Sobre la valoración</h3>
-    <p><b>floral green</b> se separa en su propia tabla de arqueros porque atajó en 4 de los 5 partidos — no tiene sentido promediarlo contra jugadores de campo cuando su rol real es otro. El partido que jugó de LW (match del 22:45) no entra en su promedio de arquero.</p>
-    <p>La valoración (78-99) sale de interpolar linealmente el score promedio entre el mínimo y el máximo <b>de cada tabla por separado</b>. Como floral green es el único arquero de la muestra, queda fijado en el techo, 99.00 porque no hay algun otro rival.</p>
+    <h3>Sobre la valoración</h3>
+    <p>Floral green se separa en su propia tabla de arqueros porque atajó en 4 de los 5 partidos — no tiene sentido promediarlo contra jugadores de campo cuando su rol real es otro. El partido que jugó de LW (match del 22:45) no entra en su promedio de arquero.</p>
   </div>
 
   <section class="block">
     <div class="block-head">
       <div class="block-title">
-        <div class="block-num gk">01</div>
         <h2>Arqueros</h2>
       </div>
-      <div class="block-hint">solo partidos atajando bajo los tres palos</div>
     </div>
 <div class="methodology" id="seasonPicker">
-  <h3>📁 Temporadas anteriores</h3>
-  <select id="seasonSelect" style="width:100%; padding:9px; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:var(--ink); font-family:'Rajdhani',sans-serif;">
-    <option value="">— Viendo la temporada actual —</option>
+  <h3>Temporadas anteriores</h3>
+  <select id="seasonSelect" style="width:100%; padding:9px; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:#fff; font-family:'Rajdhani',sans-serif;">
+    <option value="">Viendo la temporada actual</option>
   </select>
 </div>
 
@@ -82,24 +85,18 @@
         </tbody>
       </table>
     </div>
-
-    <div class="foot-note">
-      Única arquera de la muestra: sin otro caso para comparar, la valoración queda fija en el techo de la escala.
-    </div>
   </section>
 
   <section class="block">
     <div class="block-head">
       <div class="block-title">
-        <div class="block-num">02</div>
         <h2>Jugadores de Campo</h2>
       </div>
-      <div class="block-hint">excluye a floral green y sus partidos como arquera</div>
     </div>
 <div class="methodology" id="seasonPicker">
-  <h3>📁 Temporadas anteriores</h3>
-  <select id="seasonSelect" style="width:100%; padding:9px; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:var(--ink); font-family:'Rajdhani',sans-serif;">
-    <option value="">— Viendo la temporada actual —</option>
+  <h3>Temporadas anteriores</h3>
+  <select id="seasonSelect" style="width:100%; padding:9px; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:#fff; font-family:'Rajdhani',sans-serif;">
+    <option value="">Viendo la temporada actual</option>
   </select>
 </div>
 
@@ -125,13 +122,8 @@
         </tbody>
       </table>
     </div>
-
-    <div class="foot-note">
-      <b>Zapa</b> jugó solo 4 de los 5 partidos, su promedio es sobre esos 4 · <b>Maximoto013</b> define el piso de la escala (78.00), <b>skele</b> el techo (93.00).
-    </div>
   </section>
 
-  <footer>⚽ Estadísticas de rendimiento · Escala de valoración 78 (mínima) — 99 (máxima), interpolada por tabla</footer>
 </div>
 
 
@@ -159,7 +151,7 @@ async function procesarArchivo(file) {
       .maybeSingle();
 
     if (existente) {
-      console.warn(`⚠️ ${file.name} ya fue cargado antes, se salteó.`);
+      console.warn(`${file.name} ya fue cargado antes, se salteó.`);
       return { ok: false, motivo: 'duplicado', archivo: file.name };
     }
 
@@ -240,7 +232,7 @@ async function procesarArchivo(file) {
       return { ok: false, motivo: 'error_stats', archivo: file.name };
     }
 
-    console.log(`✅ ${file.name}: ${statsInsertadas.length} jugadores insertados.`);
+    console.log(`${file.name}: ${statsInsertadas.length} jugadores insertados.`);
     return { ok: true, archivo: file.name, jugadores: statsInsertadas.length };
 
   } catch (error) {
@@ -268,7 +260,7 @@ async function subirArchivos(files, onProgress) {
     detalle
   };
 
-  console.log('🏁 Resumen de carga:', resumen);
+  console.log('Resumen de carga:', resumen);
   return resumen;
 }
 
@@ -332,7 +324,7 @@ function renderGoalkeepers(gk) {
     tr.className = 'top-row';
     tr.innerHTML = `
       <td><div class="player-cell"><span class="star">★</span><span class="player-name">${p.name}</span></div></td>
-      <td><span class="pj-badge low">${p.pj}</span></td>
+      <td>${p.pj}</td>
       <td>${fmt(p.passes)}</td>
       <td>${fmt(p.tackles)}</td>
       <td>${fmt(p.interceptions)}</td>
@@ -358,10 +350,9 @@ function renderFieldPlayers(fp) {
   fp.forEach((p, i) => {
     const tr = document.createElement('tr');
     if (i === 0) tr.className = 'top-row';
-    const pjClass = p.pj < 5 ? 'pj-badge low' : 'pj-badge';
     tr.innerHTML = `
       <td><div class="player-cell">${i === 0 ? '<span class="star">★</span>' : ''}<span class="player-name">${p.name}</span> <span class="pos-tag">${p.pos}</span></div></td>
-      <td><span class="${pjClass}">${p.pj}</span></td>
+      <td>${p.pj}</td>
       <td>${fmt(p.passes)}</td>
       <td>${fmt(p.shots)}</td>
       <td>${fmt(p.shotsOnTarget)}</td>
@@ -560,7 +551,7 @@ document.getElementById('closeSeasonBtn').addEventListener('click', async () => 
 async function cargarSelectorDeTemporadas() {
   const temporadas = await getSeasons();
   const select = document.getElementById('seasonSelect');
-  select.innerHTML = '<option value="">— Viendo la temporada actual —</option>';
+  select.innerHTML = '<option value="">Viendo la temporada actual</option>';
 
   temporadas
     .filter(t => !t.is_current)
@@ -577,6 +568,12 @@ document.getElementById('seasonSelect').addEventListener('change', async (event)
   const { gk, fp } = await getMatchData(seasonId);
   renderGoalkeepers(gk);
   renderFieldPlayers(fp);
+});
+
+/* enlace "Inicio" del navbar: scroll suave al tope */
+document.querySelector('.back-top-link').addEventListener('click', (e) => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 </script>
