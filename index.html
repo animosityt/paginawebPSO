@@ -242,26 +242,18 @@ async function procesarArchivo(file) {
       return { ok: false, motivo: 'error_match', archivo: file.name };
     }
 
-    const matchId = matchInsertado.id;
+        const matchId = matchInsertado.id;
     const filasFinales = [];
 
     for (const fila of filasParaInsertar) {
-  const jugadorDb = await upsertPlayerSmart(fila._playerId, fila._playerName);
+      const jugadorDb = await upsertPlayerSmart(fila._playerId, fila._playerName);
 
-  if (!jugadorDb) {
-    console.error('Error con jugador:', fila._playerName);
-    continue;
-  }
+      if (!jugadorDb) {
+        console.error('Error con jugador:', fila._playerName);
+        continue;
+      }
 
-  const { _playerName, _playerId, ...datosLimpios } = fila;
-  filasFinales.push({
-    ...datosLimpios,
-    match_id: matchId,
-    player_id: jugadorDb.id
-  });
-}
-
-      const { _playerName, ...datosLimpios } = fila;
+      const { _playerName, _playerId, ...datosLimpios } = fila;
       filasFinales.push({
         ...datosLimpios,
         match_id: matchId,
