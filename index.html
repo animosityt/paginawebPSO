@@ -205,7 +205,7 @@ async function procesarArchivo(file) {
     for (const fila of filasParaInsertar) {
       const { data: jugadorDb, error: errorJugador } = await db
         .from('players')
-        .upsert({ name: fila._playerName }, { onConflict: 'name' })
+        .upsert({ name: fila._playerName }, { onConflict: 'external_player_id' })
         .select()
         .single();
 
