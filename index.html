@@ -138,6 +138,48 @@ const fmt = (n, d=2) => Number(n).toLocaleString('es-AR', {minimumFractionDigits
    ESTO NO LO TOQUES NADA POR FAVOR Q SUBE LAS COSAS A SUPABASE
    ============================================================ */
 
+async function upsertPlayerSmart(externalId, name) {
+  // 1) ¿ya existe alguien con este ID exacto? (caso normal, jugador de siempre)
+  if (externalId) {
+    const { data: porId } = await db
+      .from('players')
+      .select('id')
+      .eq('external_player_id', externalId)
+      .maybeSingle();
+    if (porId) return porId;
+  }
+
+  // 2) ¿existe alguien con este nombre que TODAVÍA no tiene ID vinculado?
+  //    (jugador viejo, primera vez que lo vemos con el sistema nuevo)
+  const { data: porNombre } = await db
+    .from('players')
+    .select('id')
+    .eq('name', name)
+    .is('external_player_id', null)
+    .maybeSingle();
+
+  if (porNombre) {
+    // lo encontramos por nombre: le completamos el ID para la próxima vez
+    const { data: actualizado, error } = await db
+      .from('players')
+      .update({ external_player_id: externalId })
+      .eq('id', porNombre.id)
+      .select()
+      .single();
+    if (error) { console.error('Error vinculando ID:', error); return porNombre; }
+    return actualizado;
+  }
+
+  // 3) no existe de ninguna forma: jugador nuevo de verdad
+  const { data: creado, error } = await db
+    .from('players')
+    .insert({ name, external_player_id: externalId })
+    .select()
+    .single();
+  if (error) { console.error('Error creando jugador:', error); return null; }
+  return creado;
+}
+
 async function procesarArchivo(file) {
   const contenido = await file.text();
 
@@ -162,26 +204,27 @@ async function procesarArchivo(file) {
     ];
 
     const filasParaInsertar = todosLosJugadores.map(jugador => {
-      return {
-        position: jugador.postion,
-        team: jugador.team,
-        passes: jugador.passes,
-        key_passes: jugador.keyPasses,
-        assists: jugador.assists,
-        shots: jugador.shots,
-        shots_on_target: jugador.shotsOnTarget,
-        goals: jugador.goals,
-        tackles: jugador.tackles,
-        key_tackles: jugador.keyTackles,
-        interceptions: jugador.interceptions,
-        key_interceptions: jugador.keyInterceptions,
-        possessions_lost: jugador.possessionsLost,
-        gk_saves: jugador.gKSaves,
-        gk_catches: jugador.gKCatches,
-        score: jugador.score,
-        _playerName: jugador.playerName
-      };
-    });
+  return {
+    position: jugador.postion,
+    team: jugador.team,
+    passes: jugador.passes,
+    key_passes: jugador.keyPasses,
+    assists: jugador.assists,
+    shots: jugador.shots,
+    shots_on_target: jugador.shotsOnTarget,
+    goals: jugador.goals,
+    tackles: jugador.tackles,
+    key_tackles: jugador.keyTackles,
+    interceptions: jugador.interceptions,
+    key_interceptions: jugador.keyInterceptions,
+    possessions_lost: jugador.possessionsLost,
+    gk_saves: jugador.gKSaves,
+    gk_catches: jugador.gKCatches,
+    score: jugador.score,
+    _playerName: jugador.playerName,
+    _playerId: jugador.playerId   //esto es para poder hacer upsert en players y no perder el nombre del jugador negro//
+  };
+});
 
     const { data: matchInsertado, error: errorMatch } = await db
       .from('matches')
@@ -203,16 +246,20 @@ async function procesarArchivo(file) {
     const filasFinales = [];
 
     for (const fila of filasParaInsertar) {
-      const { data: jugadorDb, error: errorJugador } = await db
-        .from('players')
-        .upsert({ name: fila._playerName }, { onConflict: 'external_player_id' })
-        .select()
-        .single();
+  const jugadorDb = await upsertPlayerSmart(fila._playerId, fila._playerName);
 
-      if (errorJugador) {
-        console.error('Error con jugador:', fila._playerName, errorJugador);
-        continue;
-      }
+  if (!jugadorDb) {
+    console.error('Error con jugador:', fila._playerName);
+    continue;
+  }
+
+  const { _playerName, _playerId, ...datosLimpios } = fila;
+  filasFinales.push({
+    ...datosLimpios,
+    match_id: matchId,
+    player_id: jugadorDb.id
+  });
+}
 
       const { _playerName, ...datosLimpios } = fila;
       filasFinales.push({
