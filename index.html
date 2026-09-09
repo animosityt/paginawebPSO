@@ -6,13 +6,25 @@
 <meta charset="UTF-8">
 <title>Tabla de Promedios · Cancha Grande</title>
 </head>
+
+<link rel="icon" type="image/svg+xml" href="images/trofeo.svg">
+
 <body>
 
-
+<div class="intro-overlay" id="introOverlay" aria-hidden="true" role="button" tabindex="0" aria-label="Saltar introducción">
+  <div class="trofeo-hero intro-trophy">
+    <div class="trofeo">
+      <img class="trofeo-glow" src="images/trofeo.svg" alt="" aria-hidden="true">
+      <img class="trofeo-base" src="images/trofeo.svg" alt="" aria-hidden="true">
+      <span class="trofeo-glint"></span>
+      <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
+    </div>
+  </div>
+</div>
 
 <nav class="navbar" id="top">
   <div class="navbar-brand">
-    <div class="brand-title">Cancha Chica · Admin</div>
+    <div class="brand-title">Cancha Grande · Admin</div>
     <a href="#top" class="back-top-link" aria-label="Volver al inicio" title="Volver al inicio">Inicio</a>
   </div>
 
@@ -42,6 +54,15 @@
 
 <div class="wrap">
 
+  <div class="trofeo-hero">
+  <div class="trofeo">
+    <img class="trofeo-glow" src="images/trofeo.svg" alt="" aria-hidden="true">
+    <img class="trofeo-base" src="images/trofeo.svg" alt="Trofeo UEFA Champions League">
+    <span class="trofeo-glint"></span>
+    <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
+  </div>
+</div>
+
   <header>
     <h1>Tabla de Promedios</h1>
   </header>
@@ -51,19 +72,19 @@
     <p>Floral green se separa en su propia tabla de arqueros porque atajó en 4 de los 5 partidos — no tiene sentido promediarlo contra jugadores de campo cuando su rol real es otro. El partido que jugó de LW (match del 22:45) no entra en su promedio de arquero.</p>
   </div>
 
-  <section class="block">
+  <div class="methodology season-picker" id="seasonPicker">
+    <h3>Temporadas anteriores</h3>
+    <select id="seasonSelect">
+      <option value="">Viendo la temporada actual</option>
+    </select>
+  </div>
+
+  <section class="block goalkeeper-block">
     <div class="block-head">
       <div class="block-title">
         <h2>Arqueros</h2>
       </div>
     </div>
-<div class="methodology" id="seasonPicker">
-  <h3>Temporadas anteriores</h3>
-  <select id="seasonSelect" style="width:100%; padding:9px; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:#fff; font-family:'Rajdhani',sans-serif;">
-    <option value="">Viendo la temporada actual</option>
-  </select>
-</div>
-
     <div class="table-scroll">
       <table>
         <thead>
@@ -93,19 +114,12 @@
         <h2>Jugadores de Campo</h2>
       </div>
     </div>
-<div class="methodology" id="seasonPicker">
-  <h3>Temporadas anteriores</h3>
-  <select id="seasonSelect" style="width:100%; padding:9px; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:#fff; font-family:'Rajdhani',sans-serif;">
-    <option value="">Viendo la temporada actual</option>
-  </select>
-</div>
-
     <div class="table-scroll">
       <table>
         <thead>
           <tr>
             <th>Jugador</th>
-            <th>PJ</th>
+            <th>Partidos</th>
             <th>Pases</th>
             <th>Tiros</th>
             <th>Tiros al Arco</th>
@@ -124,7 +138,40 @@
     </div>
   </section>
 </div>
+
+<footer class="site-footer">
+  <div class="footer-links" aria-label="Enlaces externos">
+    <div class="footer-link-group">
+      <span class="footer-label">GitHub</span>
+      <a href="https://github.com/animosityt" aria-label="GitHub de Animosity">Github Animosity</a>
+      <a href="https://github.com/aitor-byte" aria-label="GitHub de Aitor">Github Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Instagram</span>
+      <a href="https://instagram.com/aniimossity" aria-label="Instagram 1">Instagram Animosity</a>
+      <a href="https://instagram.com/aitor.pez" aria-label="Instagram 2">Instagram Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Discord</span>
+      <a href="#" class="discord-link" aria-label="Discord 1, hover para ver el usuario" data-username="animossiity">Discord Animosity</a>
+      <a href="#" class="discord-link" aria-label="Discord 2, hover para ver el usuario" data-username="aitor_rex">Discord Aitor</a>
+    </div>
+  </div>
+  <p class="footer-legal">© 2026 Cancha Grande. Todos los derechos reservados.</p>
+  <p class="footer-trademark">Cancha Grande™ es una marca de <span>Leverage™</span>.</p>
+</footer>
 <script>
+setTimeout(() => {
+  document.getElementById('introOverlay').classList.add('intro-overlay-hidden');
+}, 5000);
+
+const introOverlay = document.getElementById('introOverlay');
+const skipIntro = () => introOverlay.classList.add('intro-overlay-hidden');
+introOverlay.addEventListener('click', skipIntro);
+introOverlay.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') skipIntro();
+});
+
 const SUPABASE_URL = 'https://yjjcujmoaialawmzvdzq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_8vbo3MfWiZR9Airj_BEe_Q_HXmYsBiH';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -317,13 +364,6 @@ async function getMatchData(seasonId = null) {
     return { gk: [], fp: [] };
   }
 
-  const { data: posiciones } = await db
-    .from('player_last_position')
-    .select('*')
-    .eq('season_id', sid);
-
-  const posMap = Object.fromEntries((posiciones || []).map(p => [p.player_id, p.position]));
-
   const gk = ratings
     .filter(r => r.primary_role === 'GK')
     .map(r => ({
@@ -336,7 +376,7 @@ async function getMatchData(seasonId = null) {
   const fp = ratings
     .filter(r => r.primary_role === 'FIELD')
     .map(r => ({
-      name: r.name, pos: posMap[r.player_id] || '', pj: r.pj, passes: r.avg_passes,
+      name: r.name, pj: r.pj, passes: r.avg_passes,
       shots: r.avg_shots, shotsOnTarget: r.avg_shots_on_target, goals: r.avg_goals,
       tackles: r.avg_tackles, interceptions: r.avg_interceptions, possessionsLost: r.avg_possessions_lost,
       score: r.avg_score, rating: r.rating
@@ -387,7 +427,7 @@ function renderFieldPlayers(fp) {
     const tr = document.createElement('tr');
     if (i === 0) tr.className = 'top-row';
     tr.innerHTML = `
-      <td><div class="player-cell">${i === 0 ? '<span class="star">★</span>' : ''}<span class="player-name">${p.name}</span> <span class="pos-tag">${p.pos}</span></div></td>
+      <td><div class="player-cell">${i === 0 ? '<span class="star">★</span>' : ''}<span class="player-name">${p.name}</span></div></td>
       <td>${p.pj}</td>
       <td>${fmt(p.passes)}</td>
       <td>${fmt(p.shots)}</td>
