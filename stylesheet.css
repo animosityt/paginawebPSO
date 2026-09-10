@@ -813,6 +813,9 @@
   aspect-ratio:1152/2048;
   animation:trofeoFloat 6s ease-in-out infinite;
 }
+.wrap > .trofeo-hero .trofeo{
+  width:clamp(190px,32vw,350px);
+}
 .trofeo img,
 .trofeo .trofeo-glint{
   position:absolute; inset:0;
@@ -851,6 +854,9 @@
   animation:trofeoSweep 4.2s ease-in-out infinite;
   animation-delay:.6s;
 }
+.wrap > .trofeo-hero .trofeo .trofeo-glint::before{
+  animation-duration:2.8s;
+}
 @keyframes trofeoPulse{
   0%,100%{opacity:.55; filter:blur(14px) saturate(1.6);}
   50%    {opacity:1;   filter:blur(24px) saturate(1.6);}
@@ -871,6 +877,9 @@
   box-shadow:0 0 8px 2px rgba(255,255,255,.9);
   animation:trofeoTwinkle 2.4s ease-in-out infinite;
   pointer-events:none;
+}
+.wrap > .trofeo-hero .trofeo .spark{
+  animation-duration:1.6s;
 }
 .trofeo .spark.s1{width:5px;height:5px;top:26%;left:31%;animation-delay:0s;}
 .trofeo .spark.s2{width:4px;height:4px;top:44%;left:63%;animation-delay:.8s;}
