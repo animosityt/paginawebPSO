@@ -309,8 +309,8 @@
   .season-picker{
     margin:24px 30px 46px;
     padding:16px 18px;
-    background:rgba(29,94,56,.7);
-    border:1px solid rgba(255,211,112,.35);
+    background:var(--card);
+    border:1px solid rgba(255, 229, 168, 0.164);
     border-radius:12px;
   }
 
@@ -330,7 +330,7 @@
   .season-picker select{
     width:100%;
     padding:10px 12px;
-    border:1px solid rgba(255,211,112,.55);
+    border:1px solid rgba(255, 212, 112, 0.432);
     border-radius:9px;
     background:#0c2d1a;
     color:#fff;
