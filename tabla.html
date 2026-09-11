@@ -172,17 +172,6 @@ navToggle.addEventListener('click', () => {
   navToggle.setAttribute('aria-expanded', abierto);
 });
 
-setTimeout(() => {
-  document.getElementById('introOverlay').classList.add('intro-overlay-hidden');
-}, 5000);
-
-const introOverlay = document.getElementById('introOverlay');
-const skipIntro = () => introOverlay.classList.add('intro-overlay-hidden');
-introOverlay.addEventListener('click', skipIntro);
-introOverlay.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter' || event.key === ' ') skipIntro();
-});
-
 const SUPABASE_URL = 'https://yjjcujmoaialawmzvdzq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_8vbo3MfWiZR9Airj_BEe_Q_HXmYsBiH';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
