@@ -27,7 +27,7 @@
   </div>
 </nav>
 
-<!-- ===== BARRA DE ADMIN: login + carga de partidos ===== -->
+<!-- ===== barra de admin: login + carga de partidos ===== -->
 <div class="admin-bar">
   <span class="admin-bar-label">Panel de administración</span>
 
@@ -179,11 +179,11 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const fmt = (n, d=2) => Number(n).toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d});
 
 /* ============================================================
-   ESTO NO LO TOQUES NADA POR FAVOR Q SUBE LAS COSAS A SUPABASE
-   ============================================================ */
+  esto sube los partidos a supabase, mejor no tocarlo
+  ============================================================ */
 
 async function upsertPlayerSmart(externalId, name) {
-  // 1) ¿ya existe alguien con este ID exacto? (caso normal, jugador de siempre)
+  // 1) ¿ya existe alguien con este id? (es lo normal)
   if (externalId) {
     const { data: porId } = await db
       .from('players')
@@ -193,8 +193,8 @@ async function upsertPlayerSmart(externalId, name) {
     if (porId) return porId;
   }
 
-  // 2) ¿existe alguien con este nombre que TODAVÍA no tiene ID vinculado?
-  //    (jugador viejo, primera vez que lo vemos con el sistema nuevo)
+  // 2) ¿hay alguien con este nombre que todavía no tiene id vinculado?
+  //    puede ser un jugador viejo que recién aparece con el sistema nuevo
   const { data: porNombre } = await db
     .from('players')
     .select('id')
@@ -203,7 +203,7 @@ async function upsertPlayerSmart(externalId, name) {
     .maybeSingle();
 
   if (porNombre) {
-    // lo encontramos por nombre: le completamos el ID para la próxima vez
+    // lo encontramos por nombre y le guardamos el id para la próxima vez
     const { data: actualizado, error } = await db
       .from('players')
       .update({ external_player_id: externalId })
@@ -214,7 +214,7 @@ async function upsertPlayerSmart(externalId, name) {
     return actualizado;
   }
 
-  // 3) no existe de ninguna forma: jugador nuevo de verdad
+  // 3) no existe: es un jugador nuevo
   const { data: creado, error } = await db
     .from('players')
     .insert({ name, external_player_id: externalId })
@@ -266,7 +266,7 @@ async function procesarArchivo(file) {
     gk_catches: jugador.gKCatches,
     score: jugador.score,
     _playerName: jugador.playerName,
-    _playerId: jugador.playerId   //esto es para poder hacer upsert en players y no perder el nombre del jugador negro//
+    _playerId: jugador.playerId   // sirve para guardar el jugador con su id real
   };
 });
 
@@ -348,8 +348,8 @@ async function subirArchivos(files, onProgress) {
 }
 
 /* =======================================================================================
-   esto tampoco lo toques porque trae lo q le acabamos de mandar a supabase asi corte bien piolita
-   ======================================================================================= */
+  esto trae lo que acabamos de mandar a supabase
+  ======================================================================================= */
 
 async function getMatchData(seasonId = null) {
   const sid = seasonId || await getCurrentSeasonId();
@@ -449,7 +449,7 @@ function mostrarLogueado(logueado) {
   loginSubmit.hidden = logueado;
   loginError.hidden = true;
   uploadBtn.disabled = !logueado;
-  document.getElementById('closeSeasonBtn').disabled = !logueado;  // ← esta línea es nueva
+  document.getElementById('closeSeasonBtn').disabled = !logueado;  // botón de cerrar temporada
   sessionTag.hidden = !logueado;
 }
 
@@ -472,10 +472,9 @@ async function init() {
 init();
 
 /* =======================================================================================
-   EN CAMBIO si lo podes tocar porque es tema del boton, y vas a tener q linkear el boton
-   q vos hagas con esta parte del script, en lo posible no cambies los nombres de las funciones
-   ni las clases del css, asi q no se, manejate lompaniero vos sabras gato.
-   ======================================================================================= */
+  esta parte sí se puede tocar, porque maneja los botones
+  en lo posible dejá los nombres de las funciones y las clases como están
+  ======================================================================================= */
 
 const loginEmail = document.getElementById('loginEmail');
 const loginPassword = document.getElementById('loginPassword');
@@ -576,8 +575,8 @@ async function getSeasons() {
 async function cerrarTemporada() {
   const { data: temporadas } = await db.from('seasons').select('name');
 
-  // sacamos el número más alto que exista ("Temporada 3" -> 3) y sumamos uno.
-  // así, aunque borres una temporada, nunca repetís nombre.
+  // buscamos el número más alto y le sumamos uno.
+  // así no se repite el nombre de una temporada.
   const numeros = (temporadas || [])
     .map(t => parseInt(String(t.name).replace(/\D/g, ''), 10))
     .filter(n => !isNaN(n));

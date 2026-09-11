@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Rajdhani:wght@500;600;700&family=Oswald:wght@400;500;600;700&display=swap');
 
 /* ================================================================
-   CANCHA GRANDE · hoja de estilos única para todo el sitio
-   index.html · tabla.html · jugadores.html · pso.html
-   usuarios.html · contacto.html
+  cancha grande · hoja de estilos única para todo el sitio
+  index.html · tabla.html · jugadores.html · pso.html
+  usuarios.html · contacto.html
    ================================================================ */
 
 :root{
@@ -49,7 +49,7 @@ body{
 a{color:var(--gold-2);}
 
 /* ================================================================
-   1 · INTRO (solo en index.html)
+  1 · intro (solo en index.html)
    ================================================================ */
 
 .intro-overlay{
@@ -92,7 +92,7 @@ a{color:var(--gold-2);}
 }
 
 /* ================================================================
-   2 · NAVBAR
+  2 · navbar
    ================================================================ */
 
 .navbar{
@@ -196,7 +196,7 @@ a{color:var(--gold-2);}
 .back-top-link:hover{ color:var(--gold-2); }
 
 /* ================================================================
-   3 · BARRA DE ADMIN (solo tabla.html)
+  3 · barra de admin (solo tabla.html)
    ================================================================ */
 
 .admin-bar{
@@ -346,7 +346,7 @@ a{color:var(--gold-2);}
 @keyframes spin{ to{ transform:rotate(360deg); } }
 
 /* ================================================================
-   4 · HERO TROFEO UCL  (requiere images/trofeo.svg)
+  4 · trofeo principal (requiere images/trofeo.svg)
    ================================================================ */
 
 .trofeo-hero{
@@ -454,7 +454,7 @@ a{color:var(--gold-2);}
 }
 
 /* ================================================================
-   5 · TIPOGRAFÍA / CABECERAS
+  5 · tipografía / cabeceras
    ================================================================ */
 
 header{
@@ -520,7 +520,7 @@ h1{
 }
 
 /* ================================================================
-   6 · LANDING (index.html)
+  6 · página principal (index.html)
    ================================================================ */
 
 .hero{
@@ -720,7 +720,7 @@ h1{
 }
 
 /* ================================================================
-   7 · BLOQUES / TABLAS
+  7 · bloques / tablas
    ================================================================ */
 
 section.block{
@@ -1004,7 +1004,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 }
 
 /* ================================================================
-   8 · CARTAS DE JUGADOR (jugadores.html)
+  8 · cartas de jugador (jugadores.html)
    ================================================================ */
 
 .cards-toolbar{
@@ -1267,7 +1267,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 .sw-bronze{ background:linear-gradient(160deg,#d79a63,#7a4d2b); }
 
 /* ================================================================
-   9 · ARTÍCULO / FAQ / GLOSARIO (pso.html)
+  9 · artículo / faq / glosario (pso.html)
    ================================================================ */
 
 .article{
@@ -1391,7 +1391,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 }
 
 /* ================================================================
-   10 · CONTACTO
+  10 · contacto
    ================================================================ */
 
 .contact-layout{
@@ -1495,7 +1495,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 }
 
 /* ================================================================
-   11 · USUARIOS
+  11 · usuarios
    ================================================================ */
 
 .users-grid{
@@ -1583,7 +1583,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 }
 
 /* ================================================================
-   12 · FOOTER
+  12 · footer
    ================================================================ */
 
 .site-footer{
@@ -1657,7 +1657,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 .footer-trademark span{ color:var(--gold-2); }
 
 /* ================================================================
-   13 · RESPONSIVE
+  13 · responsive
    ================================================================ */
 
 @media (max-width:900px){

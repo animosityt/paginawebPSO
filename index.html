@@ -11,7 +11,7 @@
 
 <body>
 
-<!-- ===== INTRO (se muestra una vez por sesión) ===== -->
+<!-- ===== intro, aparece una vez por sesión ===== -->
 <div class="intro-overlay" id="introOverlay" role="button" tabindex="0" aria-label="Saltar introducción">
   <div class="trofeo-hero intro-trophy">
     <div class="trofeo">
@@ -24,7 +24,7 @@
   <span class="intro-skip">Click para entrar</span>
 </div>
 
-<!-- ===== NAVBAR (igual en todas las páginas) ===== -->
+<!-- ===== navbar, igual en todas las páginas ===== -->
 <nav class="navbar" id="top">
   <div class="navbar-brand">
     <a class="brand-title" href="index.html">Cancha Grande</a>
@@ -43,11 +43,11 @@
 
 <div class="wrap">
 
-  <!-- ===== HERO ===== -->
+  <!-- ===== portada ===== -->
   <section class="hero">
     <div class="hero-copy">
       <span class="eyebrow">Temporada en curso</span>
-      <!-- EDITAR: título y bajada de la landing -->
+      <!-- editar: título y bajada de la página principal -->
       <h1>La casa de las<br>estadísticas de PSO</h1>
       <p class="subtitle">
         Cancha Grande junta los partidos de la comunidad, los procesa y devuelve
@@ -73,8 +73,8 @@
     </div>
   </section>
 
-  <!-- ===== NÚMEROS RÁPIDOS ===== -->
-  <!-- EDITAR: estos valores son fijos, cambialos a mano cuando quieras -->
+  <!-- ===== números rápidos ===== -->
+  <!-- editar: estos valores se pueden cambiar a mano -->
   <section class="stat-strip">
     <div class="stat-box">
       <span class="stat-num" id="statJugadores">—</span>
@@ -94,10 +94,10 @@
     </div>
   </section>
 
-  <!-- ===== QUÉ HAY ACÁ ===== -->
+  <!-- ===== qué hay acá ===== -->
   <h2 class="section-title">Qué vas a encontrar</h2>
   <p class="section-lead">
-    <!-- EDITAR: descripción corta de las secciones -->
+    <!-- editar: descripción corta de las secciones -->
     Cada sección del sitio arranca del mismo lugar: los partidos que sube la administración.
     De ahí salen los promedios, las cartas y todo lo demás.
   </p>
@@ -132,7 +132,7 @@
     </article>
   </section>
 
-  <!-- ===== CÓMO FUNCIONA ===== -->
+  <!-- ===== cómo funciona ===== -->
   <h2 class="section-title">Cómo funciona</h2>
   <p class="section-lead">De la partida a la tabla, en cuatro pasos.</p>
 
@@ -140,33 +140,33 @@
     <div class="step">
       <div>
         <h3>Se juega el partido</h3>
-        <p><!-- EDITAR -->Partido de la comunidad en Pro Soccer Online. Al terminar, el juego genera un archivo con las estadísticas de todos los jugadores.</p>
+        <p><!-- editar -->Partido de la comunidad en Pro Soccer Online. Al terminar, el juego genera un archivo con las estadísticas de todos los jugadores.</p>
       </div>
     </div>
     <div class="step">
       <div>
         <h3>Se sube el archivo</h3>
-        <p><!-- EDITAR -->La administración carga ese archivo desde la página de la tabla. Si ya estaba cargado, el sistema lo saltea solo: no se duplica nada.</p>
+        <p><!-- editar -->La administración carga ese archivo desde la página de la tabla. Si ya estaba cargado, el sistema lo saltea solo: no se duplica nada.</p>
       </div>
     </div>
     <div class="step">
       <div>
         <h3>Se calculan los promedios</h3>
-        <p><!-- EDITAR -->Cada jugador queda identificado por su ID del juego, así que aunque se cambie el nombre, el historial sigue siendo suyo.</p>
+        <p><!-- editar -->Cada jugador queda identificado por su ID del juego, así que aunque se cambie el nombre, el historial sigue siendo suyo.</p>
       </div>
     </div>
     <div class="step">
       <div>
         <h3>Se publica</h3>
-        <p><!-- EDITAR -->La tabla y las cartas se actualizan en el momento. Al cerrar la temporada, todo queda archivado y consultable desde el selector.</p>
+        <p><!-- editar -->La tabla y las cartas se actualizan en el momento. Al cerrar la temporada, todo queda archivado y consultable desde el selector.</p>
       </div>
     </div>
   </section>
 
-  <!-- ===== CTA ===== -->
+  <!-- ===== invitación final ===== -->
   <section class="cta-panel">
     <h2>¿Querés jugar con nosotros?</h2>
-    <p><!-- EDITAR -->
+    <p><!-- editar -->
       Los partidos se organizan por Discord. No hace falta ser un crack: hace falta aparecer,
       jugar en el puesto que te toque y no abandonar a los diez minutos.
     </p>
@@ -178,7 +178,7 @@
 
 </div>
 
-<!-- ===== FOOTER (igual en todas las páginas) ===== -->
+<!-- ===== footer, igual en todas las páginas ===== -->
 <footer class="site-footer">
   <div class="footer-links" aria-label="Enlaces externos">
     <div class="footer-link-group">
@@ -203,7 +203,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ---------- menú mobile (va en todas las páginas) ---------- */
+/* ---------- menú mobile, va en todas las páginas ---------- */
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 navToggle.addEventListener('click', () => {
@@ -211,7 +211,7 @@ navToggle.addEventListener('click', () => {
   navToggle.setAttribute('aria-expanded', abierto);
 });
 
-/* ---------- intro: una sola vez por sesión ---------- */
+/* ---------- intro, una sola vez por sesión ---------- */
 const introOverlay = document.getElementById('introOverlay');
 const cerrarIntro = () => introOverlay.classList.add('intro-overlay-hidden');
 
@@ -229,7 +229,7 @@ if (intoYaVista) {
   });
 }
 
-/* ---------- números rápidos (se leen de Supabase) ---------- */
+/* ---------- números rápidos, vienen de supabase ---------- */
 const SUPABASE_URL = 'https://yjjcujmoaialawmzvdzq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_8vbo3MfWiZR9Airj_BEe_Q_HXmYsBiH';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
