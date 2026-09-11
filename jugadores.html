@@ -135,6 +135,30 @@ const BASE  = 65;   // lo que saca un jugador que está justo en el promedio de 
 const CURVA = 0.55; // 1 = diferencias brutales, 0.3 = todos parecidos. 0.55 es un punto medio
 const UMBRALES = { elite: 88, gold: 75, silver: 62 };  // color de la carta según valoración
 const CARPETA_FOTOS = 'images/jugadores/';
+
+/* ----------------------------------------------------------------
+   PISOS MANUALES: arrancan en un número base + lo que da la fórmula real
+   Formato: 'nombre_exacto_del_jugador': { SIGLA: piso }
+   El piso es el mínimo garantizado; arriba de eso sigue variando según
+   qué tan bien le vaya de verdad en esa estadística.
+   ---------------------------------------------------------------- */
+const PISOS = {
+  'aitor_rex': { DEF: 80 },
+  'Skele':     { TIR: 80 },
+  'Skele':     { DEF: 0 },
+  'Susering':  { TIR: 80 },
+  'Doaza':     { TIR: 80 },
+  'Fafii':     { TIR: 80 },
+};
+
+function conPiso(valorNormal, piso) {
+  // valorNormal viene 40..99 (PISO..TECHO) de la fórmula de siempre.
+  // Lo reescalamos a piso..99: el que ya rendía bien sigue arriba,
+  // nadie de la lista baja de `piso`.
+  const fraccion = (valorNormal - PISO) / (TECHO - PISO);
+  return limitar(piso + fraccion * (TECHO - piso));
+}
+
 /* ================================================================ */
 
 let TODOS = [];          // todos los jugadores de la temporada elegida
@@ -260,14 +284,20 @@ function construirCartas(ratings) {
       ['CUI', escalarInverso(r.avg_possessions_lost, promCampo.perd)]
     ];
 
+        // aplica los pisos manuales, si este jugador tiene alguno cargado
+    const statsFinales = stats.map(([k, v]) => {
+      const piso = PISOS[r.name]?.[k];
+      return piso ? [k, conPiso(v, piso)] : [k, v];
+    });
+
     return {
       nombre: r.name,
       rol: r.primary_role,
-      pos: esGk ? 'GK' : 'CAM',      // EDITAR: si algún día guardás el puesto real, va acá
+      pos: esGk ? 'GK' : 'CAM',
       pj: r.pj,
       score: num(r.avg_score),
       valoracion: Math.round(num(r.rating)),
-      stats
+      stats: statsFinales   // ← antes decía "stats", ahora "statsFinales"
     };
   }).sort((a, b) => b.valoracion - a.valoracion || b.score - a.score);
 }
