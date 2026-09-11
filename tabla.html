@@ -101,11 +101,10 @@
             <th>Atajadas</th>
             <th>Capturas</th>
             <th>Score</th>
-            <th>Valoración</th>
           </tr>
         </thead>
         <tbody id="gk-body">
-          <tr class="state-row"><td colspan="10"><span class="spinner"></span>Cargando arqueros…</td></tr>
+          <tr class="state-row"><td colspan="9"><span class="spinner"></span>Cargando arqueros…</td></tr>
         </tbody>
       </table>
     </div>
@@ -131,11 +130,10 @@
             <th>Intercep.</th>
             <th>Poses. Perd.</th>
             <th>Score</th>
-            <th>Valoración</th>
           </tr>
         </thead>
         <tbody id="fp-body">
-          <tr class="state-row"><td colspan="11"><span class="spinner"></span>Cargando jugadores de campo…</td></tr>
+          <tr class="state-row"><td colspan="10"><span class="spinner"></span>Cargando jugadores de campo…</td></tr>
         </tbody>
       </table>
     </div>
@@ -391,7 +389,7 @@ function renderGoalkeepers(gk) {
   body.innerHTML = '';
 
   if (!gk.length) {
-    body.innerHTML = `<tr class="state-row"><td colspan="10">Todavía no hay arqueros cargados.</td></tr>`;
+    body.innerHTML = `<tr class="state-row"><td colspan="9">Todavía no hay arqueros cargados.</td></tr>`;
     return;
   }
 
@@ -408,7 +406,6 @@ function renderGoalkeepers(gk) {
       <td>${fmt(p.gKSaves)}</td>
       <td>${fmt(p.gKCatches)}</td>
       <td class="score-cell">${fmt(p.score)}</td>
-      <td><span class="rating-pill">${fmt(p.rating)}</span></td>
     `;
     body.appendChild(tr);
   });
@@ -419,7 +416,7 @@ function renderFieldPlayers(fp) {
   body.innerHTML = '';
 
   if (!fp.length) {
-    body.innerHTML = `<tr class="state-row"><td colspan="11">Todavía no hay jugadores de campo cargados.</td></tr>`;
+    body.innerHTML = `<tr class="state-row"><td colspan="10">Todavía no hay jugadores de campo cargados.</td></tr>`;
     return;
   }
 
@@ -437,7 +434,6 @@ function renderFieldPlayers(fp) {
       <td>${fmt(p.interceptions)}</td>
       <td>${fmt(p.possessionsLost)}</td>
       <td class="score-cell">${fmt(p.score)}</td>
-      <td><span class="rating-pill">${fmt(p.rating)}</span></td>
     `;
     body.appendChild(tr);
   });
