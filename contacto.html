@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacto · Cancha Grande</title>
+<link rel="icon" type="image/svg+xml" href="images/trofeo.svg">
+<link rel="stylesheet" href="stylesheet.css">
+</head>
+
+<body>
+
+<nav class="navbar" id="top">
+  <div class="navbar-brand">
+    <a class="brand-title" href="index.html">Cancha Grande</a>
+    <span class="brand-sub">Pro Soccer Online · Comunidad</span>
+  </div>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">Menú</button>
+  <div class="nav-menu" id="navMenu">
+    <a href="index.html">Inicio</a>
+    <a href="tabla.html">Tabla</a>
+    <a href="jugadores.html">Jugadores</a>
+    <a href="pso.html">Qué es PSO</a>
+    <a href="usuarios.html">Usuarios</a>
+    <a href="contacto.html" class="active">Contacto</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Estamos del otro lado</span>
+    <h1>Contacto</h1>
+    <p class="subtitle">
+      Para sumarte a los partidos, avisar de un dato mal cargado o proponer algo para el sitio.
+      Lo más rápido siempre es <b>Discord</b>.
+    </p>
+  </header>
+
+  <section class="contact-layout">
+
+    <div class="contact-card">
+      <h2>Dónde encontrarnos</h2>
+      <!-- EDITAR: reemplazá por tus datos reales -->
+      <ul class="contact-list">
+        <li>
+          <span class="k">Discord de la comunidad</span>
+          <span class="v"><a href="#">discord.gg/tu-invitacion</a></span>
+        </li>
+        <li>
+          <span class="k">Discord · Animosity</span>
+          <span class="v">animossiity</span>
+        </li>
+        <li>
+          <span class="k">Discord · Aitor</span>
+          <span class="v">aitor_rex</span>
+        </li>
+        <li>
+          <span class="k">Mail</span>
+          <span class="v"><a href="mailto:hola@canchagrande.com">hola@canchagrande.com</a></span>
+        </li>
+        <li>
+          <span class="k">Instagram</span>
+          <span class="v">
+            <a href="https://instagram.com/aniimossity">@aniimossity</a> ·
+            <a href="https://instagram.com/aitor.pez">@aitor.pez</a>
+          </span>
+        </li>
+        <li>
+          <span class="k">Horarios de partido</span>
+          <span class="v">Martes y jueves, 22:00 (ARG)</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="contact-card">
+      <h2>Escribinos</h2>
+      <!-- Este formulario abre el mail del visitante con el texto ya cargado.
+           EDITAR: cambiá MAIL_DESTINO en el script de abajo. -->
+      <form class="form-grid" id="contactForm">
+        <label>
+          Tu nombre
+          <input type="text" id="fNombre" required placeholder="Cómo te decimos">
+        </label>
+
+        <label>
+          Tu mail o usuario de Discord
+          <input type="text" id="fContacto" required placeholder="Para poder responderte">
+        </label>
+
+        <label>
+          Motivo
+          <select id="fMotivo">
+            <option>Quiero sumarme a los partidos</option>
+            <option>Hay un dato mal cargado</option>
+            <option>Propuesta o idea para el sitio</option>
+            <option>Otra cosa</option>
+          </select>
+        </label>
+
+        <label>
+          Mensaje
+          <textarea id="fMensaje" required placeholder="Contanos…"></textarea>
+        </label>
+
+        <button type="submit" class="btn btn-primary" style="justify-content:center">Enviar</button>
+        <p class="form-note">
+          Se abre tu programa de mail con el mensaje listo. Si no te abre nada, escribinos directo por Discord.
+        </p>
+        <p class="form-feedback" id="formFeedback" hidden></p>
+      </form>
+    </div>
+
+  </section>
+
+  <h2 class="section-title">Antes de escribir</h2>
+  <p class="section-lead">Tres cosas que resuelven la mayoría de las consultas.</p>
+
+  <section class="card-grid">
+    <article class="info-card">
+      <span class="icon">01</span>
+      <h3>No aparezco en la tabla</h3>
+      <p>Fijate primero si tu partido está cargado. Si cambiaste el nombre en el juego, decinos el nombre viejo y el nuevo para unificar tu historial.</p>
+      <a class="card-link" href="tabla.html">Revisar la tabla →</a>
+    </article>
+
+    <article class="info-card">
+      <span class="icon">02</span>
+      <h3>Mi valoración está mal</h3>
+      <p>La valoración es un promedio por partido comparado con el resto de la temporada. Antes de escribir, leé cómo se calcula.</p>
+      <a class="card-link" href="jugadores.html">Cómo se calcula →</a>
+    </article>
+
+    <article class="info-card">
+      <span class="icon">03</span>
+      <h3>Nunca jugué a PSO</h3>
+      <p>No hay problema, pero leé la guía primero así llegás al partido sabiendo qué esperar del control y de los puestos.</p>
+      <a class="card-link" href="pso.html">Leer la guía →</a>
+    </article>
+  </section>
+
+  <section class="cta-panel">
+    <h2>¿Querés ayudar con el proyecto?</h2>
+    <p><!-- EDITAR -->
+      El sitio es abierto: si sabés diseño, datos o front, hay tarea. Escribinos y te contamos qué falta.
+    </p>
+    <div class="hero-actions" style="justify-content:center">
+      <a class="btn btn-primary" href="https://github.com/animosityt">Ver el código</a>
+      <a class="btn btn-ghost" href="usuarios.html">Ver el equipo</a>
+    </div>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-links" aria-label="Enlaces externos">
+    <div class="footer-link-group">
+      <span class="footer-label">GitHub</span>
+      <a href="https://github.com/animosityt">Github Animosity</a>
+      <a href="https://github.com/aitor-byte">Github Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Instagram</span>
+      <a href="https://instagram.com/aniimossity">Instagram Animosity</a>
+      <a href="https://instagram.com/aitor.pez">Instagram Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Discord</span>
+      <a href="#" class="discord-link" data-username="animossiity">Discord Animosity</a>
+      <a href="#" class="discord-link" data-username="aitor_rex">Discord Aitor</a>
+    </div>
+  </div>
+  <p class="footer-legal">© 2026 Cancha Grande. Todos los derechos reservados.</p>
+  <p class="footer-trademark">Cancha Grande™ es una marca de <span>Leverage™</span>.</p>
+</footer>
+
+<script>
+const navToggle = document.getElementById('navToggle');
+const navMenu = document.getElementById('navMenu');
+navToggle.addEventListener('click', () => {
+  const abierto = navMenu.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', abierto);
+});
+
+/* EDITAR: a dónde llegan los mensajes del formulario */
+const MAIL_DESTINO = 'hola@canchagrande.com';
+
+document.getElementById('contactForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const nombre   = document.getElementById('fNombre').value.trim();
+  const contacto = document.getElementById('fContacto').value.trim();
+  const motivo   = document.getElementById('fMotivo').value;
+  const mensaje  = document.getElementById('fMensaje').value.trim();
+
+  const asunto = `[Cancha Grande] ${motivo} — ${nombre}`;
+  const cuerpo = `Nombre: ${nombre}\nContacto: ${contacto}\nMotivo: ${motivo}\n\n${mensaje}`;
+
+  window.location.href =
+    `mailto:${MAIL_DESTINO}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+
+  const feedback = document.getElementById('formFeedback');
+  feedback.textContent = 'Listo, abrimos tu programa de mail. Si no pasó nada, escribinos por Discord.';
+  feedback.hidden = false;
+});
+</script>
+
+</body>
+</html>

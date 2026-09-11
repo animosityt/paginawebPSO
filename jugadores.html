@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cartas de Jugador · Cancha Grande</title>
+<link rel="icon" type="image/svg+xml" href="images/trofeo.svg">
+<link rel="stylesheet" href="stylesheet.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<nav class="navbar" id="top">
+  <div class="navbar-brand">
+    <a class="brand-title" href="index.html">Cancha Grande</a>
+    <span class="brand-sub">Pro Soccer Online · Comunidad</span>
+  </div>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">Menú</button>
+  <div class="nav-menu" id="navMenu">
+    <a href="index.html">Inicio</a>
+    <a href="tabla.html">Tabla</a>
+    <a href="jugadores.html" class="active">Jugadores</a>
+    <a href="pso.html">Qué es PSO</a>
+    <a href="usuarios.html">Usuarios</a>
+    <a href="contacto.html">Contacto</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Una carta por jugador</span>
+    <h1>Cartas de Jugador</h1>
+    <p class="subtitle">
+      El número grande es la <b>valoración de la temporada</b>. Los seis atributos salen de los
+      promedios reales: no los carga nadie a mano, se recalculan solos cuando entra un partido nuevo.
+    </p>
+  </header>
+
+  <div class="methodology">
+    <h3>Cómo se arma cada carta</h3>
+    <p>Cada atributo se compara contra el <b>promedio de la temporada</b> en esa estadística y se lleva a
+      una escala de 40 a 99: si estás justo en el promedio te toca <b>65</b>, si duplicás el promedio te
+      vas cerca de <b>95</b>, y si estás muy por debajo caés al piso. O sea: la carta te dice qué tan bien
+      estás <b>respecto al resto</b>, no un número absoluto.</p>
+    <p><b>CUI</b> (cuidado de la pelota) va al revés: cuantas menos posesiones perdés, más alto.</p>
+    <!-- EDITAR: si cambiás los umbrales de color de las cartas, contalo acá -->
+  </div>
+
+  <div class="cards-toolbar">
+    <div class="field">
+      <label for="buscar">Buscar jugador</label>
+      <input type="search" id="buscar" placeholder="Nombre del jugador…" autocomplete="off">
+    </div>
+
+    <div class="field">
+      <label for="seasonSelect">Temporada</label>
+      <select id="seasonSelect">
+        <option value="">Temporada actual</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Puesto</label>
+      <div class="filter-chips" id="chips">
+        <button class="chip active" data-rol="TODOS">Todos</button>
+        <button class="chip" data-rol="FIELD">Campo</button>
+        <button class="chip" data-rol="GK">Arqueros</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="legend-swatch sw-elite"></span>Élite · 88+</span>
+    <span class="legend-item"><span class="legend-swatch sw-gold"></span>Oro · 75+</span>
+    <span class="legend-item"><span class="legend-swatch sw-silver"></span>Plata · 62+</span>
+    <span class="legend-item"><span class="legend-swatch sw-bronze"></span>Bronce · menos de 62</span>
+  </div>
+
+  <section class="cards-grid" id="cardsGrid">
+    <div class="cards-empty"><span class="spinner"></span> Cargando jugadores…</div>
+  </section>
+
+  <div class="methodology">
+    <h3>Fotos de los jugadores</h3>
+    <p>Cada carta busca su foto en <b>images/jugadores/&lt;nombre&gt;.png</b>, en minúscula y sin espacios
+      (por ejemplo <b>images/jugadores/animosity.png</b>). Si el archivo no existe, la carta muestra las
+      iniciales y no se rompe nada. Recomendado: imagen cuadrada, 500×500, fondo transparente.</p>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-links" aria-label="Enlaces externos">
+    <div class="footer-link-group">
+      <span class="footer-label">GitHub</span>
+      <a href="https://github.com/animosityt">Github Animosity</a>
+      <a href="https://github.com/aitor-byte">Github Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Instagram</span>
+      <a href="https://instagram.com/aniimossity">Instagram Animosity</a>
+      <a href="https://instagram.com/aitor.pez">Instagram Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Discord</span>
+      <a href="#" class="discord-link" data-username="animossiity">Discord Animosity</a>
+      <a href="#" class="discord-link" data-username="aitor_rex">Discord Aitor</a>
+    </div>
+  </div>
+  <p class="footer-legal">© 2026 Cancha Grande. Todos los derechos reservados.</p>
+  <p class="footer-trademark">Cancha Grande™ es una marca de <span>Leverage™</span>.</p>
+</footer>
+
+<script>
+/* ---------- menú mobile ---------- */
+const navToggle = document.getElementById('navToggle');
+const navMenu = document.getElementById('navMenu');
+navToggle.addEventListener('click', () => {
+  const abierto = navMenu.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', abierto);
+});
+
+const SUPABASE_URL = 'https://yjjcujmoaialawmzvdzq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_8vbo3MfWiZR9Airj_BEe_Q_HXmYsBiH';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ================================================================
+   PERILLAS PARA TOCAR A GUSTO
+   ================================================================ */
+const PISO  = 40;   // atributo mínimo posible en una carta
+const TECHO = 99;   // atributo máximo posible
+const BASE  = 65;   // lo que saca un jugador que está justo en el promedio de la temporada
+const CURVA = 0.55; // 1 = diferencias brutales, 0.3 = todos parecidos. 0.55 es un punto medio
+const UMBRALES = { elite: 88, gold: 75, silver: 62 };  // color de la carta según valoración
+const CARPETA_FOTOS = 'images/jugadores/';
+/* ================================================================ */
+
+let TODOS = [];          // todos los jugadores de la temporada elegida
+let filtroRol = 'TODOS'; // TODOS | FIELD | GK
+let filtroTexto = '';
+
+const num = (v) => Number(v) || 0;
+const fmt = (n, d=2) => Number(n).toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d});
+const escapar = (s) => String(s).replace(/[&<>"']/g, c => (
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
+));
+
+const limitar = (n) => Math.max(PISO, Math.min(TECHO, Math.round(n)));
+
+/* escala un valor contra el PROMEDIO de la temporada -> 40..99
+   estar justo en el promedio da 65; el doble del promedio da ~95 */
+function escalar(valor, promedio) {
+  const v = num(valor);
+  if (!promedio || promedio <= 0) return BASE;
+  if (v <= 0) return PISO;
+  return limitar(BASE * Math.pow(v / promedio, CURVA));
+}
+
+/* igual que arriba pero al revés: menos es mejor (posesiones perdidas) */
+function escalarInverso(valor, promedio) {
+  const v = num(valor);
+  if (!promedio || promedio <= 0) return BASE;
+  if (v <= 0) return TECHO;
+  return limitar(BASE * Math.pow(promedio / v, CURVA));
+}
+
+function tier(valoracion) {
+  if (valoracion >= UMBRALES.elite)  return 'tier-elite';
+  if (valoracion >= UMBRALES.gold)   return 'tier-gold';
+  if (valoracion >= UMBRALES.silver) return 'tier-silver';
+  return 'tier-bronze';
+}
+
+function iniciales(nombre) {
+  return String(nombre).trim().split(/\s+/).slice(0,2).map(p => p[0] || '').join('').toUpperCase();
+}
+
+function slug(nombre) {
+  return String(nombre).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '');
+}
+
+/* ================================================================
+   TRAER DATOS
+   ================================================================ */
+
+async function getCurrentSeasonId() {
+  const { data } = await db.from('seasons').select('id').eq('is_current', true).single();
+  return data ? data.id : null;
+}
+
+async function getSeasons() {
+  const { data } = await db.from('seasons').select('*').order('started_at', { ascending: false });
+  return data || [];
+}
+
+async function traerJugadores(seasonId = null) {
+  const sid = seasonId || await getCurrentSeasonId();
+
+  const { data: ratings, error } = await db
+    .from('player_ratings')
+    .select('*')
+    .eq('season_id', sid);
+
+  if (error) { console.error('Error trayendo ratings:', error); return []; }
+  return ratings || [];
+}
+
+/* ================================================================
+   ARMAR LAS CARTAS
+   ================================================================ */
+
+function construirCartas(ratings) {
+  const campo = ratings.filter(r => r.primary_role === 'FIELD');
+  const arqueros = ratings.filter(r => r.primary_role === 'GK');
+
+  // el promedio de cada grupo: es la vara contra la que se mide cada jugador
+  const prom = (arr, f) => {
+    const vals = arr.map(r => num(f(r))).filter(v => v > 0);
+    return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+  };
+
+  const promCampo = {
+    passes: prom(campo, r => r.avg_passes),
+    shots:  prom(campo, r => r.avg_shots),
+    goals:  prom(campo, r => r.avg_goals),
+    def:    prom(campo, r => num(r.avg_tackles) + num(r.avg_interceptions)),
+    prec:   prom(campo, r => num(r.avg_shots) ? num(r.avg_shots_on_target) / num(r.avg_shots) : 0),
+    perd:   prom(campo, r => r.avg_possessions_lost)
+  };
+
+  const promGk = {
+    saves:   prom(arqueros, r => r.avg_gk_saves),
+    catches: prom(arqueros, r => r.avg_gk_catches),
+    passes:  prom(arqueros, r => r.avg_passes),
+    def:     prom(arqueros, r => num(r.avg_tackles) + num(r.avg_interceptions)),
+    score:   prom(arqueros, r => r.avg_score),
+    perd:    prom(arqueros, r => r.avg_possessions_lost)
+  };
+
+  return ratings.map(r => {
+    const esGk = r.primary_role === 'GK';
+
+    const stats = esGk ? [
+      ['ATA', escalar(r.avg_gk_saves,   promGk.saves)],
+      ['CAP', escalar(r.avg_gk_catches, promGk.catches)],
+      ['PAS', escalar(r.avg_passes,     promGk.passes)],
+      ['DEF', escalar(num(r.avg_tackles) + num(r.avg_interceptions), promGk.def)],
+      ['CUI', escalarInverso(r.avg_possessions_lost, promGk.perd)],
+      ['PTS', escalar(r.avg_score,      promGk.score)]
+    ] : [
+      ['PAS', escalar(r.avg_passes, promCampo.passes)],
+      ['TIR', escalar(r.avg_shots,  promCampo.shots)],
+      ['PRE', escalar(num(r.avg_shots) ? num(r.avg_shots_on_target) / num(r.avg_shots) : 0, promCampo.prec)],
+      ['GOL', escalar(r.avg_goals,  promCampo.goals)],
+      ['DEF', escalar(num(r.avg_tackles) + num(r.avg_interceptions), promCampo.def)],
+      ['CUI', escalarInverso(r.avg_possessions_lost, promCampo.perd)]
+    ];
+
+    return {
+      nombre: r.name,
+      rol: r.primary_role,
+      pos: esGk ? 'GK' : 'CAM',      // EDITAR: si algún día guardás el puesto real, va acá
+      pj: r.pj,
+      score: num(r.avg_score),
+      valoracion: Math.round(num(r.rating)),
+      stats
+    };
+  }).sort((a, b) => b.valoracion - a.valoracion || b.score - a.score);
+}
+
+function pintarCartas() {
+  const grid = document.getElementById('cardsGrid');
+
+  const visibles = TODOS.filter(j => {
+    const okRol = filtroRol === 'TODOS' || j.rol === filtroRol;
+    const okTexto = !filtroTexto || j.nombre.toLowerCase().includes(filtroTexto);
+    return okRol && okTexto;
+  });
+
+  if (!visibles.length) {
+    grid.innerHTML = '<div class="cards-empty">No hay jugadores para este filtro.</div>';
+    return;
+  }
+
+  grid.innerHTML = visibles.map(j => `
+    <article class="fut-card ${tier(j.valoracion)}" title="${escapar(j.nombre)}">
+      <div class="fut-inner">
+        <div class="fut-top">
+          <div class="fut-rating">
+            <span class="fut-score">${j.valoracion}</span>
+            <span class="fut-pos">${j.pos}</span>
+            <span class="fut-pj">${j.pj} PJ</span>
+          </div>
+          <div class="fut-photo">
+            <span class="fut-initials">${escapar(iniciales(j.nombre))}</span>
+            <img src="${CARPETA_FOTOS}${slug(j.nombre)}.png" alt=""
+                 onerror="this.classList.add('is-missing')">
+          </div>
+        </div>
+
+        <h3 class="fut-name">${escapar(j.nombre)}</h3>
+
+        <div class="fut-stats">
+          ${j.stats.map(([k, v]) => `
+            <div class="fut-stat"><b>${v}</b><span>${k}</span></div>
+          `).join('')}
+        </div>
+
+        <div class="fut-foot">Score ${fmt(j.score)}</div>
+      </div>
+    </article>
+  `).join('');
+}
+
+/* ================================================================
+   FILTROS Y ARRANQUE
+   ================================================================ */
+
+document.getElementById('buscar').addEventListener('input', (e) => {
+  filtroTexto = e.target.value.trim().toLowerCase();
+  pintarCartas();
+});
+
+document.getElementById('chips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  document.querySelectorAll('#chips .chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  filtroRol = chip.dataset.rol;
+  pintarCartas();
+});
+
+document.getElementById('seasonSelect').addEventListener('change', async (e) => {
+  document.getElementById('cardsGrid').innerHTML =
+    '<div class="cards-empty"><span class="spinner"></span> Cargando jugadores…</div>';
+  TODOS = construirCartas(await traerJugadores(e.target.value || null));
+  pintarCartas();
+});
+
+async function cargarSelectorDeTemporadas() {
+  const temporadas = await getSeasons();
+  const select = document.getElementById('seasonSelect');
+  select.innerHTML = '<option value="">Temporada actual</option>';
+  temporadas.filter(t => !t.is_current).forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = t.name;
+    select.appendChild(opt);
+  });
+}
+
+async function init() {
+  try {
+    await cargarSelectorDeTemporadas();
+    TODOS = construirCartas(await traerJugadores());
+    pintarCartas();
+  } catch (err) {
+    console.error(err);
+    document.getElementById('cardsGrid').innerHTML =
+      '<div class="cards-empty">No se pudieron cargar los jugadores.</div>';
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>

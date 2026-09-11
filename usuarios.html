@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Usuarios · Cancha Grande</title>
+<link rel="icon" type="image/svg+xml" href="images/trofeo.svg">
+<link rel="stylesheet" href="stylesheet.css">
+</head>
+
+<body>
+
+<nav class="navbar" id="top">
+  <div class="navbar-brand">
+    <a class="brand-title" href="index.html">Cancha Grande</a>
+    <span class="brand-sub">Pro Soccer Online · Comunidad</span>
+  </div>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">Menú</button>
+  <div class="nav-menu" id="navMenu">
+    <a href="index.html">Inicio</a>
+    <a href="tabla.html">Tabla</a>
+    <a href="jugadores.html">Jugadores</a>
+    <a href="pso.html">Qué es PSO</a>
+    <a href="usuarios.html" class="active">Usuarios</a>
+    <a href="contacto.html">Contacto</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">En construcción</span>
+    <h1>Usuarios</h1>
+    <p class="subtitle">
+      Acá va a vivir el sistema de cuentas: perfiles propios, permisos y quién puede cargar partidos.
+      Por ahora es una <b>maqueta</b> — los datos están escritos a mano en el HTML.
+    </p>
+  </header>
+
+  <div class="notice">
+    <h3>Todavía no hace nada</h3>
+    <p>
+      Esta página no está conectada a la base de datos. Cuando exista la tabla de usuarios, cada tarjeta
+      va a salir de ahí y el estado (activo, invitado, suspendido) va a ser real. Mientras tanto sirve
+      para ir viendo cómo queda.
+    </p>
+  </div>
+
+  <h2 class="section-title">Equipo</h2>
+  <p class="section-lead">Los que tienen permiso para cargar partidos y cerrar temporadas.</p>
+
+  <!-- EDITAR: agregá o sacá tarjetas copiando el bloque <article class="user-card"> -->
+  <section class="users-grid">
+    <article class="user-card">
+      <div class="user-avatar">AN</div>
+      <div class="user-meta">
+        <span class="user-name">Animosity</span>
+        <span class="user-role">Fundador · Desarrollo</span>
+        <span class="badge badge-admin">Admin</span>
+      </div>
+    </article>
+
+    <article class="user-card">
+      <div class="user-avatar">AI</div>
+      <div class="user-meta">
+        <span class="user-name">Aitor</span>
+        <span class="user-role">Fundador · Datos</span>
+        <span class="badge badge-admin">Admin</span>
+      </div>
+    </article>
+
+    <article class="user-card">
+      <div class="user-avatar">??</div>
+      <div class="user-meta">
+        <span class="user-name">Puesto libre</span>
+        <span class="user-role">Carga de partidos</span>
+        <span class="badge badge-off">Vacante</span>
+      </div>
+    </article>
+  </section>
+
+  <h2 class="section-title">Miembros</h2>
+  <p class="section-lead">Jugadores de la comunidad con perfil reservado.</p>
+
+  <section class="users-grid">
+    <article class="user-card">
+      <div class="user-avatar">J1</div>
+      <div class="user-meta">
+        <span class="user-name">Jugador Uno</span>
+        <span class="user-role">Mediocampista</span>
+        <span class="badge badge-user">Miembro</span>
+      </div>
+    </article>
+
+    <article class="user-card">
+      <div class="user-avatar">J2</div>
+      <div class="user-meta">
+        <span class="user-name">Jugador Dos</span>
+        <span class="user-role">Arquero</span>
+        <span class="badge badge-user">Miembro</span>
+      </div>
+    </article>
+
+    <article class="user-card">
+      <div class="user-avatar">J3</div>
+      <div class="user-meta">
+        <span class="user-name">Jugador Tres</span>
+        <span class="user-role">Defensor</span>
+        <span class="badge badge-user">Miembro</span>
+      </div>
+    </article>
+
+    <article class="user-card">
+      <div class="user-avatar">J4</div>
+      <div class="user-meta">
+        <span class="user-name">Jugador Cuatro</span>
+        <span class="user-role">Delantero</span>
+        <span class="badge badge-off">Inactivo</span>
+      </div>
+    </article>
+  </section>
+
+  <h2 class="section-title">Cómo va a funcionar</h2>
+  <p class="section-lead">Plan de lo que viene, para no perderlo de vista.</p>
+
+  <section class="steps">
+    <div class="step">
+      <div>
+        <h3>Cuenta propia</h3>
+        <p>Cada jugador va a poder entrar con su mail y ver su historial completo, no solo el promedio.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div>
+        <h3>Vincular el perfil del juego</h3>
+        <p>Asociar la cuenta del sitio con el ID de Pro Soccer Online, así los partidos caen solos en el perfil correcto.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div>
+        <h3>Permisos por rol</h3>
+        <p>Admin carga y cierra temporadas; miembro solo mira. Lo que hoy hace el login de la tabla, pero por persona.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div>
+        <h3>Personalización</h3>
+        <p>Foto para la carta, apodo, puesto favorito. Todo lo que hoy se edita a mano en el HTML.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-links" aria-label="Enlaces externos">
+    <div class="footer-link-group">
+      <span class="footer-label">GitHub</span>
+      <a href="https://github.com/animosityt">Github Animosity</a>
+      <a href="https://github.com/aitor-byte">Github Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Instagram</span>
+      <a href="https://instagram.com/aniimossity">Instagram Animosity</a>
+      <a href="https://instagram.com/aitor.pez">Instagram Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Discord</span>
+      <a href="#" class="discord-link" data-username="animossiity">Discord Animosity</a>
+      <a href="#" class="discord-link" data-username="aitor_rex">Discord Aitor</a>
+    </div>
+  </div>
+  <p class="footer-legal">© 2026 Cancha Grande. Todos los derechos reservados.</p>
+  <p class="footer-trademark">Cancha Grande™ es una marca de <span>Leverage™</span>.</p>
+</footer>
+
+<script>
+const navToggle = document.getElementById('navToggle');
+const navMenu = document.getElementById('navMenu');
+navToggle.addEventListener('click', () => {
+  const abierto = navMenu.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', abierto);
+});
+</script>
+
+</body>
+</html>
