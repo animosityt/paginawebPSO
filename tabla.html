@@ -11,6 +11,17 @@
 
 <body>
 
+<div class="intro-overlay" id="introOverlay" aria-hidden="true" role="button" tabindex="0" aria-label="Saltar introducción">
+  <div class="trofeo-hero intro-trophy">
+    <div class="trofeo">
+      <img class="trofeo-glow" src="images/trofeo.svg" alt="" aria-hidden="true">
+      <img class="trofeo-base" src="images/trofeo.svg" alt="" aria-hidden="true">
+      <span class="trofeo-glint"></span>
+      <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
+    </div>
+  </div>
+</div>
+
 <nav class="navbar" id="top">
   <div class="navbar-brand">
     <a class="brand-title" href="index.html">Cancha Grande</a>
@@ -57,31 +68,22 @@
 <div class="wrap">
 
   <div class="trofeo-hero">
-    <div class="trofeo">
-      <img class="trofeo-glow" src="images/trofeo.svg" alt="" aria-hidden="true">
-      <img class="trofeo-base" src="images/trofeo.svg" alt="Trofeo de la Champions">
-      <span class="trofeo-glint"></span>
-      <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
-    </div>
+  <div class="trofeo">
+    <img class="trofeo-glow" src="images/trofeo.svg" alt="" aria-hidden="true">
+    <img class="trofeo-base" src="images/trofeo.svg" alt="Trofeo UEFA Champions League">
+    <span class="trofeo-glint"></span>
+    <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
   </div>
+</div>
 
   <header>
-    <span class="eyebrow">Rendimiento por partido</span>
     <h1>Tabla de Promedios</h1>
-    <p class="subtitle">
-      Todo lo que ves acá es un <b>promedio por partido</b>, no un total acumulado:
-      jugar más partidos no infla los números.
-    </p>
   </header>
 
   <div class="methodology">
     <h3>Sobre la valoración</h3>
-    <p>Los arqueros tienen su propia tabla porque en el juego su desempeño se mide diferente al de los
-      jugadores de campo: consiguen aproximadamente un <b>x1.2</b> más de puntos por el multiplicador
+    <p>Los arqueros tienen su propia tabla porque en el juego su desempeño es diferente al de los jugadores de campo, supuestamente consiguen un x1.2 mas de puntos por el multiplicador
       añadido en las stats de capturas y atajadas.</p>
-    <!-- EDITAR: si cambiás la fórmula de la valoración, contala acá -->
-    <p>La columna <b>Score</b> es el puntaje promedio que devuelve el juego. La <b>Valoración</b> es
-      nuestro número propio, pensado para poder comparar jugadores entre sí dentro de la misma temporada.</p>
   </div>
 
   <div class="methodology season-picker" id="seasonPicker">
@@ -96,7 +98,6 @@
       <div class="block-title">
         <h2>Arqueros</h2>
       </div>
-      <span class="block-hint">Ordenados por score promedio</span>
     </div>
     <div class="table-scroll">
       <table>
@@ -119,7 +120,6 @@
         </tbody>
       </table>
     </div>
-    <p class="foot-note">Las <b>atajadas</b> y <b>capturas</b> solo suman en esta tabla; para el resto de los puestos son siempre cero.</p>
   </section>
 
   <section class="block">
@@ -127,7 +127,6 @@
       <div class="block-title">
         <h2>Jugadores de Campo</h2>
       </div>
-      <span class="block-hint">Ordenados por score promedio</span>
     </div>
     <div class="table-scroll">
       <table>
@@ -151,33 +150,30 @@
         </tbody>
       </table>
     </div>
-    <p class="foot-note">¿Falta alguien? Puede que su partido todavía no esté cargado. <b>Avisá por Discord</b> y lo subimos.</p>
   </section>
-
 </div>
 
 <footer class="site-footer">
   <div class="footer-links" aria-label="Enlaces externos">
     <div class="footer-link-group">
       <span class="footer-label">GitHub</span>
-      <a href="https://github.com/animosityt">Github Animosity</a>
-      <a href="https://github.com/aitor-byte">Github Aitor</a>
+      <a href="https://github.com/animosityt" aria-label="GitHub de Animosity">Github Animosity</a>
+      <a href="https://github.com/aitor-byte" aria-label="GitHub de Aitor">Github Aitor</a>
     </div>
     <div class="footer-link-group">
       <span class="footer-label">Instagram</span>
-      <a href="https://instagram.com/aniimossity">Instagram Animosity</a>
-      <a href="https://instagram.com/aitor.pez">Instagram Aitor</a>
+      <a href="https://instagram.com/aniimossity" aria-label="Instagram 1">Instagram Animosity</a>
+      <a href="https://instagram.com/aitor.pez" aria-label="Instagram 2">Instagram Aitor</a>
     </div>
     <div class="footer-link-group">
       <span class="footer-label">Discord</span>
-      <a href="#" class="discord-link" data-username="animossiity">Discord Animosity</a>
-      <a href="#" class="discord-link" data-username="aitor_rex">Discord Aitor</a>
+      <a href="#" class="discord-link" aria-label="Discord 1, hover para ver el usuario" data-username="animossiity">Discord Animosity</a>
+      <a href="#" class="discord-link" aria-label="Discord 2, hover para ver el usuario" data-username="aitor_rex">Discord Aitor</a>
     </div>
   </div>
   <p class="footer-legal">© 2026 Cancha Grande. Todos los derechos reservados.</p>
   <p class="footer-trademark">Cancha Grande™ es una marca de <span>Leverage™</span>.</p>
 </footer>
-
 <script>
 /* ---------- menú mobile ---------- */
 const navToggle = document.getElementById('navToggle');
@@ -185,6 +181,17 @@ const navMenu = document.getElementById('navMenu');
 navToggle.addEventListener('click', () => {
   const abierto = navMenu.classList.toggle('open');
   navToggle.setAttribute('aria-expanded', abierto);
+});
+
+setTimeout(() => {
+  document.getElementById('introOverlay').classList.add('intro-overlay-hidden');
+}, 5000);
+
+const introOverlay = document.getElementById('introOverlay');
+const skipIntro = () => introOverlay.classList.add('intro-overlay-hidden');
+introOverlay.addEventListener('click', skipIntro);
+introOverlay.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') skipIntro();
 });
 
 const SUPABASE_URL = 'https://yjjcujmoaialawmzvdzq.supabase.co';
@@ -410,11 +417,11 @@ function renderGoalkeepers(gk) {
     return;
   }
 
-  gk.forEach((p, i) => {
+  gk.forEach(p => {
     const tr = document.createElement('tr');
-    if (i === 0) tr.className = 'top-row';
+    tr.className = 'top-row';
     tr.innerHTML = `
-      <td><div class="player-cell">${i === 0 ? '<span class="star">★</span>' : ''}<span class="player-name">${p.name}</span></div></td>
+      <td><div class="player-cell"><span class="star">★</span><span class="player-name">${p.name}</span></div></td>
       <td>${p.pj}</td>
       <td>${fmt(p.passes)}</td>
       <td>${fmt(p.tackles)}</td>
@@ -464,7 +471,7 @@ function mostrarLogueado(logueado) {
   loginSubmit.hidden = logueado;
   loginError.hidden = true;
   uploadBtn.disabled = !logueado;
-  document.getElementById('closeSeasonBtn').disabled = !logueado;
+  document.getElementById('closeSeasonBtn').disabled = !logueado;  // ← esta línea es nueva
   sessionTag.hidden = !logueado;
 }
 
