@@ -16,6 +16,8 @@ Cada partido de la cancha grande genera un archivo de estadísticas (`MatchStats
 
 Es un proyecto chico hecho por y para el grupo que juega. Nada de frameworks y boludeces.
 
+El +60% del codigo esta hecho a mano ya que fue usado para aprender SQL, DB y JS, se uso Claude y Copilot (GPT 5.6 Astra) para tareas tediosas como podrian ser spammear comentarios o arreglos de iteracion/cosas que sabiamos pero que consideramos dejar de lado para prestarle atencion a aprender cosas que no sabiamos.
+
 ## 特徴 ｜ Características
 
 - **Arqueros y jugadores de campo, separados.** (ﾉ´ヮ`)ﾉ*: ･ﾟ si alguien atajó la mayoría de sus partidos, se lo compara contra otros arqueros — no contra delanteros.
