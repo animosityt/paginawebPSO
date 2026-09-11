@@ -6,6 +6,7 @@
 <title>Usuarios · Cancha Grande</title>
 <link rel="icon" type="image/svg+xml" href="images/trofeo.svg">
 <link rel="stylesheet" href="stylesheet.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -29,20 +30,21 @@
 <div class="wrap">
 
   <header>
-    <span class="eyebrow">En construcción</span>
+    <span class="eyebrow">Perfiles de la comunidad</span>
     <h1>Usuarios</h1>
     <p class="subtitle">
-      Acá va a vivir el sistema de cuentas: perfiles propios, permisos y quién puede cargar partidos.
-      Por ahora es una <b>maqueta</b> — los datos están escritos a mano en el HTML.
+      Creá tu perfil con un nombre y una clave de 6 números, ponete una foto, y listo — vas a aparecer
+      en la lista de <b>Miembros</b> de acá abajo.
     </p>
   </header>
 
   <div class="notice">
-    <h3>Todavía no hace nada</h3>
+    <h3>Cómo funciona la clave</h3>
     <p>
-      Esta página no está conectada a la base de datos. Cuando exista la tabla de usuarios, cada tarjeta
-      va a salir de ahí y el estado (activo, invitado, suspendido) va a ser real. Mientras tanto sirve
-      para ir viendo cómo queda.
+      No es un mail ni una contraseña larga: es solo un PIN de 6 números para que nadie más edite tu
+      perfil. Se guarda de forma encriptada, nunca en texto plano — pero como es corto, no lo uses para
+      nada importante ni lo repitas de otro lado. Si te lo olvidás, por ahora no hay forma de recuperarlo:
+      escribinos por <a href="contacto.html">contacto</a> y te lo reseteamos a mano.
     </p>
   </div>
 
@@ -68,84 +70,136 @@
         <span class="badge badge-admin">Admin</span>
       </div>
     </article>
+  </section>
 
-    <article class="user-card">
-      <div class="user-avatar">??</div>
-      <div class="user-meta">
-        <span class="user-name">Puesto libre</span>
-        <span class="user-role">Carga de partidos</span>
-        <span class="badge badge-off">Vacante</span>
+  <h2 class="section-title">Tu perfil</h2>
+  <p class="section-lead">Creá tu cuenta o entrá a la que ya tenés para editarla.</p>
+
+  <section class="contact-card profile-card">
+
+    <!-- ---------- todavía no inició sesión ---------- -->
+    <div id="perfilAnonimo">
+      <div class="filter-chips" id="profileTabs">
+        <button class="chip active" data-tab="crear">Crear perfil</button>
+        <button class="chip" data-tab="entrar">Ya tengo cuenta</button>
       </div>
-    </article>
+
+      <form class="form-grid" id="formCrear">
+        <label>
+          Nombre de usuario
+          <input type="text" id="crearNombre" required minlength="2" maxlength="24" placeholder="Cómo te vamos a ver">
+        </label>
+        <label>
+          Clave de 6 números
+          <input type="password" id="crearPin" required pattern="[0-9]{6}" maxlength="6" inputmode="numeric" placeholder="••••••" autocomplete="new-password">
+        </label>
+        <label>
+          Repetí la clave
+          <input type="password" id="crearPinConfirma" required pattern="[0-9]{6}" maxlength="6" inputmode="numeric" placeholder="••••••" autocomplete="new-password">
+        </label>
+        <label>
+          Puesto favorito <span style="opacity:.6; text-transform:none; letter-spacing:0;">(opcional)</span>
+          <select id="crearPuesto">
+            <option value="">Sin definir</option>
+            <option>Arquero</option>
+            <option>Defensor</option>
+            <option>Mediocampista</option>
+            <option>Delantero</option>
+          </select>
+        </label>
+        <button type="submit" class="btn btn-primary" style="justify-content:center" id="crearBtn">Crear perfil</button>
+        <p class="form-note">Nombre único para todo el sitio — si ya está tomado, te lo avisamos.</p>
+      </form>
+
+      <form class="form-grid" id="formEntrar" hidden>
+        <label>
+          Nombre de usuario
+          <input type="text" id="entrarNombre" required placeholder="Tu nombre de usuario">
+        </label>
+        <label>
+          Clave de 6 números
+          <input type="password" id="entrarPin" required pattern="[0-9]{6}" maxlength="6" inputmode="numeric" placeholder="••••••" autocomplete="current-password">
+        </label>
+        <button type="submit" class="btn btn-primary" style="justify-content:center" id="entrarBtn">Entrar</button>
+      </form>
+
+      <p class="form-feedback" id="perfilFeedbackAnonimo" hidden></p>
+    </div>
+
+    <!-- ---------- ya inició sesión ---------- -->
+    <div id="perfilLogueado" hidden>
+      <div class="profile-edit-head">
+        <div class="user-avatar profile-avatar-grande" id="miAvatarPreview">
+          <span class="user-initials" id="miAvatarIniciales"></span>
+        </div>
+        <div>
+          <h3 style="margin:0 0 4px; font-family:'Oswald',sans-serif; letter-spacing:.04em;">
+            Hola, <span id="miNombre"></span>
+          </h3>
+          <button type="button" class="btn btn-ghost" id="cerrarSesionPerfilBtn" style="padding:8px 16px; font-size:11px;">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <form class="form-grid" id="formEditar" style="margin-top:18px;">
+        <label>
+          Foto de perfil <span style="opacity:.6; text-transform:none; letter-spacing:0;">(opcional, cuadrada, hasta 3MB)</span>
+          <input type="file" id="editarFoto" accept="image/png,image/jpeg,image/webp">
+        </label>
+        <label>
+          Puesto favorito
+          <select id="editarPuesto">
+            <option value="">Sin definir</option>
+            <option>Arquero</option>
+            <option>Defensor</option>
+            <option>Mediocampista</option>
+            <option>Delantero</option>
+          </select>
+        </label>
+        <label>
+          Confirmá tu clave para guardar
+          <input type="password" id="editarPin" required pattern="[0-9]{6}" maxlength="6" inputmode="numeric" placeholder="••••••" autocomplete="current-password">
+        </label>
+        <button type="submit" class="btn btn-primary" style="justify-content:center" id="editarBtn">Guardar cambios</button>
+      </form>
+
+      <p class="form-feedback" id="perfilFeedbackLogueado" hidden></p>
+    </div>
+
   </section>
 
   <h2 class="section-title">Miembros</h2>
-  <p class="section-lead">Jugadores de la comunidad con perfil reservado.</p>
+  <p class="section-lead">Jugadores de la comunidad con perfil propio.</p>
 
-  <section class="users-grid">
-    <article class="user-card">
-      <div class="user-avatar">J1</div>
-      <div class="user-meta">
-        <span class="user-name">Jugador Uno</span>
-        <span class="user-role">Mediocampista</span>
-        <span class="badge badge-user">Miembro</span>
-      </div>
-    </article>
-
-    <article class="user-card">
-      <div class="user-avatar">J2</div>
-      <div class="user-meta">
-        <span class="user-name">Jugador Dos</span>
-        <span class="user-role">Arquero</span>
-        <span class="badge badge-user">Miembro</span>
-      </div>
-    </article>
-
-    <article class="user-card">
-      <div class="user-avatar">J3</div>
-      <div class="user-meta">
-        <span class="user-name">Jugador Tres</span>
-        <span class="user-role">Defensor</span>
-        <span class="badge badge-user">Miembro</span>
-      </div>
-    </article>
-
-    <article class="user-card">
-      <div class="user-avatar">J4</div>
-      <div class="user-meta">
-        <span class="user-name">Jugador Cuatro</span>
-        <span class="user-role">Delantero</span>
-        <span class="badge badge-off">Inactivo</span>
-      </div>
-    </article>
+  <section class="users-grid" id="miembrosGrid">
+    <div class="cards-empty"><span class="spinner"></span> Cargando miembros…</div>
   </section>
 
   <h2 class="section-title">Cómo va a funcionar</h2>
-  <p class="section-lead">Plan de lo que viene, para no perderlo de vista.</p>
+  <p class="section-lead">Lo que ya está y lo que falta.</p>
 
   <section class="steps">
     <div class="step">
       <div>
-        <h3>Cuenta propia</h3>
-        <p>Cada jugador va a poder entrar con su mail y ver su historial completo, no solo el promedio.</p>
+        <h3>Perfil con clave propia</h3>
+        <p><b>Ya está.</b> Cualquiera puede crear su usuario y clave de 6 números desde esta página, sin necesidad de mail.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div>
+        <h3>Foto y puesto personalizados</h3>
+        <p><b>Ya está.</b> Subís tu foto y elegís tu puesto favorito, y aparece en tu tarjeta de Miembro.</p>
       </div>
     </div>
     <div class="step">
       <div>
         <h3>Vincular el perfil del juego</h3>
-        <p>Asociar la cuenta del sitio con el ID de Pro Soccer Online, así los partidos caen solos en el perfil correcto.</p>
+        <p>Asociar tu cuenta con tu nombre real de Pro Soccer Online, así tus partidos y tu perfil quedan conectados.</p>
       </div>
     </div>
     <div class="step">
       <div>
         <h3>Permisos por rol</h3>
-        <p>Admin carga y cierra temporadas; miembro solo mira. Lo que hoy hace el login de la tabla, pero por persona.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div>
-        <h3>Personalización</h3>
-        <p>Foto para la carta, apodo, puesto favorito. Todo lo que hoy se edita a mano en el HTML.</p>
+        <p>Que un admin pueda ascender a un miembro para que también cargue partidos, sin tocar código.</p>
       </div>
     </div>
   </section>
@@ -181,6 +235,286 @@ navToggle.addEventListener('click', () => {
   const abierto = navMenu.classList.toggle('open');
   navToggle.setAttribute('aria-expanded', abierto);
 });
+
+const SUPABASE_URL = 'https://yjjcujmoaialawmzvdzq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_8vbo3MfWiZR9Airj_BEe_Q_HXmYsBiH';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const BUCKET_AVATARES = 'avatars';
+const CLAVE_SESION_PERFIL = 'perfilActivo'; // lo que guardamos en localStorage: { id, username }
+
+const escapar = (s) => String(s).replace(/[&<>"']/g, c => (
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
+));
+
+function iniciales(nombre) {
+  return String(nombre).trim().split(/\s+/).slice(0,2).map(p => p[0] || '').join('').toUpperCase();
+}
+
+function urlAvatar(path) {
+  if (!path) return null;
+  return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_AVATARES}/${path}`;
+}
+
+function pinValido(pin) {
+  return /^[0-9]{6}$/.test(pin);
+}
+
+function mostrarFeedback(el, texto, esError = false) {
+  el.textContent = texto;
+  el.hidden = false;
+  el.style.color = esError ? '#ff9d9d' : '';
+}
+
+/* ================================================================
+   SESIÓN DEL PERFIL (no es Supabase Auth: es un login propio con PIN,
+   guardado en este navegador. La clave NUNCA se guarda, solo se pide
+   de nuevo cuando hace falta confirmar un cambio)
+   ================================================================ */
+
+function getPerfilActivo() {
+  try { return JSON.parse(localStorage.getItem(CLAVE_SESION_PERFIL)); }
+  catch { return null; }
+}
+
+function setPerfilActivo(perfil) {
+  localStorage.setItem(CLAVE_SESION_PERFIL, JSON.stringify(perfil));
+}
+
+function limpiarPerfilActivo() {
+  localStorage.removeItem(CLAVE_SESION_PERFIL);
+}
+
+function pintarEstadoSesion() {
+  const perfil = getPerfilActivo();
+  const anonimo = document.getElementById('perfilAnonimo');
+  const logueado = document.getElementById('perfilLogueado');
+
+  if (!perfil) {
+    anonimo.hidden = false;
+    logueado.hidden = true;
+    return;
+  }
+
+  anonimo.hidden = true;
+  logueado.hidden = false;
+  document.getElementById('miNombre').textContent = perfil.username;
+
+  const preview = document.getElementById('miAvatarPreview');
+  const inicialesSpan = document.getElementById('miAvatarIniciales');
+  preview.querySelector('img')?.remove();
+
+  if (perfil.avatar_path) {
+    const img = document.createElement('img');
+    img.src = urlAvatar(perfil.avatar_path);
+    img.alt = '';
+    img.onerror = () => img.remove();
+    preview.appendChild(img);
+    inicialesSpan.style.opacity = '0';
+  } else {
+    inicialesSpan.style.opacity = '1';
+  }
+  inicialesSpan.textContent = iniciales(perfil.username);
+
+  document.getElementById('editarPuesto').value = perfil.puesto || '';
+}
+
+/* ================================================================
+   TABS CREAR / ENTRAR
+   ================================================================ */
+
+document.getElementById('profileTabs').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  document.querySelectorAll('#profileTabs .chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  const esCrear = chip.dataset.tab === 'crear';
+  document.getElementById('formCrear').hidden = !esCrear;
+  document.getElementById('formEntrar').hidden = esCrear;
+  document.getElementById('perfilFeedbackAnonimo').hidden = true;
+});
+
+/* ================================================================
+   CREAR PERFIL
+   ================================================================ */
+
+document.getElementById('formCrear').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const feedback = document.getElementById('perfilFeedbackAnonimo');
+  feedback.hidden = true;
+
+  const username = document.getElementById('crearNombre').value.trim();
+  const pin = document.getElementById('crearPin').value;
+  const pinConfirma = document.getElementById('crearPinConfirma').value;
+  const puesto = document.getElementById('crearPuesto').value || null;
+
+  if (!pinValido(pin)) return mostrarFeedback(feedback, 'La clave tiene que ser de 6 números.', true);
+  if (pin !== pinConfirma) return mostrarFeedback(feedback, 'Las dos claves no coinciden.', true);
+
+  const btn = document.getElementById('crearBtn');
+  btn.disabled = true;
+
+  const { data, error } = await db.rpc('crear_perfil', {
+    p_username: username,
+    p_pin: pin,
+    p_puesto: puesto
+  });
+
+  btn.disabled = false;
+
+  if (error) { mostrarFeedback(feedback, error.message || 'No se pudo crear el perfil.', true); return; }
+
+  const perfil = Array.isArray(data) ? data[0] : data;
+  setPerfilActivo({ id: perfil.id, username: perfil.username, puesto: perfil.puesto, avatar_path: perfil.avatar_path });
+  pintarEstadoSesion();
+  cargarMiembros();
+});
+
+/* ================================================================
+   INICIAR SESIÓN
+   ================================================================ */
+
+document.getElementById('formEntrar').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const feedback = document.getElementById('perfilFeedbackAnonimo');
+  feedback.hidden = true;
+
+  const username = document.getElementById('entrarNombre').value.trim();
+  const pin = document.getElementById('entrarPin').value;
+
+  const btn = document.getElementById('entrarBtn');
+  btn.disabled = true;
+
+  const { data, error } = await db.rpc('iniciar_sesion_perfil', {
+    p_username: username,
+    p_pin: pin
+  });
+
+  btn.disabled = false;
+
+  if (error) { mostrarFeedback(feedback, 'Nombre o clave incorrectos.', true); return; }
+
+  const perfil = Array.isArray(data) ? data[0] : data;
+  setPerfilActivo({ id: perfil.id, username: perfil.username, puesto: perfil.puesto, avatar_path: perfil.avatar_path });
+  document.getElementById('formEntrar').reset();
+  pintarEstadoSesion();
+});
+
+/* ================================================================
+   CERRAR SESIÓN
+   ================================================================ */
+
+document.getElementById('cerrarSesionPerfilBtn').addEventListener('click', () => {
+  limpiarPerfilActivo();
+  document.getElementById('formCrear').reset();
+  document.getElementById('formEntrar').reset();
+  document.getElementById('formEditar').reset();
+  document.getElementById('perfilFeedbackLogueado').hidden = true;
+  pintarEstadoSesion();
+});
+
+/* ================================================================
+   EDITAR PERFIL (foto + puesto), pide la clave de nuevo para confirmar
+   ================================================================ */
+
+document.getElementById('formEditar').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const feedback = document.getElementById('perfilFeedbackLogueado');
+  feedback.hidden = true;
+
+  const perfil = getPerfilActivo();
+  if (!perfil) return;
+
+  const pin = document.getElementById('editarPin').value;
+  if (!pinValido(pin)) return mostrarFeedback(feedback, 'La clave tiene que ser de 6 números.', true);
+
+  const puesto = document.getElementById('editarPuesto').value || null;
+  const archivo = document.getElementById('editarFoto').files[0];
+
+  const btn = document.getElementById('editarBtn');
+  btn.disabled = true;
+
+  let avatarPath = null;
+
+  try {
+    if (archivo) {
+      if (archivo.size > 3 * 1024 * 1024) throw new Error('La foto pesa más de 3MB.');
+
+      const ext = (archivo.name.split('.').pop() || 'png').toLowerCase();
+      avatarPath = `${perfil.id}-${Date.now()}.${ext}`;
+
+      const { error: errorSubida } = await db.storage
+        .from(BUCKET_AVATARES)
+        .upload(avatarPath, archivo, { upsert: true, contentType: archivo.type });
+
+      if (errorSubida) throw new Error('No se pudo subir la foto: ' + errorSubida.message);
+    }
+
+    const { data, error } = await db.rpc('editar_perfil', {
+      p_id: perfil.id,
+      p_pin: pin,
+      p_puesto: puesto,
+      p_avatar_path: avatarPath
+    });
+
+    if (error) throw new Error(error.message || 'Clave incorrecta.');
+
+    const actualizado = Array.isArray(data) ? data[0] : data;
+    setPerfilActivo({ id: actualizado.id, username: actualizado.username, puesto: actualizado.puesto, avatar_path: actualizado.avatar_path });
+
+    document.getElementById('editarPin').value = '';
+    document.getElementById('editarFoto').value = '';
+    mostrarFeedback(feedback, 'Listo, se guardaron los cambios.');
+    pintarEstadoSesion();
+    cargarMiembros();
+  } catch (err) {
+    console.error(err);
+    mostrarFeedback(feedback, err.message || 'Hubo un error guardando los cambios.', true);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+/* ================================================================
+   GRILLA DE MIEMBROS (pública, sale de Supabase)
+   ================================================================ */
+
+async function cargarMiembros() {
+  const grid = document.getElementById('miembrosGrid');
+  const { data, error } = await db.rpc('listar_perfiles');
+
+  if (error) {
+    console.error('Error cargando miembros:', error);
+    grid.innerHTML = '<div class="cards-empty">No se pudieron cargar los miembros.</div>';
+    return;
+  }
+
+  if (!data || !data.length) {
+    grid.innerHTML = '<div class="cards-empty">Todavía no hay nadie con perfil. ¡Sé el primero!</div>';
+    return;
+  }
+
+  grid.innerHTML = data.map(m => {
+    const foto = urlAvatar(m.avatar_path);
+    const avatarHtml = foto
+      ? `<img src="${foto}" alt="" onerror="this.remove()">`
+      : `<span>${escapar(iniciales(m.username))}</span>`;
+
+    return `
+      <article class="user-card">
+        <div class="user-avatar">${avatarHtml}</div>
+        <div class="user-meta">
+          <span class="user-name">${escapar(m.username)}</span>
+          <span class="user-role">${escapar(m.puesto || 'Sin puesto definido')}</span>
+          <span class="badge badge-user">Miembro</span>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+pintarEstadoSesion();
+cargarMiembros();
 </script>
 
 </body>

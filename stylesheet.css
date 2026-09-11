@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Rajdhani:wght@500;600;700&family=Oswald:wght@400;500;600;700&display=swap');
 
 /* ================================================================
-  cancha grande · hoja de estilos única para todo el sitio
-  index.html · tabla.html · jugadores.html · pso.html
-  usuarios.html · contacto.html
+   CANCHA GRANDE · hoja de estilos única para todo el sitio
+   index.html · tabla.html · jugadores.html · pso.html
+   usuarios.html · contacto.html
    ================================================================ */
 
 :root{
@@ -49,7 +49,7 @@ body{
 a{color:var(--gold-2);}
 
 /* ================================================================
-  1 · intro (solo en index.html)
+   1 · INTRO (solo en index.html)
    ================================================================ */
 
 .intro-overlay{
@@ -92,7 +92,7 @@ a{color:var(--gold-2);}
 }
 
 /* ================================================================
-  2 · navbar
+   2 · NAVBAR
    ================================================================ */
 
 .navbar{
@@ -196,7 +196,7 @@ a{color:var(--gold-2);}
 .back-top-link:hover{ color:var(--gold-2); }
 
 /* ================================================================
-  3 · barra de admin (solo tabla.html)
+   3 · BARRA DE ADMIN (solo tabla.html)
    ================================================================ */
 
 .admin-bar{
@@ -346,7 +346,7 @@ a{color:var(--gold-2);}
 @keyframes spin{ to{ transform:rotate(360deg); } }
 
 /* ================================================================
-  4 · trofeo principal (requiere images/trofeo.svg)
+   4 · HERO TROFEO UCL  (requiere images/trofeo.svg)
    ================================================================ */
 
 .trofeo-hero{
@@ -454,7 +454,7 @@ a{color:var(--gold-2);}
 }
 
 /* ================================================================
-  5 · tipografía / cabeceras
+   5 · TIPOGRAFÍA / CABECERAS
    ================================================================ */
 
 header{
@@ -520,7 +520,7 @@ h1{
 }
 
 /* ================================================================
-  6 · página principal (index.html)
+   6 · LANDING (index.html)
    ================================================================ */
 
 .hero{
@@ -720,7 +720,7 @@ h1{
 }
 
 /* ================================================================
-  7 · bloques / tablas
+   7 · BLOQUES / TABLAS
    ================================================================ */
 
 section.block{
@@ -1004,7 +1004,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 }
 
 /* ================================================================
-  8 · cartas de jugador (jugadores.html)
+   8 · CARTAS DE JUGADOR (jugadores.html)
    ================================================================ */
 
 .cards-toolbar{
@@ -1267,7 +1267,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 .sw-bronze{ background:linear-gradient(160deg,#d79a63,#7a4d2b); }
 
 /* ================================================================
-  9 · artículo / faq / glosario (pso.html)
+   9 · ARTÍCULO / FAQ / GLOSARIO (pso.html)
    ================================================================ */
 
 .article{
@@ -1391,7 +1391,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 }
 
 /* ================================================================
-  10 · contacto
+   10 · CONTACTO
    ================================================================ */
 
 .contact-layout{
@@ -1495,7 +1495,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 }
 
 /* ================================================================
-  11 · usuarios
+   11 · USUARIOS
    ================================================================ */
 
 .users-grid{
@@ -1516,9 +1516,11 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 }
 .user-card:hover{ border-color:rgba(242,181,68,.35); transform:translateY(-3px); }
 .user-avatar{
+  position:relative;
   width:52px; height:52px;
   border-radius:50%;
   flex-shrink:0;
+  overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -1526,6 +1528,19 @@ tr.top-row{ background:rgba(242,181,68,.10); }
   font-size:16px;
   color:var(--pitch-1);
   background:linear-gradient(150deg,var(--gold-2),var(--gold));
+}
+.user-avatar img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.profile-avatar-grande{ width:72px; height:72px; font-size:22px; }
+.profile-edit-head{
+  display:flex;
+  align-items:center;
+  gap:16px;
 }
 .user-meta{ display:flex; flex-direction:column; gap:3px; min-width:0; }
 .user-name{
@@ -1583,7 +1598,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 }
 
 /* ================================================================
-  12 · footer
+   12 · FOOTER
    ================================================================ */
 
 .site-footer{
@@ -1657,7 +1672,7 @@ tr.top-row{ background:rgba(242,181,68,.10); }
 .footer-trademark span{ color:var(--gold-2); }
 
 /* ================================================================
-  13 · responsive
+   13 · RESPONSIVE
    ================================================================ */
 
 @media (max-width:900px){
