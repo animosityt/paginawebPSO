@@ -40,11 +40,18 @@
 
   <div class="methodology">
     <h3>Cómo se arma cada carta</h3>
+    <p>Los seis atributos son <b>PAS</b> (pase), <b>TIR</b> (tiro), <b>REG</b> (regate), <b>PHY</b>
+      (físico), <b>DEF</b> (defensa) y <b>VIS</b> (visión). Para los arqueros cambian los dos primeros por
+      <b>REF</b> (reflejos) y <b>DIV</b> (vuelo/achique), y comparten PAS, DEF, PHY y VIS.</p>
     <p>Cada atributo se compara contra el <b>promedio de la temporada</b> en esa estadística y se lleva a
-      una escala de 40 a 99: si estás justo en el promedio te toca <b>65</b>, si duplicás el promedio te
-      vas cerca de <b>95</b>, y si estás muy por debajo caés al piso. O sea: la carta te dice qué tan bien
-      estás <b>respecto al resto</b>, no un número absoluto.</p>
-    <p><b>CUI</b> (cuidado de la pelota) va al revés: cuantas menos posesiones perdés, más alto.</p>
+      una escala de 40 a 99: justo en el promedio da <b>65</b>, el doble del promedio da cerca de
+      <b>95</b>. REG, PHY y VIS no tienen una columna propia en las estadísticas, así que se aproximan:
+      REG sale de cuánto cuidás la pelota, PHY de los tackles que metés y VIS de las intercepciones.</p>
+    <p>Algunos jugadores tienen además una <b>base manual</b> definida a mano para ciertos atributos
+      (ver <code>PERSONALIDADES</code> en el código): esa base no reemplaza el número real, lo toma como
+      punto de partida y lo deja moverse un poco para arriba o para abajo según el rendimiento real de la
+      temporada. Cualquier jugador que no esté en esa lista —incluyendo los nuevos que se sumen— sale
+      100% del cálculo automático de arriba.</p>
     <!-- EDITAR: si cambiás los umbrales de color de las cartas, contalo acá -->
   </div>
 
@@ -137,28 +144,42 @@ const UMBRALES = { elite: 88, gold: 75, silver: 62 };  // color de la carta seg�
 const CARPETA_FOTOS = 'images/jugadores/';
 
 /* ----------------------------------------------------------------
-   PISOS MANUALES: arrancan en un número base + lo que da la fórmula real
-   Formato: 'nombre_exacto_del_jugador': { SIGLA: piso }
-   El piso es el mínimo garantizado; arriba de eso sigue variando según
-   qué tan bien le vaya de verdad en esa estadística.
+   PERSONALIDADES (base manual por jugador)
+   Poné acá el nombre EXACTO del jugador tal cual aparece en Supabase
+   (ojo con mayúsculas/alias: 'Aitor' vs 'aitor_rex', 'Fafi' vs 'Fafii'
+   — si el nombre no calza ni un poquito con lo que devuelve la base,
+   el jugador simplemente no recibe ninguna base y sale 100% automático).
+
+   Solo hace falta escribir los atributos que querés fijar como punto
+   de partida; el resto de esa misma carta sigue saliendo del cálculo
+   normal. La base NO es un número fijo: el rendimiento real de la
+   temporada la empuja un poco para arriba o para abajo (ver PESO_BASE
+   y la función conBase más abajo). Para los nuevos jugadores que no
+   estén acá, todo sale del promedio real de tabla.html, sin excepción.
    ---------------------------------------------------------------- */
-const PISOS = {
-  'aitor_rex': { DEF: 80 },
-  'Skele':     { TIR: 80 },
-  'Skele':     { DEF: 0 },
-  'Susering':  { TIR: 80 },
-  'Doaza':     { TIR: 80 },
-  'Fafii':     { TIR: 80 },
+const PESO_BASE = 0.45; // 0 = ignora la base y usa solo lo real · 1 = la base nunca se mueve
+
+const PERSONALIDADES = {
+  'Susering':     { PAS: 88, TIR: 90, PHY: 42, VIS: 92 },
+  'Skele':        { PAS: 88, TIR: 84, REG: 88, PHY: 68, VIS: 78, DEF: 35 },
+  'aitor_rex':    { PAS: 88, TIR: 48, REG: 48, PHY: 48, VIS: 48, DEF: 98 },
+  'Killbot':      { PAS: 83, TIR: 89, REG: 79, PHY: 60, DEF: 75, VIS: 71 },
+  'Doaza':        { TIR: 95, REG: 97, DEF: 82 },
+  'Fafii':        { REG: 88, TIR: 96 },
+  'El Wachin':    { TIR: 94 },
+  'Zapa':         { PAS: 72, TIR: 82, REG: 73, PHY: 72, DEF: 89, VIS: 72 },
+  'Valthim':      { PAS: 91, TIR: 72, REG: 82, PHY: 52, DEF: 74, VIS: 88 },
+  'Quinno':       { VIS: 93 },
+  'Halzz':        { TIR: 90 },
+  'Mr Pipol':     { DEF: 88 },
+  'Floral Green': { REF: 95, DIV: 95 },
 };
 
-function conPiso(valorNormal, piso) {
-  // valorNormal viene 40..99 (PISO..TECHO) de la fórmula de siempre.
-  // Lo reescalamos a piso..99: el que ya rendía bien sigue arriba,
-  // nadie de la lista baja de `piso`.
-  const fraccion = (valorNormal - PISO) / (TECHO - PISO);
-  return limitar(piso + fraccion * (TECHO - piso));
+/* mezcla la base manual con el valor real: estar en el promedio (BASE)
+   no mueve la base, estar arriba/abajo del promedio la empuja un poco */
+function conBase(valorNormal, base) {
+  return limitar(base + (valorNormal - BASE) * PESO_BASE);
 }
-
 /* ================================================================ */
 
 let TODOS = [];          // todos los jugadores de la temporada elegida
@@ -248,56 +269,58 @@ function construirCartas(ratings) {
   };
 
   const promCampo = {
-    passes: prom(campo, r => r.avg_passes),
-    shots:  prom(campo, r => r.avg_shots),
-    goals:  prom(campo, r => r.avg_goals),
-    def:    prom(campo, r => num(r.avg_tackles) + num(r.avg_interceptions)),
-    prec:   prom(campo, r => num(r.avg_shots) ? num(r.avg_shots_on_target) / num(r.avg_shots) : 0),
-    perd:   prom(campo, r => r.avg_possessions_lost)
+    pas: prom(campo, r => r.avg_passes),
+    tir: prom(campo, r => num(r.avg_goals) * 2 + num(r.avg_shots_on_target)),
+    reg: prom(campo, r => r.avg_possessions_lost),
+    phy: prom(campo, r => r.avg_tackles),
+    def: prom(campo, r => num(r.avg_tackles) + num(r.avg_interceptions)),
+    vis: prom(campo, r => r.avg_interceptions)
   };
 
   const promGk = {
-    saves:   prom(arqueros, r => r.avg_gk_saves),
-    catches: prom(arqueros, r => r.avg_gk_catches),
-    passes:  prom(arqueros, r => r.avg_passes),
-    def:     prom(arqueros, r => num(r.avg_tackles) + num(r.avg_interceptions)),
-    score:   prom(arqueros, r => r.avg_score),
-    perd:    prom(arqueros, r => r.avg_possessions_lost)
+    ref: prom(arqueros, r => r.avg_gk_saves),
+    div: prom(arqueros, r => r.avg_gk_catches),
+    pas: prom(arqueros, r => r.avg_passes),
+    phy: prom(arqueros, r => r.avg_tackles),
+    def: prom(arqueros, r => num(r.avg_tackles) + num(r.avg_interceptions)),
+    vis: prom(arqueros, r => r.avg_interceptions)
   };
 
   return ratings.map(r => {
     const esGk = r.primary_role === 'GK';
 
-    const stats = esGk ? [
-      ['ATA', escalar(r.avg_gk_saves,   promGk.saves)],
-      ['CAP', escalar(r.avg_gk_catches, promGk.catches)],
-      ['PAS', escalar(r.avg_passes,     promGk.passes)],
+    // cálculo 100% automático a partir de los promedios reales
+    const statsAuto = esGk ? [
+      ['REF', escalar(r.avg_gk_saves,   promGk.ref)],
+      ['DIV', escalar(r.avg_gk_catches, promGk.div)],
+      ['PAS', escalar(r.avg_passes,     promGk.pas)],
       ['DEF', escalar(num(r.avg_tackles) + num(r.avg_interceptions), promGk.def)],
-      ['CUI', escalarInverso(r.avg_possessions_lost, promGk.perd)],
-      ['PTS', escalar(r.avg_score,      promGk.score)]
+      ['PHY', escalar(r.avg_tackles,    promGk.phy)],
+      ['VIS', escalar(r.avg_interceptions, promGk.vis)]
     ] : [
-      ['PAS', escalar(r.avg_passes, promCampo.passes)],
-      ['TIR', escalar(r.avg_shots,  promCampo.shots)],
-      ['PRE', escalar(num(r.avg_shots) ? num(r.avg_shots_on_target) / num(r.avg_shots) : 0, promCampo.prec)],
-      ['GOL', escalar(r.avg_goals,  promCampo.goals)],
+      ['PAS', escalar(r.avg_passes, promCampo.pas)],
+      ['TIR', escalar(num(r.avg_goals) * 2 + num(r.avg_shots_on_target), promCampo.tir)],
+      ['REG', escalarInverso(r.avg_possessions_lost, promCampo.reg)],
+      ['PHY', escalar(r.avg_tackles, promCampo.phy)],
       ['DEF', escalar(num(r.avg_tackles) + num(r.avg_interceptions), promCampo.def)],
-      ['CUI', escalarInverso(r.avg_possessions_lost, promCampo.perd)]
+      ['VIS', escalar(r.avg_interceptions, promCampo.vis)]
     ];
 
-        // aplica los pisos manuales, si este jugador tiene alguno cargado
-    const statsFinales = stats.map(([k, v]) => {
-      const piso = PISOS[r.name]?.[k];
-      return piso ? [k, conPiso(v, piso)] : [k, v];
-    });
+    // si el jugador tiene una base manual cargada, la mezclamos con lo real;
+    // lo que no esté definido en su base sigue 100% automático
+    const personalidad = PERSONALIDADES[r.name];
+    const stats = personalidad
+      ? statsAuto.map(([k, v]) => [k, k in personalidad ? conBase(v, personalidad[k]) : v])
+      : statsAuto;
 
     return {
       nombre: r.name,
       rol: r.primary_role,
-      pos: esGk ? 'GK' : 'CAM',
+      pos: esGk ? 'GK' : 'CAM',      // EDITAR: si algún día guardás el puesto real, va acá
       pj: r.pj,
       score: num(r.avg_score),
       valoracion: Math.round(num(r.rating)),
-      stats: statsFinales   // ← antes decía "stats", ahora "statsFinales"
+      stats
     };
   }).sort((a, b) => b.valoracion - a.valoracion || b.score - a.score);
 }
