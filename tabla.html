@@ -457,9 +457,9 @@ async function init() {
     renderFieldPlayers(fp);
   } catch (err) {
     document.getElementById('gk-body').innerHTML =
-      `<tr class="state-row"><td colspan="10">No se pudieron cargar los datos.</td></tr>`;
+      `<tr class="state-row"><td colspan="9">No se pudieron cargar los datos.</td></tr>`;
     document.getElementById('fp-body').innerHTML =
-      `<tr class="state-row"><td colspan="11">No se pudieron cargar los datos.</td></tr>`;
+      `<tr class="state-row"><td colspan="10">No se pudieron cargar los datos.</td></tr>`;
     console.error(err);
   }
   estaLogueado().then(mostrarLogueado);
