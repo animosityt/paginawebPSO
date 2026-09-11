@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<link rel="stylesheet" href="stylesheet.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>   
+<meta charset="UTF-8">
+<title>Tabla de Promedios · Cancha Grande</title>
+</head>
+
+<link rel="icon" type="image/svg+xml" href="images/trofeo.svg">
+
+<body>
+
+<div class="intro-overlay" id="introOverlay" aria-hidden="true" role="button" tabindex="0" aria-label="Saltar introducción">
+  <div class="trofeo-hero intro-trophy">
+    <div class="trofeo">
+      <img class="trofeo-glow" src="images/trofeo.svg" alt="" aria-hidden="true">
+      <img class="trofeo-base" src="images/trofeo.svg" alt="" aria-hidden="true">
+      <span class="trofeo-glint"></span>
+      <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
+    </div>
+  </div>
+</div>
+
+<nav class="navbar" id="top">
+  <div class="navbar-brand">
+    <div class="brand-title">Cancha Grande · Admin</div>
+    <a href="#top" class="back-top-link" aria-label="Volver al inicio" title="Volver al inicio">Inicio</a>
+  </div>
+
+  <div class="navbar-right">
+    <div class="nav-login">
+      <div class="nav-login-fields">
+        <input type="email" id="loginEmail" placeholder="Email" autocomplete="username">
+        <input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="current-password">
+      </div>
+      <span class="login-error" id="loginError" hidden></span>
+      <button class="login-submit" id="loginSubmit">Entrar</button>
+    </div>
+
+    <div class="nav-actions">
+      <input type="file" id="fileInput" multiple accept=".txt" style="display:none">
+      <button class="btn-upload" id="uploadBtn" disabled>Subir partido</button>
+      <button class="btn-upload" id="closeSeasonBtn" disabled>Cerrar temporada</button>
+      <span class="upload-status" id="uploadStatus" hidden>
+        <span class="spinner"></span>
+        <span id="uploadStatusText"></span>
+      </span>
+    </div>
+
+    <span class="session-tag" id="sessionTag" hidden>Cerrar sesión</span>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="trofeo-hero">
+  <div class="trofeo">
+    <img class="trofeo-glow" src="images/trofeo.svg" alt="" aria-hidden="true">
+    <img class="trofeo-base" src="images/trofeo.svg" alt="Trofeo UEFA Champions League">
+    <span class="trofeo-glint"></span>
+    <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
+  </div>
+</div>
+
+  <header>
+    <h1 style="margin-top: 150px;">Tabla de Promedios</h1>
+  </header>
+
+  <div class="methodology">
+    <h3>Sobre la valoración</h3>
+    <p>Los arqueros tienen su propia tabla porque en el juego su desempeño es diferente al de los jugadores de campo, supuestamente consiguen un x1.2 mas de puntos por el multiplicador
+      añadido en las stats de capturas y atajadas.</p>
+  </div>
+
+  <div class="methodology season-picker" id="seasonPicker">
+    <h3>Temporadas anteriores</h3>
+    <select id="seasonSelect">
+      <option value="">Viendo la temporada actual</option>
+    </select>
+  </div>
+
+  <section class="block goalkeeper-block">
+    <div class="block-head">
+      <div class="block-title">
+        <h2>Arqueros</h2>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Jugador</th>
+            <th>Partidos</th>
+            <th>Pases</th>
+            <th>Tackles</th>
+            <th>Intercep.</th>
+            <th>Poses. Perd.</th>
+            <th>Atajadas</th>
+            <th>Capturas</th>
+            <th>Score</th>
+            <th>Valoración</th>
+          </tr>
+        </thead>
+        <tbody id="gk-body">
+          <tr class="state-row"><td colspan="10"><span class="spinner"></span>Cargando arqueros…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <div class="block-title">
+        <h2>Jugadores de Campo</h2>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Jugador</th>
+            <th>Partidos</th>
+            <th>Pases</th>
+            <th>Tiros</th>
+            <th>Tiros al Arco</th>
+            <th>Goles</th>
+            <th>Tackles</th>
+            <th>Intercep.</th>
+            <th>Poses. Perd.</th>
+            <th>Score</th>
+            <th>Valoración</th>
+          </tr>
+        </thead>
+        <tbody id="fp-body">
+          <tr class="state-row"><td colspan="11"><span class="spinner"></span>Cargando jugadores de campo…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-links" aria-label="Enlaces externos">
+    <div class="footer-link-group">
+      <span class="footer-label">GitHub</span>
+      <a href="https://github.com/animosityt" aria-label="GitHub de Animosity">Github Animosity</a>
+      <a href="https://github.com/aitor-byte" aria-label="GitHub de Aitor">Github Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Instagram</span>
+      <a href="https://instagram.com/aniimossity" aria-label="Instagram 1">Instagram Animosity</a>
+      <a href="https://instagram.com/aitor.pez" aria-label="Instagram 2">Instagram Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Discord</span>
+      <a href="#" class="discord-link" aria-label="Discord 1, hover para ver el usuario" data-username="animossiity">Discord Animosity</a>
+      <a href="#" class="discord-link" aria-label="Discord 2, hover para ver el usuario" data-username="aitor_rex">Discord Aitor</a>
+    </div>
+  </div>
+  <p class="footer-legal">© 2026 Cancha Grande. Todos los derechos reservados.</p>
+  <p class="footer-trademark">Cancha Grande™ es una marca de <span>Leverage™</span>.</p>
+</footer>
+<script>
+setTimeout(() => {
+  document.getElementById('introOverlay').classList.add('intro-overlay-hidden');
+}, 5000);
+
+const introOverlay = document.getElementById('introOverlay');
+const skipIntro = () => introOverlay.classList.add('intro-overlay-hidden');
+introOverlay.addEventListener('click', skipIntro);
+introOverlay.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') skipIntro();
+});
+
+const SUPABASE_URL = 'https://yjjcujmoaialawmzvdzq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_8vbo3MfWiZR9Airj_BEe_Q_HXmYsBiH';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const fmt = (n, d=2) => Number(n).toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d});
+
+/* ============================================================
+   ESTO NO LO TOQUES NADA POR FAVOR Q SUBE LAS COSAS A SUPABASE
+   ============================================================ */
+
+async function upsertPlayerSmart(externalId, name) {
+  // 1) ¿ya existe alguien con este ID exacto? (caso normal, jugador de siempre)
+  if (externalId) {
+    const { data: porId } = await db
+      .from('players')
+      .select('id')
+      .eq('external_player_id', externalId)
+      .maybeSingle();
+    if (porId) return porId;
+  }
+
+  // 2) ¿existe alguien con este nombre que TODAVÍA no tiene ID vinculado?
+  //    (jugador viejo, primera vez que lo vemos con el sistema nuevo)
+  const { data: porNombre } = await db
+    .from('players')
+    .select('id')
+    .eq('name', name)
+    .is('external_player_id', null)
+    .maybeSingle();
+
+  if (porNombre) {
+    // lo encontramos por nombre: le completamos el ID para la próxima vez
+    const { data: actualizado, error } = await db
+      .from('players')
+      .update({ external_player_id: externalId })
+      .eq('id', porNombre.id)
+      .select()
+      .single();
+    if (error) { console.error('Error vinculando ID:', error); return porNombre; }
+    return actualizado;
+  }
+
+  // 3) no existe de ninguna forma: jugador nuevo de verdad
+  const { data: creado, error } = await db
+    .from('players')
+    .insert({ name, external_player_id: externalId })
+    .select()
+    .single();
+  if (error) { console.error('Error creando jugador:', error); return null; }
+  return creado;
+}
+
+async function procesarArchivo(file) {
+  const contenido = await file.text();
+
+  try {
+    const partido = JSON.parse(contenido);
+
+    const { data: existente } = await db
+      .from('matches')
+      .select('id')
+      .eq('source_filename', file.name)
+      .maybeSingle();
+
+    if (existente) {
+      console.warn(`${file.name} ya fue cargado antes, se salteó.`);
+      return { ok: false, motivo: 'duplicado', archivo: file.name };
+    }
+
+    const todosLosJugadores = [
+      ...partido.team1PlayerStats,
+      ...partido.team2PlayerStats,
+      ...partido.noTeamPlayerStats
+    ];
+
+    const filasParaInsertar = todosLosJugadores.map(jugador => {
+  return {
+    position: jugador.postion,
+    team: jugador.team,
+    passes: jugador.passes,
+    key_passes: jugador.keyPasses,
+    assists: jugador.assists,
+    shots: jugador.shots,
+    shots_on_target: jugador.shotsOnTarget,
+    goals: jugador.goals,
+    tackles: jugador.tackles,
+    key_tackles: jugador.keyTackles,
+    interceptions: jugador.interceptions,
+    key_interceptions: jugador.keyInterceptions,
+    possessions_lost: jugador.possessionsLost,
+    gk_saves: jugador.gKSaves,
+    gk_catches: jugador.gKCatches,
+    score: jugador.score,
+    _playerName: jugador.playerName,
+    _playerId: jugador.playerId   //esto es para poder hacer upsert en players y no perder el nombre del jugador negro//
+  };
+});
+
+    const { data: matchInsertado, error: errorMatch } = await db
+      .from('matches')
+      .insert({
+        source_filename: file.name,
+        team1_name: partido.team1Stats.teamName,
+        team2_name: partido.team2Stats.teamName,
+        season_id: await getCurrentSeasonId()
+      })
+      .select()
+      .single();
+
+    if (errorMatch) {
+      console.error('Error insertando el partido:', errorMatch);
+      return { ok: false, motivo: 'error_match', archivo: file.name };
+    }
+
+        const matchId = matchInsertado.id;
+    const filasFinales = [];
+
+    for (const fila of filasParaInsertar) {
+      const jugadorDb = await upsertPlayerSmart(fila._playerId, fila._playerName);
+
+      if (!jugadorDb) {
+        console.error('Error con jugador:', fila._playerName);
+        continue;
+      }
+
+      const { _playerName, _playerId, ...datosLimpios } = fila;
+      filasFinales.push({
+        ...datosLimpios,
+        match_id: matchId,
+        player_id: jugadorDb.id
+      });
+    }
+
+    const { data: statsInsertadas, error: errorStats } = await db
+      .from('match_player_stats')
+      .insert(filasFinales)
+      .select();
+
+    if (errorStats) {
+      console.error('Error insertando stats:', errorStats);
+      return { ok: false, motivo: 'error_stats', archivo: file.name };
+    }
+
+    console.log(`${file.name}: ${statsInsertadas.length} jugadores insertados.`);
+    return { ok: true, archivo: file.name, jugadores: statsInsertadas.length };
+
+  } catch (error) {
+    console.error('Archivo inválido:', file.name, error);
+    return { ok: false, motivo: 'json_invalido', archivo: file.name };
+  }
+}
+
+async function subirArchivos(files, onProgress) {
+  const archivos = Array.from(files);
+  const detalle = [];
+
+  for (let i = 0; i < archivos.length; i++) {
+    const file = archivos[i];
+    const resultado = await procesarArchivo(file);
+    detalle.push(resultado);
+
+    if (onProgress) onProgress(i + 1, archivos.length, resultado);
+  }
+
+  const resumen = {
+    exitosos: detalle.filter(r => r.ok).length,
+    saltados: detalle.filter(r => !r.ok && r.motivo === 'duplicado').length,
+    fallidos: detalle.filter(r => !r.ok && r.motivo !== 'duplicado').length,
+    detalle
+  };
+
+  console.log('Resumen de carga:', resumen);
+  return resumen;
+}
+
+/* =======================================================================================
+   esto tampoco lo toques porque trae lo q le acabamos de mandar a supabase asi corte bien piolita
+   ======================================================================================= */
+
+async function getMatchData(seasonId = null) {
+  const sid = seasonId || await getCurrentSeasonId();
+
+  const { data: ratings, error } = await db
+    .from('player_ratings')
+    .select('*')
+    .eq('season_id', sid);
+
+  if (error) {
+    console.error('Error trayendo ratings:', error);
+    return { gk: [], fp: [] };
+  }
+
+  const gk = ratings
+    .filter(r => r.primary_role === 'GK')
+    .map(r => ({
+      name: r.name, pj: r.pj, passes: r.avg_passes, tackles: r.avg_tackles,
+      interceptions: r.avg_interceptions, possessionsLost: r.avg_possessions_lost,
+      gKSaves: r.avg_gk_saves, gKCatches: r.avg_gk_catches, score: r.avg_score, rating: r.rating
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  const fp = ratings
+    .filter(r => r.primary_role === 'FIELD')
+    .map(r => ({
+      name: r.name, pj: r.pj, passes: r.avg_passes,
+      shots: r.avg_shots, shotsOnTarget: r.avg_shots_on_target, goals: r.avg_goals,
+      tackles: r.avg_tackles, interceptions: r.avg_interceptions, possessionsLost: r.avg_possessions_lost,
+      score: r.avg_score, rating: r.rating
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  return { gk, fp };
+}
+
+function renderGoalkeepers(gk) {
+  const body = document.getElementById('gk-body');
+  body.innerHTML = '';
+
+  if (!gk.length) {
+    body.innerHTML = `<tr class="state-row"><td colspan="10">Todavía no hay arqueros cargados.</td></tr>`;
+    return;
+  }
+
+  gk.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.className = 'top-row';
+    tr.innerHTML = `
+      <td><div class="player-cell"><span class="star">★</span><span class="player-name">${p.name}</span></div></td>
+      <td>${p.pj}</td>
+      <td>${fmt(p.passes)}</td>
+      <td>${fmt(p.tackles)}</td>
+      <td>${fmt(p.interceptions)}</td>
+      <td>${fmt(p.possessionsLost)}</td>
+      <td>${fmt(p.gKSaves)}</td>
+      <td>${fmt(p.gKCatches)}</td>
+      <td class="score-cell">${fmt(p.score)}</td>
+      <td><span class="rating-pill">${fmt(p.rating)}</span></td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+function renderFieldPlayers(fp) {
+  const body = document.getElementById('fp-body');
+  body.innerHTML = '';
+
+  if (!fp.length) {
+    body.innerHTML = `<tr class="state-row"><td colspan="11">Todavía no hay jugadores de campo cargados.</td></tr>`;
+    return;
+  }
+
+  fp.forEach((p, i) => {
+    const tr = document.createElement('tr');
+    if (i === 0) tr.className = 'top-row';
+    tr.innerHTML = `
+      <td><div class="player-cell">${i === 0 ? '<span class="star">★</span>' : ''}<span class="player-name">${p.name}</span></div></td>
+      <td>${p.pj}</td>
+      <td>${fmt(p.passes)}</td>
+      <td>${fmt(p.shots)}</td>
+      <td>${fmt(p.shotsOnTarget)}</td>
+      <td>${fmt(p.goals)}</td>
+      <td>${fmt(p.tackles)}</td>
+      <td>${fmt(p.interceptions)}</td>
+      <td>${fmt(p.possessionsLost)}</td>
+      <td class="score-cell">${fmt(p.score)}</td>
+      <td><span class="rating-pill">${fmt(p.rating)}</span></td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+function mostrarLogueado(logueado) {
+  loginEmail.hidden = logueado;
+  loginPassword.hidden = logueado;
+  loginSubmit.hidden = logueado;
+  loginError.hidden = true;
+  uploadBtn.disabled = !logueado;
+  document.getElementById('closeSeasonBtn').disabled = !logueado;  // ← esta línea es nueva
+  sessionTag.hidden = !logueado;
+}
+
+async function init() {
+  try {
+    await cargarSelectorDeTemporadas();
+    const { gk, fp } = await getMatchData();
+    renderGoalkeepers(gk);
+    renderFieldPlayers(fp);
+  } catch (err) {
+    document.getElementById('gk-body').innerHTML =
+      `<tr class="state-row"><td colspan="10">No se pudieron cargar los datos.</td></tr>`;
+    document.getElementById('fp-body').innerHTML =
+      `<tr class="state-row"><td colspan="11">No se pudieron cargar los datos.</td></tr>`;
+    console.error(err);
+  }
+  estaLogueado().then(mostrarLogueado);
+}
+
+init();
+
+/* =======================================================================================
+   EN CAMBIO si lo podes tocar porque es tema del boton, y vas a tener q linkear el boton
+   q vos hagas con esta parte del script, en lo posible no cambies los nombres de las funciones
+   ni las clases del css, asi q no se, manejate lompaniero vos sabras gato.
+   ======================================================================================= */
+
+const loginEmail = document.getElementById('loginEmail');
+const loginPassword = document.getElementById('loginPassword');
+const loginSubmit = document.getElementById('loginSubmit');
+const loginError = document.getElementById('loginError');
+const uploadBtn = document.getElementById('uploadBtn');
+const sessionTag = document.getElementById('sessionTag');
+
+loginSubmit.addEventListener('click', async () => {
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value;
+
+  if (!email || !password) {
+    loginError.textContent = 'Completá los dos campos.';
+    loginError.hidden = false;
+    return;
+  }
+
+  const ok = await login(email, password);
+
+  if (!ok) {
+    loginError.textContent = 'Email o contraseña incorrectos.';
+    loginError.hidden = false;
+    return;
+  }
+
+  loginEmail.value = '';
+  loginPassword.value = '';
+  mostrarLogueado(true);
+});
+
+loginPassword.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') loginSubmit.click();
+});
+
+uploadBtn.addEventListener('click', () => {
+  document.getElementById('fileInput').click();
+});
+
+sessionTag.addEventListener('click', async () => {
+  await logout();
+  mostrarLogueado(false);
+});
+
+document.getElementById('fileInput').addEventListener('change', async (event) => {
+  const status = document.getElementById('uploadStatus');
+  const statusText = document.getElementById('uploadStatusText');
+  const total = event.target.files.length;
+
+  uploadBtn.disabled = true;
+  status.hidden = false;
+  statusText.textContent = `Subiendo 0/${total}...`;
+
+  const resumen = await subirArchivos(event.target.files, (actual, tot, resultado) => {
+    statusText.textContent = `Subiendo ${actual}/${tot}... (${resultado.archivo})`;
+  });
+
+  statusText.textContent = `:^) ${resumen.exitosos} cargados · ${resumen.saltados} ya existían · ${resumen.fallidos} con error`;
+
+  setTimeout(() => { status.hidden = true; }, 6000);
+
+  const { gk, fp } = await getMatchData();
+  renderGoalkeepers(gk);
+  renderFieldPlayers(fp);
+
+  uploadBtn.disabled = false;
+  event.target.value = '';
+});
+
+async function login(email, password) {
+  const { error } = await db.auth.signInWithPassword({ email, password });
+  if (error) {
+    console.error('Error de login:', error.message);
+    return false;
+  }
+  return true;
+}
+
+async function estaLogueado() {
+  const { data: { session } } = await db.auth.getSession();
+  return !!session;
+}
+
+async function logout() {
+  await db.auth.signOut();
+}
+
+async function getCurrentSeasonId() {
+  const { data } = await db.from('seasons').select('id').eq('is_current', true).single();
+  return data ? data.id : null;
+}
+
+async function getSeasons() {
+  const { data } = await db.from('seasons').select('*').order('started_at', { ascending: false });
+  return data || [];
+}
+
+async function cerrarTemporada() {
+  const { data: temporadas } = await db.from('seasons').select('name').order('started_at', { ascending: false });
+  const siguienteNumero = temporadas ? temporadas.length : 1; // Temporada 0 ya existe, así que el largo = próximo número
+  const nombreNueva = `Temporada ${siguienteNumero}`;
+
+  const { data: actual } = await db.from('seasons').select('id').eq('is_current', true).single();
+
+  if (actual) {
+    const { error: errorCierre } = await db
+      .from('seasons')
+      .update({ is_current: false, ended_at: new Date().toISOString() })
+      .eq('id', actual.id);
+
+    if (errorCierre) {
+      console.error('Error cerrando temporada:', errorCierre);
+      return null;
+    }
+  }
+
+  const { data: nueva, error: errorNueva } = await db
+    .from('seasons')
+    .insert({ name: nombreNueva, is_current: true })
+    .select()
+    .single();
+
+  if (errorNueva) {
+    console.error('Error creando temporada nueva:', errorNueva);
+    return null;
+  }
+
+  return nueva;
+}
+
+document.getElementById('closeSeasonBtn').addEventListener('click', async () => {
+  const confirmado = confirm('¿Seguro que querés cerrar la temporada? Se archiva todo lo actual y arranca una nueva, vacía.');
+  if (!confirmado) return;
+
+  const nueva = await cerrarTemporada();
+  if (!nueva) {
+    alert('Hubo un error cerrando la temporada.');
+    return;
+  }
+
+  alert(`Temporada cerrada. Arrancó: ${nueva.name}`);
+
+  await cargarSelectorDeTemporadas();
+  const { gk, fp } = await getMatchData();
+  renderGoalkeepers(gk);
+  renderFieldPlayers(fp);
+});
+
+async function cargarSelectorDeTemporadas() {
+  const temporadas = await getSeasons();
+  const select = document.getElementById('seasonSelect');
+  select.innerHTML = '<option value="">Viendo la temporada actual</option>';
+
+  temporadas
+    .filter(t => !t.is_current)
+    .forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.id;
+      opt.textContent = t.name;
+      select.appendChild(opt);
+    });
+}
+
+document.getElementById('seasonSelect').addEventListener('change', async (event) => {
+  const seasonId = event.target.value || null;
+  const { gk, fp } = await getMatchData(seasonId);
+  renderGoalkeepers(gk);
+  renderFieldPlayers(fp);
+});
+
+/* enlace "Inicio" del navbar: scroll suave al tope */
+document.querySelector('.back-top-link').addEventListener('click', (e) => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+</script>
+
+
+</body>
+</html>
