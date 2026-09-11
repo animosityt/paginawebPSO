@@ -41,7 +41,7 @@
 
     <div class="contact-card">
       <h2>Dónde encontrarnos</h2>
-      <!-- editar: reemplazá por tus datos reales -->
+      <!-- EDITAR: reemplazá por tus datos reales -->
       <ul class="contact-list">
         <li>
           <span class="k">Discord de la comunidad</span>
@@ -75,22 +75,22 @@
 
     <div class="contact-card">
       <h2>Escribinos</h2>
-       <!-- este formulario abre el mail con el texto ya cargado.
-         editar: cambiá mail_destino en el script de abajo. -->
-      <form class="form-grid" id="contactForm">
+      <!-- Este formulario manda el mensaje directo a Formspree (sin abrir el mail del visitante).
+           EDITAR: si cambiás de cuenta de Formspree, actualizá la URL del atributo action de abajo. -->
+      <form class="form-grid" id="contactForm" action="https://formspree.io/f/xnpqrglk" method="POST">
         <label>
           Tu nombre
-          <input type="text" id="fNombre" required placeholder="Cómo te decimos">
+          <input type="text" id="fNombre" name="name" required placeholder="Cómo te decimos">
         </label>
 
         <label>
           Tu mail o usuario de Discord
-          <input type="text" id="fContacto" required placeholder="Para poder responderte">
+          <input type="text" id="fContacto" name="email" required placeholder="Para poder responderte">
         </label>
 
         <label>
           Motivo
-          <select id="fMotivo">
+          <select id="fMotivo" name="motivo">
             <option>Quiero sumarme a los partidos</option>
             <option>Hay un dato mal cargado</option>
             <option>Propuesta o idea para el sitio</option>
@@ -100,12 +100,12 @@
 
         <label>
           Mensaje
-          <textarea id="fMensaje" required placeholder="Contanos…"></textarea>
+          <textarea id="fMensaje" name="message" required placeholder="Contanos…"></textarea>
         </label>
 
-        <button type="submit" class="btn btn-primary" style="justify-content:center">Enviar</button>
+        <button type="submit" class="btn btn-primary" style="justify-content:center" id="formSubmitBtn">Enviar</button>
         <p class="form-note">
-          Se abre tu programa de mail con el mensaje listo. Si no te abre nada, escribinos directo por Discord.
+          Te respondemos por el mail o Discord que nos dejes acá arriba.
         </p>
         <p class="form-feedback" id="formFeedback" hidden></p>
       </form>
@@ -137,6 +137,17 @@
       <p>No hay problema, pero leé la guía primero así llegás al partido sabiendo qué esperar del control y de los puestos.</p>
       <a class="card-link" href="pso.html">Leer la guía →</a>
     </article>
+  </section>
+
+  <section class="cta-panel">
+    <h2>¿Querés ayudar con el proyecto?</h2>
+    <p><!-- EDITAR -->
+      El sitio es abierto: si sabés diseño, datos o front, hay tarea. Escribinos y te contamos qué falta.
+    </p>
+    <div class="hero-actions" style="justify-content:center">
+      <a class="btn btn-primary" href="https://github.com/animosityt">Ver el código</a>
+      <a class="btn btn-ghost" href="usuarios.html">Ver el equipo</a>
+    </div>
   </section>
 
 </div>
@@ -171,26 +182,35 @@ navToggle.addEventListener('click', () => {
   navToggle.setAttribute('aria-expanded', abierto);
 });
 
-/* editar: a dónde llegan los mensajes del formulario */
-const MAIL_DESTINO = 'hola@canchagrande.com';
+const contactForm = document.getElementById('contactForm');
+const formFeedback = document.getElementById('formFeedback');
+const formSubmitBtn = document.getElementById('formSubmitBtn');
 
-document.getElementById('contactForm').addEventListener('submit', (e) => {
+contactForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const nombre   = document.getElementById('fNombre').value.trim();
-  const contacto = document.getElementById('fContacto').value.trim();
-  const motivo   = document.getElementById('fMotivo').value;
-  const mensaje  = document.getElementById('fMensaje').value.trim();
+  formSubmitBtn.disabled = true;
+  formFeedback.hidden = true;
 
-  const asunto = `[Cancha Grande] ${motivo} — ${nombre}`;
-  const cuerpo = `Nombre: ${nombre}\nContacto: ${contacto}\nMotivo: ${motivo}\n\n${mensaje}`;
+  try {
+    const respuesta = await fetch(contactForm.action, {
+      method: 'POST',
+      body: new FormData(contactForm),
+      headers: { 'Accept': 'application/json' }
+    });
 
-  window.location.href =
-    `mailto:${MAIL_DESTINO}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+    if (!respuesta.ok) throw new Error('Formspree respondió con error');
 
-  const feedback = document.getElementById('formFeedback');
-  feedback.textContent = 'Listo, abrimos tu programa de mail. Si no pasó nada, escribinos por Discord.';
-  feedback.hidden = false;
+    formFeedback.textContent = '¡Listo! Recibimos tu mensaje, te respondemos pronto.';
+    formFeedback.hidden = false;
+    contactForm.reset();
+  } catch (err) {
+    console.error('Error enviando el formulario:', err);
+    formFeedback.textContent = 'Hubo un problema enviando el mensaje. Probá de nuevo o escribinos directo por Discord.';
+    formFeedback.hidden = false;
+  } finally {
+    formSubmitBtn.disabled = false;
+  }
 });
 </script>
 
