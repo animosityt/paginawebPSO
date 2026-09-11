@@ -47,12 +47,11 @@
       una escala de 40 a 99: justo en el promedio da <b>65</b>, el doble del promedio da cerca de
       <b>95</b>. REG, PHY y VIS no tienen una columna propia en las estadísticas, así que se aproximan:
       REG sale de cuánto cuidás la pelota, PHY de los tackles que metés y VIS de las intercepciones.</p>
-    <p>Algunos jugadores tienen además una <b>base manual</b> definida a mano para ciertos atributos
-      (ver <code>PERSONALIDADES</code> en el código): esa base no reemplaza el número real, lo toma como
-      punto de partida y lo deja moverse un poco para arriba o para abajo según el rendimiento real de la
-      temporada. Cualquier jugador que no esté en esa lista —incluyendo los nuevos que se sumen— sale
-      100% del cálculo automático de arriba.</p>
-    <!-- editar: si cambiás los umbrales de color, actualizá esta explicación -->
+    <p>Algunos jugadores tienen además atributos <b>cargados a mano</b> (ver <code>STATS_MANUALES</code>
+      en el código): en esos casos el número no se calcula, se muestra tal cual se escribió. Cualquier
+      jugador que no esté en esa lista —incluyendo los nuevos que se sumen— sale 100% del cálculo
+      automático de arriba.</p>
+    <!-- EDITAR: si cambiás los umbrales de color de las cartas, contalo acá -->
   </div>
 
   <div class="cards-toolbar">
@@ -134,51 +133,48 @@ const SUPABASE_KEY = 'sb_publishable_8vbo3MfWiZR9Airj_BEe_Q_HXmYsBiH';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* ================================================================
-  cosas que se pueden tocar
-  ================================================================ */
-const PISO  = 40;   // atributo mínimo de una carta
-const TECHO = 99;   // atributo máximo
-const BASE  = 65;   // lo que da estar justo en el promedio
-const CURVA = 0.55; // 1 marca mucha diferencia, 0.3 deja todo más parejo
-const UMBRALES = { elite: 88, gold: 75, silver: 62 };  // color según la valoración
+   PERILLAS PARA TOCAR A GUSTO
+   ================================================================ */
+const PISO  = 40;   // atributo mínimo posible en una carta
+const TECHO = 99;   // atributo máximo posible
+const BASE  = 65;   // lo que saca un jugador que está justo en el promedio de la temporada
+const CURVA = 0.55; // 1 = diferencias brutales, 0.3 = todos parecidos. 0.55 es un punto medio
+const UMBRALES = { elite: 88, gold: 75, silver: 62 };  // color de la carta según valoración
 const CARPETA_FOTOS = 'images/jugadores/';
 
 /* ----------------------------------------------------------------
-  bases manuales por jugador
-  poné acá el nombre exacto tal cual aparece en supabase
-  (ojo con mayúsculas y alias: 'aitor' no es lo mismo que 'aitor_rex'
-  si el nombre no coincide con la base, el jugador sale automático).
+   STATS_MANUALES (hardcodeo directo, sin fórmulas)
+   Poné acá el nombre EXACTO del jugador tal cual aparece en Supabase
+   y el número fijo que querés que muestre esa carta en cada atributo.
+   No se mezcla con nada ni se recalcula: el número que escribís es el
+   número que se ve, tal cual. Lo que no escribas para ese jugador
+   sigue saliendo del cálculo automático de siempre.
 
-  solo hace falta escribir los atributos que querés usar como punto
-  de partida. el resto de la carta sigue con el cálculo normal.
-  la base no es fija: el rendimiento real la puede mover un poco.
-  los jugadores nuevos que no estén acá salen del promedio real.
+   Ejemplo:
+   'Aitor': { DEF: 95 },
+   'Floral Green': { REF: 95, DIV: 95 },
+
+   Los jugadores que no aparezcan acá (incluidos los nuevos que se
+   sumen) salen 100% del cálculo automático, sin excepción.
    ---------------------------------------------------------------- */
-const PESO_BASE = 0.45; // 0 usa solo lo real, 1 deja la base fija
-
-const PERSONALIDADES = {
-  'Susering':     { PAS: 88, TIR: 90, PHY: 42, VIS: 92 },
-  'Skele':        { PAS: 88, TIR: 84, REG: 88, PHY: 68, VIS: 78, DEF: 35 },
-  'aitor_rex':    { PAS: 88, TIR: 48, REG: 48, PHY: 48, VIS: 48, DEF: 98 },
+const STATS_MANUALES = {
+  'susering':     { PAS: 88, TIR: 90, PHY: 42, VIS: 92 },
+  'skele':        { PAS: 88, TIR: 84, REG: 88, PHY: 68, VIS: 78, DEF: 35 },
+  'AITOR_REX':    { PAS: 88, TIR: 48, REG: 48, PHY: 48, VIS: 48, DEF: 99 },
   'Killbot':      { PAS: 83, TIR: 89, REG: 79, PHY: 60, DEF: 75, VIS: 71 },
-  'Doaza':        { TIR: 95, REG: 97, DEF: 82 },
+  'doaza':        { TIR: 95, REG: 97, DEF: 88 },
   'Fafii':        { REG: 88, TIR: 96 },
-  'El Wachin':    { TIR: 94 },
-  'Zapa':         { PAS: 72, TIR: 82, REG: 73, PHY: 72, DEF: 89, VIS: 72 },
+  'el wachin':    { TIR: 94 },
+  'Zapa':         { PAS: 82, TIR: 79, REG: 63, PHY: 82, DEF: 89, VIS: 52 },
   'Valthim':      { PAS: 91, TIR: 72, REG: 82, PHY: 52, DEF: 74, VIS: 88 },
   'Quinno':       { VIS: 93 },
   'Halzz':        { TIR: 90 },
   'Mr Pipol':     { DEF: 88 },
-  'Floral Green': { REF: 95, DIV: 95 },
+  'floral green': { REF: 91, DIV: 94, PAS: 70, DEF: 73, PHY: 89, VIS: 85 },
 };
-
-/* mezcla la base manual con el valor real. en el promedio queda igual */
-function conBase(valorNormal, base) {
-  return limitar(base + (valorNormal - BASE) * PESO_BASE);
-}
 /* ================================================================ */
 
-let TODOS = [];          // jugadores de la temporada elegida
+let TODOS = [];          // todos los jugadores de la temporada elegida
 let filtroRol = 'TODOS'; // TODOS | FIELD | GK
 let filtroTexto = '';
 
@@ -190,7 +186,8 @@ const escapar = (s) => String(s).replace(/[&<>"']/g, c => (
 
 const limitar = (n) => Math.max(PISO, Math.min(TECHO, Math.round(n)));
 
-/* compara el valor con el promedio de la temporada y lo lleva de 40 a 99 */
+/* escala un valor contra el PROMEDIO de la temporada -> 40..99
+   estar justo en el promedio da 65; el doble del promedio da ~95 */
 function escalar(valor, promedio) {
   const v = num(valor);
   if (!promedio || promedio <= 0) return BASE;
@@ -198,7 +195,7 @@ function escalar(valor, promedio) {
   return limitar(BASE * Math.pow(v / promedio, CURVA));
 }
 
-/* acá menos es mejor, porque son posesiones perdidas */
+/* igual que arriba pero al revés: menos es mejor (posesiones perdidas) */
 function escalarInverso(valor, promedio) {
   const v = num(valor);
   if (!promedio || promedio <= 0) return BASE;
@@ -224,8 +221,8 @@ function slug(nombre) {
 }
 
 /* ================================================================
-  traer datos
-  ================================================================ */
+   TRAER DATOS
+   ================================================================ */
 
 async function getCurrentSeasonId() {
   const { data } = await db.from('seasons').select('id').eq('is_current', true).single();
@@ -250,14 +247,14 @@ async function traerJugadores(seasonId = null) {
 }
 
 /* ================================================================
-  armar las cartas
-  ================================================================ */
+   ARMAR LAS CARTAS
+   ================================================================ */
 
 function construirCartas(ratings) {
   const campo = ratings.filter(r => r.primary_role === 'FIELD');
   const arqueros = ratings.filter(r => r.primary_role === 'GK');
 
-  // cada grupo tiene su propio promedio para comparar a los jugadores
+  // el promedio de cada grupo: es la vara contra la que se mide cada jugador
   const prom = (arr, f) => {
     const vals = arr.map(r => num(f(r))).filter(v => v > 0);
     return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
@@ -284,7 +281,7 @@ function construirCartas(ratings) {
   return ratings.map(r => {
     const esGk = r.primary_role === 'GK';
 
-    // cálculo automático con los promedios reales
+    // cálculo 100% automático a partir de los promedios reales
     const statsAuto = esGk ? [
       ['REF', escalar(r.avg_gk_saves,   promGk.ref)],
       ['DIV', escalar(r.avg_gk_catches, promGk.div)],
@@ -301,17 +298,17 @@ function construirCartas(ratings) {
       ['VIS', escalar(r.avg_interceptions, promCampo.vis)]
     ];
 
-    // si hay una base manual, se mezcla con el cálculo real;
-    // lo que no esté definido sigue saliendo automático
-    const personalidad = PERSONALIDADES[r.name];
-    const stats = personalidad
-      ? statsAuto.map(([k, v]) => [k, k in personalidad ? conBase(v, personalidad[k]) : v])
+    // si el jugador tiene números hardcodeados, pisan el cálculo tal cual;
+    // lo que no esté definido para ese jugador sigue 100% automático
+    const manual = STATS_MANUALES[r.name];
+    const stats = manual
+      ? statsAuto.map(([k, v]) => [k, k in manual ? limitar(manual[k]) : v])
       : statsAuto;
 
     return {
       nombre: r.name,
       rol: r.primary_role,
-      pos: esGk ? 'GK' : 'CAM',      // editar si algún día guardamos el puesto real
+      pos: esGk ? 'GK' : 'CAM',      // EDITAR: si algún día guardás el puesto real, va acá
       pj: r.pj,
       score: num(r.avg_score),
       valoracion: Math.round(num(r.rating)),
@@ -365,8 +362,8 @@ function pintarCartas() {
 }
 
 /* ================================================================
-  filtros y arranque
-  ================================================================ */
+   FILTROS Y ARRANQUE
+   ================================================================ */
 
 document.getElementById('buscar').addEventListener('input', (e) => {
   filtroTexto = e.target.value.trim().toLowerCase();
