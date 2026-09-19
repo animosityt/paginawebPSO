@@ -144,11 +144,12 @@ const CARPETA_FOTOS = 'images/jugadores/';
 
 /* ----------------------------------------------------------------
    STATS_MANUALES (hardcodeo directo, sin fórmulas)
-   Poné acá el nombre EXACTO del jugador tal cual aparece en Supabase
-   y el número fijo que querés que muestre esa carta en cada atributo.
-   No se mezcla con nada ni se recalcula: el número que escribís es el
-   número que se ve, tal cual. Lo que no escribas para ese jugador
-   sigue saliendo del cálculo automático de siempre.
+   Poné acá el nombre del jugador tal cual aparece en Supabase (no
+   importa si usás mayúsculas o minúsculas distintas: la comparación
+   ignora eso) y el número fijo que querés que muestre esa carta en
+   cada atributo. No se mezcla con nada ni se recalcula: el número
+   que escribís es el número que se ve, tal cual. Lo que no escribas
+   para ese jugador sigue saliendo del cálculo automático de siempre.
 
    Ejemplo:
    'Aitor': { DEF: 95 },
@@ -163,7 +164,7 @@ const STATS_MANUALES = {
   'AITOR_REX':    { PAS: 78, TIR: 61, REG: 48, PHY: 88, DEF: 94, VIS: 38 },
   'Killbot':      { PAS: 83, TIR: 83, REG: 84, PHY: 70, DEF: 75, VIS: 71 },
   'doaza':        { PAS: 87, TIR: 95, REG: 95, PHY: 71, DEF: 88, VIS: 80 },
-  'fafii':        { PAS: 1, TIR: 96, REG: 83, PHY: 80, DEF: 41, VIS: 58 },
+  'Fafii':        { PAS:  1, TIR: 96, REG: 83, PHY: 80, DEF: 41, VIS: 58 },
   'el wachin':    { PAS: 52, TIR: 92, REG: 69, PHY: 84, DEF: 21, VIS: 33 },
   'Zapa':         { PAS: 82, TIR: 77, REG: 63, PHY: 90, DEF: 86, VIS: 52 },
   'Valthim':      { PAS: 91, TIR: 72, REG: 64, PHY: 66, DEF: 70, VIS: 88 },
@@ -172,6 +173,15 @@ const STATS_MANUALES = {
   'Mr Pipol':     { PAS: 41, TIR: 65, REG: 34, PHY: 82, DEF: 70, VIS: 53 },
   'floral green': { REF: 89, DIV: 94, PAS: 64, DEF: 73, PHY: 89, VIS: 79 },
 };
+
+// normalizamos las claves de STATS_MANUALES una sola vez al cargar la
+// página, así no importa si el nombre real en Supabase tiene mayúsculas
+// o espacios distintos a como lo escribiste arriba — esto es lo que
+// se rompía antes (ej: 'Fafii' vs el nombre real guardado en la base).
+const normalizarNombre = (s) => String(s).trim().toLowerCase();
+const STATS_MANUALES_NORM = Object.fromEntries(
+  Object.entries(STATS_MANUALES).map(([nombre, valores]) => [normalizarNombre(nombre), valores])
+);
 /* ================================================================ */
 
 let TODOS = [];          // todos los jugadores de la temporada elegida
@@ -216,7 +226,7 @@ function iniciales(nombre) {
 
 function slug(nombre) {
   return String(nombre).toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9]+/g, '');
 }
 
@@ -300,7 +310,7 @@ function construirCartas(ratings) {
 
     // si el jugador tiene números hardcodeados, pisan el cálculo tal cual;
     // lo que no esté definido para ese jugador sigue 100% automático
-    const manual = STATS_MANUALES[r.name];
+    const manual = STATS_MANUALES_NORM[normalizarNombre(r.name)];
     const stats = manual
       ? statsAuto.map(([k, v]) => [k, k in manual ? limitar(manual[k]) : v])
       : statsAuto;
