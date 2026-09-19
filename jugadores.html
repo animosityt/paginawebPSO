@@ -44,7 +44,7 @@
       (físico), <b>DEF</b> (defensa) y <b>VIS</b> (visión). Para los arqueros cambian los dos primeros por
       <b>REF</b> (reflejos) y <b>DIV</b> (vuelo/achique), y comparten PAS, DEF, PHY y VIS.</p>
     <p>Cada atributo se compara contra el <b>promedio de la temporada</b> en esa estadística y se lleva a
-      una escala de 40 a 99: justo en el promedio da <b>65</b>, el doble del promedio da cerca de
+      una escala de 1 a 99: justo en el promedio da <b>65</b>, el doble del promedio da cerca de
       <b>95</b>. REG, PHY y VIS no tienen una columna propia en las estadísticas, así que se aproximan:
       REG sale de cuánto cuidás la pelota, PHY de los tackles que metés y VIS de las intercepciones.</p>
     <p>Algunos jugadores tienen además atributos <b>cargados a mano</b> (ver <code>STATS_MANUALES</code>
@@ -163,7 +163,7 @@ const STATS_MANUALES = {
   'AITOR_REX':    { PAS: 78, TIR: 61, REG: 48, PHY: 88, DEF: 94, VIS: 38 },
   'Killbot':      { PAS: 83, TIR: 83, REG: 84, PHY: 70, DEF: 75, VIS: 71 },
   'doaza':        { PAS: 87, TIR: 95, REG: 95, PHY: 71, DEF: 88, VIS: 80 },
-  'Fafii':        { PAS: 1, TIR: 96, REG: 83, PHY: 80, DEF: 41, VIS: 58 },
+  'fafii':        { PAS: 1, TIR: 96, REG: 83, PHY: 80, DEF: 41, VIS: 58 },
   'el wachin':    { PAS: 52, TIR: 92, REG: 69, PHY: 84, DEF: 21, VIS: 33 },
   'Zapa':         { PAS: 82, TIR: 77, REG: 63, PHY: 90, DEF: 86, VIS: 52 },
   'Valthim':      { PAS: 91, TIR: 72, REG: 64, PHY: 66, DEF: 70, VIS: 88 },
@@ -186,7 +186,7 @@ const escapar = (s) => String(s).replace(/[&<>"']/g, c => (
 
 const limitar = (n) => Math.max(PISO, Math.min(TECHO, Math.round(n)));
 
-/* escala un valor contra el PROMEDIO de la temporada -> 40..99
+/* escala un valor contra el PROMEDIO de la temporada -> 1..99
    estar justo en el promedio da 65; el doble del promedio da ~95 */
 function escalar(valor, promedio) {
   const v = num(valor);
