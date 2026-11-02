@@ -52,7 +52,7 @@ require __DIR__ . '/includes/head.php';
           <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
         </div>
       </div>
-      <figcaption>[ Trofeo UEFA Champions League ]</figcaption>
+      <figcaption>            ★ ★ ★ ★ ★            </figcaption>
     </figure>
   </div>
 

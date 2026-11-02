@@ -27,6 +27,7 @@
 
   /* acentos mínimos */
   --boleto:#ffd21f;
+  --boton-destacado:#e9ddb6;
   --rojo:#ef3b2d;
   --glow:#59d6ff;
 
@@ -229,7 +230,7 @@ a{ color:var(--boleto); text-underline-offset:4px; }
 }
 .nav-menu a.active{
   color:var(--tinta);
-  background:var(--boleto);
+  background:var(--boton-destacado);
   border-color:var(--tinta);
   transform:rotate(-2.5deg);
   box-shadow:3px 3px 0 var(--rojo);
@@ -245,7 +246,7 @@ a{ color:var(--boleto); text-underline-offset:4px; }
   color:var(--tinta);
   background:var(--marfil);
   border:2px solid var(--tinta);
-  box-shadow:3px 3px 0 var(--boleto);
+  box-shadow:3px 3px 0 var(--boton-destacado);
   padding:8px 14px;
   cursor:pointer;
 }
@@ -339,7 +340,7 @@ a{ color:var(--boleto); text-underline-offset:4px; }
 .admin-bar input::placeholder{ color:rgba(235,228,207,.45); }
 
 .login-submit{
-  background:var(--boleto);
+  background:var(--boton-destacado);
   border:2px solid var(--tinta);
   box-shadow:3px 3px 0 var(--rojo);
   padding:7px 14px;
@@ -353,7 +354,7 @@ a{ color:var(--boleto); text-underline-offset:4px; }
   white-space:nowrap;
   transition:transform .1s ease, box-shadow .1s ease;
 }
-.login-submit:hover{ transform:translate(2px,2px); box-shadow:1px 1px 0 var(--rojo); }
+.login-submit:hover{ transform:translate(1px,1px); box-shadow:2px 2px 0 var(--rojo); }
 
 .login-error{
   font-family:var(--f-dato);
@@ -371,16 +372,19 @@ a{ color:var(--boleto); text-underline-offset:4px; }
   color:var(--tinta);
   background:var(--marfil);
   border:2px solid var(--tinta);
-  box-shadow:3px 3px 0 var(--boleto);
+  box-shadow:3px 3px 0 var(--boton-destacado);
   padding:8px 16px;
   cursor:pointer;
   white-space:nowrap;
   transition:transform .1s ease, box-shadow .1s ease;
 }
-.btn-upload:hover,
+.btn-upload:hover{
+  transform:translate(1px,1px);
+  box-shadow:2px 2px 0 var(--boton-destacado);
+}
 .btn-upload:focus-visible{
   transform:translate(2px,2px);
-  box-shadow:1px 1px 0 var(--boleto);
+  box-shadow:1px 1px 0 var(--boton-destacado);
   outline:none;
 }
 .btn-upload[disabled]{
@@ -693,17 +697,17 @@ h1 .resalte{
   transition:transform .1s ease, box-shadow .1s ease;
 }
 .btn-primary{
-  background:var(--boleto);
+  background:var(--boton-destacado);
   color:var(--tinta);
   box-shadow:5px 5px 0 var(--rojo);
 }
-.btn-primary:hover{ transform:translate(3px,3px); box-shadow:2px 2px 0 var(--rojo); }
+.btn-primary:hover{ transform:translate(1px,1px); box-shadow:4px 4px 0 var(--rojo); }
 .btn-ghost{
   background:var(--marfil);
   color:var(--tinta);
   box-shadow:5px 5px 0 var(--sombra);
 }
-.btn-ghost:hover{ transform:translate(3px,3px); box-shadow:2px 2px 0 var(--sombra); background:var(--boleto); }
+.btn-ghost:hover{ transform:translate(1px,1px); box-shadow:4px 4px 0 var(--sombra); }
 .hero-visual{
   display:flex;
   justify-content:center;
@@ -771,8 +775,9 @@ h1 .resalte{
 }
 .info-card{
   position:relative;
-  background:var(--marfil);
   color:var(--tinta);
+  text-decoration:none;
+  background:var(--marfil);
   padding:30px 22px 20px;
   display:flex;
   flex-direction:column;
@@ -786,7 +791,8 @@ h1 .resalte{
 .info-card:nth-child(4n+2){ transform:rotate(.9deg) translateY(12px); }
 .info-card:nth-child(4n+3){ transform:rotate(-.6deg); }
 .info-card:nth-child(4n+4){ transform:rotate(1.4deg) translateY(8px); }
-.info-card:hover{ transform:rotate(0) translateY(-6px); box-shadow:11px 11px 0 var(--rojo); }
+.info-card:hover,
+.info-card:focus-visible{ transform:rotate(0) translateY(-6px); box-shadow:11px 11px 0 var(--rojo); }
 .info-card::before{
   content:"";
   position:absolute;
@@ -928,7 +934,7 @@ h1 .resalte{
 }
 .cta-panel .btn-primary{
   background:var(--tinta);
-  color:var(--boleto);
+  color:var(--boton-destacado);
   box-shadow:5px 5px 0 var(--marfil);
 }
 .cta-panel .btn-ghost{
@@ -937,8 +943,6 @@ h1 .resalte{
   border-color:var(--tinta);
   box-shadow:none;
 }
-.cta-panel .btn-ghost:hover{ background:var(--tinta); color:var(--boleto); }
-
 /* ================================================================
    7 · BLOQUES / TABLAS  (planilla de diario)
    ================================================================ */
@@ -1294,16 +1298,15 @@ tr.top-row .score-cell{
   cursor:pointer;
   transition:background-color .1s ease, color .1s ease, transform .1s ease;
 }
-.chip:hover{ background:var(--tinta); color:var(--marfil); transform:rotate(-2deg); }
+.chip:hover{ transform:translateY(-1px); }
 .chip.active{
   background:var(--tinta);
-  color:var(--boleto);
+  color:var(--boton-destacado);
   box-shadow:3px 3px 0 var(--rojo);
 }
 /* los chips de usuarios.php viven sobre pizarra: se invierten */
 .profile-card .chip{ color:var(--marfil); border-color:var(--marfil); }
-.profile-card .chip:hover{ background:var(--marfil); color:var(--tinta); }
-.profile-card .chip.active{ background:var(--boleto); color:var(--tinta); border-color:var(--tinta); box-shadow:3px 3px 0 var(--rojo); }
+.profile-card .chip.active{ background:var(--boton-destacado); color:var(--tinta); border-color:var(--tinta); box-shadow:3px 3px 0 var(--rojo); }
 
 .cards-grid{
   display:grid;

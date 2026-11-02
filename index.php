@@ -55,7 +55,7 @@ require __DIR__ . '/includes/head.php';
           <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
         </div>
       </div>
-      <figcaption>[ Trofeo de la Champions ]</figcaption>
+      <figcaption>★ ★ ★ ★ ★</figcaption>
     </figure>
     </div>
   </section>
@@ -91,33 +91,33 @@ require __DIR__ . '/includes/head.php';
     </p>
 
     <div class="card-grid">
-      <article class="info-card">
+      <a class="info-card" href="tabla.php">
         <span class="icon">01</span>
         <h3>Tabla de promedios</h3>
         <p>Arqueros y jugadores de campo, separados porque su puntaje no se mide igual aunque CASI igual. Se puede mirar la temporada actual o cualquiera de las anteriores.</p>
-        <a class="card-link" href="tabla.php">Ir a la tabla →</a>
-      </article>
+        <span class="card-link">Ir a la tabla →</span>
+      </a>
 
-      <article class="info-card">
+      <a class="info-card" href="jugadores.php">
         <span class="icon">02</span>
         <h3>Cartas de jugador</h3>
         <p>Cartas tipo FIFA: una carta por jugador, con la valoración y los atributos calculados a partir de sus promedios reales de la temporada.</p>
-        <a class="card-link" href="jugadores.php">Ver cartas →</a>
-      </article>
+        <span class="card-link">Ver cartas →</span>
+      </a>
 
-      <article class="info-card">
+      <a class="info-card" href="pso.php">
         <span class="icon">03</span>
         <h3>Guía de PSO</h3>
         <p>Qué es Pro Soccer Online, cómo se juega, qué significan las estadísticas del juego y por qué las usamos como las usamos.</p>
-        <a class="card-link" href="pso.php">Leer la guía →</a>
-      </article>
+        <span class="card-link">Leer la guía →</span>
+      </a>
 
-      <article class="info-card">
+      <a class="info-card" href="contacto.php">
         <span class="icon">04</span>
         <h3>Comunidad</h3>
         <p>Quiénes están detrás del proyecto, cómo aplicar para sumarte a los partidos y a dónde escribir si encontraste un error en los datos.</p>
-        <a class="card-link" href="contacto.php">Contacto →</a>
-      </article>
+        <span class="card-link">Contacto →</span>
+      </a>
     </div>
   </section>
 
