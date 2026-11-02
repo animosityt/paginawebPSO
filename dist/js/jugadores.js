@@ -1,0 +1,292 @@
+/* ================================================================
+   PERILLAS PARA TOCAR A GUSTO
+   ================================================================ */
+const PISO  = 1;   // atributo mínimo posible en una carta
+const TECHO = 99;   // atributo máximo posible
+const BASE  = 65;   // lo que saca un jugador que está justo en el promedio de la temporada
+const CURVA = 0.55; // 1 = diferencias brutales, 0.3 = todos parecidos. 0.55 es un punto medio
+const UMBRALES = { elite: 88, gold: 75, silver: 62 };  // color de la carta según valoración
+const CARPETA_FOTOS = 'images/jugadores/';
+
+/* ----------------------------------------------------------------
+   STATS_MANUALES (hardcodeo directo, sin fórmulas)
+   Poné acá el nombre del jugador tal cual aparece en Supabase (no
+   importa si usás mayúsculas o minúsculas distintas: la comparación
+   ignora eso) y el número fijo que querés que muestre esa carta en
+   cada atributo. No se mezcla con nada ni se recalcula: el número
+   que escribís es el número que se ve, tal cual. Lo que no escribas
+   para ese jugador sigue saliendo del cálculo automático de siempre.
+
+   Ejemplo:
+   'Aitor': { DEF: 95 },
+   'Floral Green': { REF: 95, DIV: 95 },
+
+   Los jugadores que no aparezcan acá (incluidos los nuevos que se
+   sumen) salen 100% del cálculo automático, sin excepción.
+   ---------------------------------------------------------------- */
+const STATS_MANUALES = {
+  'susering':     { PAS: 96, TIR: 97, REG: 79, PHY: 73, DEF: 84, VIS: 98 },
+  'skele':        { PAS: 90, TIR: 89, REG: 97, PHY: 78, DEF: 78, VIS: 78 },
+  'AITOR_REX':    { PAS: 78, TIR: 61, REG: 48, PHY: 88, DEF: 94, VIS: 38 },
+  'Killbot':      { PAS: 83, TIR: 83, REG: 84, PHY: 70, DEF: 75, VIS: 71 },
+  'doaza':        { PAS: 87, TIR: 95, REG: 95, PHY: 71, DEF: 88, VIS: 80 },
+  'Fafii':        { PAS:  1, TIR: 96, REG: 83, PHY: 80, DEF: 41, VIS: 58 },
+  'el wachin':    { PAS: 52, TIR: 92, REG: 69, PHY: 84, DEF: 21, VIS: 33 },
+  'Zapa':         { PAS: 82, TIR: 77, REG: 63, PHY: 90, DEF: 86, VIS: 52 },
+  'Valthim':      { PAS: 91, TIR: 72, REG: 64, PHY: 66, DEF: 70, VIS: 88 },
+  'Quinno':       { PAS: 61, TIR: 59, REG: 21, PHY: 62, DEF: 66, VIS: 45 },
+  'Halzz':        { PAS: 81, TIR: 82, REG: 70, PHY: 72, DEF: 69, VIS: 68 },
+  'Mr Pipol':     { PAS: 41, TIR: 65, REG: 34, PHY: 82, DEF: 70, VIS: 53 },
+  'floral green': { REF: 89, DIV: 94, PAS: 64, DEF: 73, PHY: 89, VIS: 79 },
+  'FERRARI PEEK': { REF: 79, DIV: 86, PAS: 74, DEF: 79, PHY: 68, VIS: 69 },
+  'katzerr':      { REF: 86, DIV: 72, PAS: 88, DEF: 75, PHY: 68, VIS: 84 },
+  'esliper':      { PAS: 51, TIR: 71, REG: 21, PHY: 53, DEF: 61, VIS: 45 },
+};
+
+// normalizamos las claves de STATS_MANUALES una sola vez al cargar la
+// página, así no importa si el nombre real en Supabase tiene mayúsculas
+// o espacios distintos a como lo escribiste arriba — esto es lo que
+// se rompía antes (ej: 'Fafii' vs el nombre real guardado en la base).
+const normalizarNombre = (s) => String(s).trim().toLowerCase();
+const STATS_MANUALES_NORM = Object.fromEntries(
+  Object.entries(STATS_MANUALES).map(([nombre, valores]) => [normalizarNombre(nombre), valores])
+);
+/* ================================================================ */
+
+let TODOS = [];          // todos los jugadores de la temporada elegida
+let filtroRol = 'TODOS'; // TODOS | FIELD | GK
+let filtroTexto = '';
+
+const num = (v) => Number(v) || 0;
+const fmt = (n, d=2) => Number(n).toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d});
+const escapar = (s) => String(s).replace(/[&<>"']/g, c => (
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
+));
+
+const limitar = (n) => Math.max(PISO, Math.min(TECHO, Math.round(n)));
+
+/* escala un valor contra el PROMEDIO de la temporada -> 1..99
+   estar justo en el promedio da 65; el doble del promedio da ~95 */
+function escalar(valor, promedio) {
+  const v = num(valor);
+  if (!promedio || promedio <= 0) return BASE;
+  if (v <= 0) return PISO;
+  return limitar(BASE * Math.pow(v / promedio, CURVA));
+}
+
+/* igual que arriba pero al revés: menos es mejor (posesiones perdidas) */
+function escalarInverso(valor, promedio) {
+  const v = num(valor);
+  if (!promedio || promedio <= 0) return BASE;
+  if (v <= 0) return TECHO;
+  return limitar(BASE * Math.pow(promedio / v, CURVA));
+}
+
+function tier(valoracion) {
+  if (valoracion >= UMBRALES.elite)  return 'tier-elite';
+  if (valoracion >= UMBRALES.gold)   return 'tier-gold';
+  if (valoracion >= UMBRALES.silver) return 'tier-silver';
+  return 'tier-bronze';
+}
+
+function iniciales(nombre) {
+  return String(nombre).trim().split(/\s+/).slice(0,2).map(p => p[0] || '').join('').toUpperCase();
+}
+
+function slug(nombre) {
+  return String(nombre).toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '');
+}
+
+/* ================================================================
+   TRAER DATOS
+   ================================================================ */
+
+async function getCurrentSeasonId() {
+  const { data } = await db.from('seasons').select('id').eq('is_current', true).single();
+  return data ? data.id : null;
+}
+
+async function getSeasons() {
+  const { data } = await db.from('seasons').select('*').order('started_at', { ascending: false });
+  return data || [];
+}
+
+async function traerJugadores(seasonId = null) {
+  const sid = seasonId || await getCurrentSeasonId();
+
+  const { data: ratings, error } = await db
+    .from('player_ratings')
+    .select('*')
+    .eq('season_id', sid);
+
+  if (error) { console.error('Error trayendo ratings:', error); return []; }
+  return ratings || [];
+}
+
+/* ================================================================
+   ARMAR LAS CARTAS
+   ================================================================ */
+
+function construirCartas(ratings) {
+  const campo = ratings.filter(r => r.primary_role === 'FIELD');
+  const arqueros = ratings.filter(r => r.primary_role === 'GK');
+
+  // el promedio de cada grupo: es la vara contra la que se mide cada jugador
+  const prom = (arr, f) => {
+    const vals = arr.map(r => num(f(r))).filter(v => v > 0);
+    return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+  };
+
+  const promCampo = {
+    pas: prom(campo, r => r.avg_passes),
+    tir: prom(campo, r => num(r.avg_goals) * 2 + num(r.avg_shots_on_target)),
+    reg: prom(campo, r => r.avg_possessions_lost),
+    phy: prom(campo, r => r.avg_tackles),
+    def: prom(campo, r => num(r.avg_tackles) + num(r.avg_interceptions)),
+    vis: prom(campo, r => r.avg_interceptions)
+  };
+
+  const promGk = {
+    ref: prom(arqueros, r => r.avg_gk_saves),
+    div: prom(arqueros, r => r.avg_gk_catches),
+    pas: prom(arqueros, r => r.avg_passes),
+    phy: prom(arqueros, r => r.avg_tackles),
+    def: prom(arqueros, r => num(r.avg_tackles) + num(r.avg_interceptions)),
+    vis: prom(arqueros, r => r.avg_interceptions)
+  };
+
+  return ratings.map(r => {
+    const esGk = r.primary_role === 'GK';
+
+    // cálculo 100% automático a partir de los promedios reales
+    const statsAuto = esGk ? [
+      ['REF', escalar(r.avg_gk_saves,   promGk.ref)],
+      ['DIV', escalar(r.avg_gk_catches, promGk.div)],
+      ['PAS', escalar(r.avg_passes,     promGk.pas)],
+      ['DEF', escalar(num(r.avg_tackles) + num(r.avg_interceptions), promGk.def)],
+      ['PHY', escalar(r.avg_tackles,    promGk.phy)],
+      ['VIS', escalar(r.avg_interceptions, promGk.vis)]
+    ] : [
+      ['PAS', escalar(r.avg_passes, promCampo.pas)],
+      ['TIR', escalar(num(r.avg_goals) * 2 + num(r.avg_shots_on_target), promCampo.tir)],
+      ['REG', escalarInverso(r.avg_possessions_lost, promCampo.reg)],
+      ['PHY', escalar(r.avg_tackles, promCampo.phy)],
+      ['DEF', escalar(num(r.avg_tackles) + num(r.avg_interceptions), promCampo.def)],
+      ['VIS', escalar(r.avg_interceptions, promCampo.vis)]
+    ];
+
+    // si el jugador tiene números hardcodeados, pisan el cálculo tal cual;
+    // lo que no esté definido para ese jugador sigue 100% automático
+    const manual = STATS_MANUALES_NORM[normalizarNombre(r.name)];
+    const stats = manual
+      ? statsAuto.map(([k, v]) => [k, k in manual ? limitar(manual[k]) : v])
+      : statsAuto;
+
+    return {
+      nombre: r.name,
+      rol: r.primary_role,
+      pos: esGk ? 'GK' : 'CAM',      // EDITAR: si algún día guardás el puesto real, va acá
+      pj: r.pj,
+      score: num(r.avg_score),
+      valoracion: Math.round(num(r.rating)),
+      stats
+    };
+  }).sort((a, b) => b.valoracion - a.valoracion || b.score - a.score);
+}
+
+function pintarCartas() {
+  const grid = document.getElementById('cardsGrid');
+
+  const visibles = TODOS.filter(j => {
+    const okRol = filtroRol === 'TODOS' || j.rol === filtroRol;
+    const okTexto = !filtroTexto || j.nombre.toLowerCase().includes(filtroTexto);
+    return okRol && okTexto;
+  });
+
+  if (!visibles.length) {
+    grid.innerHTML = '<div class="cards-empty">No hay jugadores para este filtro.</div>';
+    return;
+  }
+
+  grid.innerHTML = visibles.map(j => `
+    <article class="fut-card ${tier(j.valoracion)}" title="${escapar(j.nombre)}">
+      <div class="fut-inner">
+        <div class="fut-top">
+          <div class="fut-rating">
+            <span class="fut-score">${j.valoracion}</span>
+            <span class="fut-pos">${j.pos}</span>
+            <span class="fut-pj">${j.pj} PJ</span>
+          </div>
+          <div class="fut-photo">
+            <span class="fut-initials">${escapar(iniciales(j.nombre))}</span>
+            <img src="${CARPETA_FOTOS}${slug(j.nombre)}.png" alt=""
+                 onerror="this.classList.add('is-missing')">
+          </div>
+        </div>
+
+        <h3 class="fut-name">${escapar(j.nombre)}</h3>
+
+        <div class="fut-stats">
+          ${j.stats.map(([k, v]) => `
+            <div class="fut-stat"><b>${v}</b><span>${k}</span></div>
+          `).join('')}
+        </div>
+
+        <div class="fut-foot">Score ${fmt(j.score)}</div>
+      </div>
+    </article>
+  `).join('');
+}
+
+/* ================================================================
+   FILTROS Y ARRANQUE
+   ================================================================ */
+
+document.getElementById('buscar').addEventListener('input', (e) => {
+  filtroTexto = e.target.value.trim().toLowerCase();
+  pintarCartas();
+});
+
+document.getElementById('chips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  document.querySelectorAll('#chips .chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  filtroRol = chip.dataset.rol;
+  pintarCartas();
+});
+
+document.getElementById('seasonSelect').addEventListener('change', async (e) => {
+  document.getElementById('cardsGrid').innerHTML =
+    '<div class="cards-empty"><span class="spinner"></span> Cargando jugadores…</div>';
+  TODOS = construirCartas(await traerJugadores(e.target.value || null));
+  pintarCartas();
+});
+
+async function cargarSelectorDeTemporadas() {
+  const temporadas = await getSeasons();
+  const select = document.getElementById('seasonSelect');
+  select.innerHTML = '<option value="">Temporada actual</option>';
+  temporadas.filter(t => !t.is_current).forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = t.name;
+    select.appendChild(opt);
+  });
+}
+
+async function init() {
+  try {
+    await cargarSelectorDeTemporadas();
+    TODOS = construirCartas(await traerJugadores());
+    pintarCartas();
+  } catch (err) {
+    console.error(err);
+    document.getElementById('cardsGrid').innerHTML =
+      '<div class="cards-empty">No se pudieron cargar los jugadores.</div>';
+  }
+}
+
+init();

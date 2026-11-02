@@ -1,0 +1,146 @@
+<?php
+$pageTitle    = 'Qué es Pro Soccer Online · Guía para nuevos · Cancha Grande';
+$pageDesc     = 'Guía rápida de Pro Soccer Online: qué es, cómo se juega y qué significan sus estadísticas.';
+$paginaActiva = 'pso';
+$usaSupabase  = false;
+$paginaJs     = [];
+require __DIR__ . '/includes/head.php';
+?>
+<?php require __DIR__ . '/includes/nav.php'; ?>
+
+<main id="contenido" class="wrap">
+
+
+  <header>
+    <span class="eyebrow">Guía para nuevos</span>
+    <h1>¿Qué es Pro<br>Soccer Online?</h1>
+    <p class="subtitle">
+      <!-- editar: bajada con tus palabras -->
+      Un juego de fútbol donde cada persona controla <b>un solo jugador</b> dentro del equipo.
+      No manejás a los once: manejás al tuyo, y el resultado depende de que el equipo se entienda.
+    </p>
+  </header>
+
+  <div class="pill-row">
+    <!-- editar: datos duros del juego -->
+    <span class="pill">PC</span>
+    <span class="pill">Multijugador online</span>
+    <span class="pill">Cámara en tercera persona</span>
+    <span class="pill">Partidos de club</span>
+    <span class="pill">Estadísticas por partido</span>
+  </div>
+
+  <article class="article">
+    <h2>La idea básica</h2>
+    <p><!-- editar -->
+      En la mayoría de los juegos de fútbol vos controlás al jugador que tiene la pelota y la cámara salta
+      de uno a otro. En Pro Soccer Online no: entrás a la cancha con <b>un</b> jugador y ese es tuyo los
+      noventa minutos. Si la jugada pasa por la otra punta, tu trabajo es moverte bien, ofrecerte y marcar.
+    </p>
+    <p><!-- editar -->
+      Eso cambia todo. El que corre sin pelota vale tanto como el que define, y los partidos se ganan más
+      por posicionamiento y comunicación que por gambeta individual.
+    </p>
+
+    <h3>Qué se necesita para jugar</h3>
+    <ul>
+      <li><!-- editar -->Una PC que lo aguante y el juego instalado.</li>
+      <li>Micrófono. No hace falta que hables mucho, pero escuchar ayuda.</li>
+      <li>Estar en el Discord de la comunidad para enterarte de los partidos.</li>
+      <li>Paciencia los primeros partidos: el control se siente raro hasta que te acostumbrás.</li>
+    </ul>
+
+    <h3>Los puestos</h3>
+    <p><!-- editar -->
+      Se juega con los puestos clásicos: arquero, defensores, mediocampistas y delanteros. Antes de cada
+      partido se reparten los puestos y, salvo lesión o cambio, cada uno se queda en el suyo. Por eso en la
+      tabla separamos a los arqueros: su puntaje se construye con estadísticas que ningún otro puesto genera.
+    </p>
+  </article>
+
+  <section aria-labelledby="h-las-estadisticas-del-juego">
+    <h2 class="section-title" id="h-las-estadisticas-del-juego">Las estadísticas del juego</h2>
+    <p class="section-lead">
+      Cada partido termina con un archivo de estadísticas por jugador. Estas son las que usamos en la tabla
+      y en las cartas.
+    </p>
+
+    <div class="glossary">
+      <div>
+        <b>Pases</b>
+        <p>Pases completados en el partido. Es el mejor indicador de cuánto participó alguien en el juego.</p>
+      </div>
+      <div>
+        <b>Tiros / Tiros al arco</b>
+        <p>Remates totales y cuántos de esos fueron al arco. La relación entre los dos habla de la puntería.</p>
+      </div>
+      <div>
+        <b>Goles</b>
+        <p>Lo obvio. En la carta pesa, pero no define solo la valoración: un central no tiene por qué convertir.</p>
+      </div>
+      <div>
+        <b>Tackles</b>
+        <p>Quites limpios. Sube mucho en defensores y en mediocampistas que retroceden a marcar.</p>
+      </div>
+      <div>
+        <b>Intercepciones</b>
+        <p>Pelotas cortadas antes de que lleguen a destino. Es la estadística del que lee bien la jugada.</p>
+      </div>
+      <div>
+        <b>Posesiones perdidas</b>
+        <p>Cuántas veces perdiste la pelota. Es la única donde <b>menos es mejor</b>, y así la calculamos.</p>
+      </div>
+      <div>
+        <b>Atajadas</b>
+        <p>Solo arqueros. Tiros que fueron al arco y terminaron en las manos (o los pies) del uno.</p>
+      </div>
+      <div>
+        <b>Capturas</b>
+        <p>Solo arqueros. Pelotas retenidas de forma segura, sin rebote. Vale más que despejar de cualquier manera.</p>
+      </div>
+      <div>
+        <b>Score</b>
+        <p>El puntaje que arma el propio juego combinando todo lo anterior. Es nuestra base para el promedio.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-preguntas-frecuentes">
+    <h2 class="section-title" id="h-preguntas-frecuentes">Preguntas frecuentes</h2>
+    <p class="section-lead">Las que más se repiten en el Discord.</p>
+
+    <div class="faq">
+      <details open>
+        <summary>¿Se puede jugar sin saber nada?</summary>
+        <p><!-- editar -->Sí. Nadie llegó sabiendo. Lo único que pedimos es que si arrancás un partido lo termines.</p>
+      </details>
+      <details>
+        <summary>¿Cómo entro a un partido?</summary>
+        <p><!-- editar -->Se avisa por Discord con horario. Confirmás, te asignan puesto y equipo, y listo.</p>
+      </details>
+      <details>
+        <summary>¿Por qué no aparezco en la tabla?</summary>
+        <p><!-- editar -->Porque todavía no se cargó ningún partido tuyo, o porque tu nombre en el juego cambió y quedó como jugador nuevo. Avisanos y lo unificamos.</p>
+      </details>
+      <details>
+        <summary>¿Qué pasa cuando se cierra una temporada?</summary>
+        <p>Los promedios de esa temporada quedan congelados y consultables desde el selector de temporadas. La nueva arranca en cero para todos.</p>
+      </details>
+      <details>
+        <summary>¿Se pueden borrar o corregir partidos?</summary>
+        <p><!-- editar -->Sí, pero solo la administración. Si detectás un partido mal cargado, escribinos y lo revisamos.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="cta-panel">
+    <h2>Ya entendiste, ahora jugá</h2>
+    <p>Si llegaste hasta acá leyendo, seguramente te interese. El próximo partido se organiza esta semana.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="contacto.php">Quiero entrar</a>
+      <a class="btn btn-ghost" href="tabla.php">Ver la tabla</a>
+    </div>
+  </section>
+</main>
+
+<?php require __DIR__ . '/includes/footer.php'; ?>

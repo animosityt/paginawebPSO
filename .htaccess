@@ -1,0 +1,13 @@
+# Cancha Grande · configuración para Apache (hosting con PHP)
+
+# página 404 propia
+ErrorDocument 404 /404.php
+
+DirectoryIndex index.php index.html
+
+# los links viejos en .html redirigen a la versión .php
+RewriteEngine On
+RewriteRule ^(index|tabla|jugadores|pso|usuarios|contacto)\.html$ /$1.php [R=301,L]
+
+# las plantillas internas no se abren sueltas
+RewriteRule ^includes/ - [F]

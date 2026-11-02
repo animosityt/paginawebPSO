@@ -1,0 +1,136 @@
+<?php
+$pageTitle    = 'Contacto · Cancha Grande';
+$pageDesc     = 'Cómo contactar a Cancha Grande: Discord, Instagram y un formulario para sumarte a los partidos, avisar de un dato mal cargado o proponer algo para el sitio.';
+$paginaActiva = 'contacto';
+$usaSupabase  = false;
+$paginaJs     = ['contacto'];
+require __DIR__ . '/includes/head.php';
+?>
+<?php require __DIR__ . '/includes/nav.php'; ?>
+
+<main id="contenido" class="wrap">
+
+
+  <header>
+    <span class="eyebrow">Estamos del otro lado</span>
+    <h1>Contacto</h1>
+    <p class="subtitle">
+      Para sumarte a los partidos, avisar de un dato mal cargado o proponer algo para el sitio.
+      Lo más rápido siempre es <b>Discord</b>.
+    </p>
+  </header>
+
+  <div class="contact-layout">
+
+    <div class="contact-card">
+      <h2>Dónde encontrarnos</h2>
+      <!-- EDITAR: reemplazá por tus datos reales -->
+      <ul class="contact-list">
+        <li>
+          <span class="k">Discord · Animosity</span>
+          <span class="v">animossiity</span>
+        </li>
+        <li>
+          <span class="k">Discord · Aitor</span>
+          <span class="v">aitor_rex</span>
+        </li>
+        <li>
+          <span class="k">Instagram</span>
+          <span class="v">
+            <a href="https://instagram.com/aniimossity">@aniimossity</a> ·
+            <a href="https://instagram.com/aitor.pez">@aitor.pez</a>
+          </span>
+        </li>
+        <li>
+          <span class="k">Horarios de partido</span>
+          <span class="v">Casi todos los dias (en los que este vivo el vc), 22:00 (ARG) <br> <br>
+          Siempre empezamos a las 7:10 p.m. aprox. pero esos partidos son de cancha chica asi que no se cuentan</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="contact-card">
+      <h2>Escribinos</h2>
+      <!-- Este formulario manda el mensaje directo a Formspree (sin abrir el mail del visitante).
+           EDITAR: si cambiamos de cuenta de Formspree, actualizá la URL del atributo action de abajo. -->
+      <form class="form-grid" id="contactForm" action="https://formspree.io/f/xnpqrglk" method="POST">
+        <label>
+          Tu nombre
+          <input type="text" id="fNombre" name="name" required placeholder="Cómo te decimos">
+        </label>
+
+        <label>
+          Tu mail o usuario de Discord
+          <input type="text" id="fContacto" name="email" required placeholder="Para poder responderte">
+        </label>
+
+        <label>
+          Motivo
+          <select id="fMotivo" name="motivo">
+            <option>Quiero sumarme a los partidos</option>
+            <option>Hay un dato mal cargado</option>
+            <option>Propuesta o idea para el sitio</option>
+            <option>Otra cosa</option>
+          </select>
+        </label>
+
+        <label>
+          Mensaje
+          <textarea id="fMensaje" name="message" required placeholder="Contanos…"></textarea>
+        </label>
+
+        <!-- trampa para bots: invisible para una persona, pero un bot la suele completar.
+             Formspree descarta el envío solo si esto llega con contenido. No la borres ni la muestres. -->
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+        <button type="submit" class="btn btn-primary" style="justify-content:center" id="formSubmitBtn">Enviar</button>
+        <p class="form-note">
+          Te respondemos por el mail o Discord que nos dejes acá arriba.
+        </p>
+        <p class="form-feedback" id="formFeedback" hidden></p>
+      </form>
+    </div>
+
+  </div>
+
+  <section aria-labelledby="h-antes-de-escribir">
+    <h2 class="section-title" id="h-antes-de-escribir">Antes de escribir</h2>
+    <p class="section-lead">Tres cosas que resuelven la mayoría de las consultas.</p>
+
+    <div class="card-grid">
+      <article class="info-card">
+        <span class="icon">01</span>
+        <h3>No aparezco en la tabla</h3>
+        <p>Fijate primero si tu partido está cargado. Si cambiaste el nombre en el juego, decinos el nombre viejo y el nuevo para unificar tu historial.</p>
+        <a class="card-link" href="tabla.php">Revisar la tabla →</a>
+      </article>
+
+      <article class="info-card">
+        <span class="icon">02</span>
+        <h3>Mi valoración está mal</h3>
+        <p>La valoración es un promedio por partido comparado con el resto de la temporada. Antes de escribir, leé cómo se calcula.</p>
+        <a class="card-link" href="jugadores.php">Cómo se calcula →</a>
+      </article>
+
+      <article class="info-card">
+        <span class="icon">03</span>
+        <h3>Nunca jugué a PSO</h3>
+        <p>No hay problema, pero leé la guía primero así llegás al partido sabiendo qué esperar del control y de los puestos.</p>
+        <a class="card-link" href="pso.php">Leer la guía →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="cta-panel">
+    <h2>¿Querés ayudar con el proyecto?</h2>
+    <p><!-- EDITAR -->
+      El sitio es abierto: si sabés diseño, datos o front, hay tarea. Escribinos y te contamos qué falta.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://github.com/animosityt">Ver el código</a>
+      <a class="btn btn-ghost" href="usuarios.php">Ver el equipo</a>
+    </div>
+  </section>
+</main>
+
+<?php require __DIR__ . '/includes/footer.php'; ?>

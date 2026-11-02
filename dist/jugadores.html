@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cartas de jugador · Cancha Grande</title>
+<meta name="description" content="Una carta tipo FIFA por jugador, con la valoración y los atributos calculados a partir de los promedios reales de cada temporada de Pro Soccer Online.">
+<link rel="icon" type="image/svg+xml" href="images/trofeo.svg">
+<link rel="stylesheet" href="stylesheet.css">
+</head>
+
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<!-- ===== navbar, igual en todas las páginas ===== -->
+<nav class="navbar" id="top" aria-label="Navegación principal">
+  <div class="navbar-brand">
+    <a class="brand-title" href="index.html">Cancha Grande</a>
+    <span class="brand-sub">Pro Soccer Online · Comunidad</span>
+  </div>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">Menú</button>
+  <div class="nav-menu" id="navMenu">
+    <a href="index.html">Inicio</a>
+    <a href="tabla.html">Tabla</a>
+    <a href="jugadores.html" class="active" aria-current="page">Jugadores</a>
+    <a href="pso.html">Qué es PSO</a>
+    <a href="usuarios.html">Usuarios</a>
+    <a href="contacto.html">Contacto</a>
+  </div>
+</nav>
+
+<main id="contenido" class="wrap">
+
+
+  <header>
+    <span class="eyebrow">Una carta por jugador</span>
+    <h1>Cartas de<br>Jugador</h1>
+    <p class="subtitle">
+      El número grande es la <b>valoración de la temporada</b>. Los seis atributos salen de los
+      promedios reales: no los carga nadie a mano, se recalculan solos cuando entra un partido nuevo.
+    </p>
+  </header>
+
+  <div class="methodology">
+    <h2>Cómo se arma cada carta</h2>
+    <p>Los seis atributos son <b>PAS</b> (pase), <b>TIR</b> (tiro), <b>REG</b> (regate), <b>PHY</b>
+      (físico), <b>DEF</b> (defensa) y <b>VIS</b> (visión). Para los arqueros cambian los dos primeros por
+      <b>REF</b> (reflejos) y <b>DIV</b> (vuelo/achique), y comparten PAS, DEF, PHY y VIS.</p>
+    <p>Cada atributo se compara contra el <b>promedio de la temporada</b> en esa estadística y se lleva a
+      una escala de 1 a 99: justo en el promedio da <b>65</b>, el doble del promedio da cerca de
+      <b>95</b>. REG, PHY y VIS no tienen una columna propia en las estadísticas, así que se aproximan:
+      REG sale de cuánto cuidás la pelota, PHY de los tackles que metés y VIS de las intercepciones.</p>
+    <p>Algunos jugadores tienen además atributos <b>cargados a mano</b> (ver <code>STATS_MANUALES</code>
+      en el código): en esos casos el número no se calcula, se muestra tal cual se escribió. Cualquier
+      jugador que no esté en esa lista —incluyendo los nuevos que se sumen— sale 100% del cálculo
+      automático de arriba.</p>
+    <!-- EDITAR: si cambiás los umbrales de color de las cartas, contalo acá -->
+  </div>
+
+  <div class="cards-toolbar">
+    <div class="field">
+      <label for="buscar">Buscar jugador</label>
+      <input type="search" id="buscar" placeholder="Nombre del jugador…" autocomplete="off">
+    </div>
+
+    <div class="field">
+      <label for="seasonSelect">Temporada</label>
+      <select id="seasonSelect">
+        <option value="">Temporada actual</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Puesto</label>
+      <div class="filter-chips" id="chips">
+        <button class="chip active" data-rol="TODOS">Todos</button>
+        <button class="chip" data-rol="FIELD">Campo</button>
+        <button class="chip" data-rol="GK">Arqueros</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="legend-swatch sw-elite"></span>Élite · 88+</span>
+    <span class="legend-item"><span class="legend-swatch sw-gold"></span>Oro · 75+</span>
+    <span class="legend-item"><span class="legend-swatch sw-silver"></span>Plata · 62+</span>
+    <span class="legend-item"><span class="legend-swatch sw-bronze"></span>Bronce · menos de 62</span>
+  </div>
+
+  <h2 class="solo-lector">Cartas de la temporada</h2>
+  <div class="cards-grid" id="cardsGrid">
+    <div class="cards-empty"><span class="spinner"></span> Cargando jugadores…</div>
+  </div>
+
+  <div class="methodology">
+    <h2>Fotos de los jugadores</h2>
+    <p>Cada carta busca su foto en <b>images/jugadores/&lt;nombre&gt;.png</b>, en minúscula y sin espacios
+      (por ejemplo <b>images/jugadores/animosity.png</b>). Si el archivo no existe, la carta muestra las
+      iniciales y no se rompe nada. Recomendado: imagen cuadrada, 500×500, fondo transparente.</p>
+  </div>
+</main>
+
+<!-- ===== footer, igual en todas las páginas ===== -->
+<footer class="site-footer">
+  <div class="footer-links" aria-label="Enlaces externos">
+    <div class="footer-link-group">
+      <span class="footer-label">GitHub</span>
+      <a href="https://github.com/animosityt" aria-label="GitHub de Animosity">Github Animosity</a>
+      <a href="https://github.com/aitor-byte" aria-label="GitHub de Aitor">Github Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Instagram</span>
+      <a href="https://instagram.com/aniimossity" aria-label="Instagram de Animosity">Instagram Animosity</a>
+      <a href="https://instagram.com/aitor.pez" aria-label="Instagram de Aitor">Instagram Aitor</a>
+    </div>
+    <div class="footer-link-group">
+      <span class="footer-label">Discord</span>
+      <a href="#" class="discord-link" aria-label="Discord de Animosity, hover para ver el usuario" data-username="animossiity">Discord Animosity</a>
+      <a href="#" class="discord-link" aria-label="Discord de Aitor, hover para ver el usuario" data-username="aitor_rex">Discord Aitor</a>
+    </div>
+  </div>
+  <p class="footer-legal">© 2026 Cancha Grande. Todos los derechos reservados.</p>
+  <p class="footer-trademark">Cancha Grande™ es una marca de <span>Leverage™</span>.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/jugadores.js"></script>
+
+</body>
+</html>
