@@ -79,7 +79,7 @@
 
     <!-- ---------- todavía no inició sesión ---------- -->
     <div id="perfilAnonimo">
-      <div class="filter-chips" id="profileTabs">
+      <div class="filter-chips" id="profileTabs" style="margin-bottom:22px;">
         <button class="chip active" data-tab="crear">Crear perfil</button>
         <button class="chip" data-tab="entrar">Ya tengo cuenta</button>
       </div>
@@ -133,14 +133,14 @@
           <span class="user-initials" id="miAvatarIniciales"></span>
         </div>
         <div>
-          <h3 style="margin:0 0 4px; font-family:'Oswald',sans-serif; letter-spacing:.04em;">
+          <h3 class="profile-greeting">
             Hola, <span id="miNombre"></span>
           </h3>
-          <button type="button" class="btn btn-ghost" id="cerrarSesionPerfilBtn" style="padding:8px 16px; font-size:11px;">Cerrar sesión</button>
+          <button type="button" class="btn btn-ghost" id="cerrarSesionPerfilBtn" style="padding:8px 16px; font-size:14px;">Cerrar sesión</button>
         </div>
       </div>
 
-      <form class="form-grid" id="formEditar" style="margin-top:18px;">
+      <form class="form-grid" id="formEditar" style="margin-top:22px;">
         <label>
           Foto de perfil <span style="opacity:.6; text-transform:none; letter-spacing:0;">(opcional, cuadrada, hasta 3MB)</span>
           <input type="file" id="editarFoto" accept="image/png,image/jpeg,image/webp">
