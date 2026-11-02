@@ -14,8 +14,8 @@
   /* noche de estadio de barrio */
   --noche:#06100a;
   --cesped:#0b2216;
-  --cesped-2:#10301f;
-  --linea:#2f7d4d;
+  --cesped-2:#305240;
+  --linea:#14813e;
   --pizarra:#111812;
 
   /* papel ajado */
@@ -26,9 +26,9 @@
   --tiza-suave:rgba(235,228,207,.18);
 
   /* acentos mínimos */
-  --boleto:#ffd21f;
+  --boleto:#fcba2b;
   --boton-destacado:#e9ddb6;
-  --rojo:#ef3b2d;
+  --rojo:#aa1106;
   --glow:#59d6ff;
 
   --sombra:#020604;
@@ -36,7 +36,7 @@
 
   --f-titulo:'Anton','Impact','Arial Narrow',sans-serif;
   --f-texto:'Barlow Condensed','Arial Narrow',sans-serif;
-  --f-dato:'IBM Plex Mono','Courier New',monospace;
+  --f-dato: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 *{box-sizing:border-box;}
@@ -188,7 +188,7 @@ a{ color:var(--boleto); text-underline-offset:4px; }
   z-index:-1;
   transform:skewX(-14deg);
 }
-.brand-title:hover{ color:var(--boleto); }
+.brand-title:hover{ color:var(--glow); }
 
 .brand-sub{
   font-family:var(--f-dato);
