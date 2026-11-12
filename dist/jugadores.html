@@ -35,24 +35,21 @@
     <span class="eyebrow">Una carta por jugador</span>
     <h1>Cartas de<br>Jugador</h1>
     <p class="subtitle">
-      El número grande es la <b>valoración de la temporada</b>. Los seis atributos salen de los
-      promedios reales: no los carga nadie a mano, se recalculan solos cuando entra un partido nuevo.
+      El número grande resume la <b>temporada</b>. Los seis atributos se calculan con los promedios de cada
+      jugador y se actualizan cuando cargamos un partido nuevo.
     </p>
   </header>
 
   <div class="methodology">
     <h2>Cómo se arma cada carta</h2>
-    <p>Los seis atributos son <b>PAS</b> (pase), <b>TIR</b> (tiro), <b>REG</b> (regate), <b>PHY</b>
-      (físico), <b>DEF</b> (defensa) y <b>VIS</b> (visión). Para los arqueros cambian los dos primeros por
-      <b>REF</b> (reflejos) y <b>DIV</b> (vuelo/achique), y comparten PAS, DEF, PHY y VIS.</p>
-    <p>Cada atributo se compara contra el <b>promedio de la temporada</b> en esa estadística y se lleva a
-      una escala de 1 a 99: justo en el promedio da <b>65</b>, el doble del promedio da cerca de
-      <b>95</b>. REG, PHY y VIS no tienen una columna propia en las estadísticas, así que se aproximan:
-      REG sale de cuánto cuidás la pelota, PHY de los tackles que metés y VIS de las intercepciones.</p>
-    <p>Algunos jugadores tienen además atributos <b>cargados a mano</b> (ver <code>STATS_MANUALES</code>
-      en el código): en esos casos el número no se calcula, se muestra tal cual se escribió. Cualquier
-      jugador que no esté en esa lista —incluyendo los nuevos que se sumen— sale 100% del cálculo
-      automático de arriba.</p>
+    <p>Para los jugadores de campo, los atributos son <b>PAS</b> (pase), <b>TIR</b> (tiro), <b>REG</b>
+      (regate), <b>PHY</b> (físico), <b>DEF</b> (defensa) y <b>VIS</b> (visión). En las cartas de arquero,
+      <b>REF</b> (reflejos) y <b>DIV</b> (vuelo/achique) reemplazan a TIR y REG; los otros cuatro se mantienen.</p>
+    <p>Comparamos cada atributo con el <b>promedio de la temporada</b> y lo pasamos a una escala de 1 a 99.
+      Estar justo en el promedio da <b>65</b>; el doble, cerca de <b>95</b>. Como el juego no registra REG,
+      PHY y VIS directamente, los estimamos con otras estadísticas: posesiones perdidas, tackles e intercepciones.</p>
+    <p>A algunos jugadores les ajustamos ciertos atributos <b>a mano</b> (en el código figuran en
+      <code>STATS_MANUALES</code>). El resto se calcula automáticamente, también para quienes se sumen más adelante.</p>
     <!-- EDITAR: si cambiás los umbrales de color de las cartas, contalo acá -->
   </div>
 
@@ -93,9 +90,9 @@
 
   <div class="methodology">
     <h2>Fotos de los jugadores</h2>
-    <p>Cada carta busca su foto en <b>images/jugadores/&lt;nombre&gt;.png</b>, en minúscula y sin espacios
-      (por ejemplo <b>images/jugadores/animosity.png</b>). Si el archivo no existe, la carta muestra las
-      iniciales y no se rompe nada. Recomendado: imagen cuadrada, 500×500, fondo transparente.</p>
+    <p>La foto va en <b>images/jugadores/&lt;nombre&gt;.png</b>, todo en minúscula y sin espacios
+      (por ejemplo, <b>images/jugadores/animosity.png</b>). Si no encuentra el archivo, la carta muestra
+      las iniciales. Lo ideal es usar una imagen cuadrada de 500×500 con fondo transparente.</p>
   </div>
 </main>
 

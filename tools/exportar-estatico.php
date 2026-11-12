@@ -13,17 +13,41 @@ $raiz = dirname(__DIR__);
 $dist = $raiz . '/dist';
 $paginas = ['index', 'tabla', 'jugadores', 'pso', 'contacto', 'usuarios', '404'];
 
+/* Archivos que no se pudieron tocar (casi siempre porque otro programa los
+   tiene abiertos: navegador, visor de fotos, vista previa del Explorador, OneDrive).
+   No frenan la exportación: se avisa al final con un mensaje corto. */
+$bloqueados = [];
+
+function copiar_archivo(string $desde, string $hasta): void {
+    global $bloqueados;
+    for ($i = 0; $i < 3; $i++) {
+        if (@copy($desde, $hasta)) return;
+        usleep(300000);
+    }
+    $bloqueados[] = $hasta;
+}
+
+function borrar_ruta(string $ruta, bool $esCarpeta): void {
+    global $bloqueados;
+    for ($i = 0; $i < 3; $i++) {
+        if ($esCarpeta ? (@rmdir($ruta) || !is_dir($ruta)) : (@unlink($ruta) || !file_exists($ruta))) return;
+        usleep(300000);
+    }
+    /* una carpeta que no se vació ya está avisada por el archivo que la traba */
+    if (!$esCarpeta) $bloqueados[] = $ruta;
+}
+
 function copiar_carpeta(string $desde, string $hasta): void {
     if (!is_dir($hasta)) mkdir($hasta, 0777, true);
     foreach (scandir($desde) as $f) {
         if ($f === '.' || $f === '..') continue;
-        is_dir("$desde/$f") ? copiar_carpeta("$desde/$f", "$hasta/$f") : copy("$desde/$f", "$hasta/$f");
+        is_dir("$desde/$f") ? copiar_carpeta("$desde/$f", "$hasta/$f") : copiar_archivo("$desde/$f", "$hasta/$f");
     }
 }
 
 if (is_dir($dist)) {
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dist, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $f) {
-        $f->isDir() ? rmdir($f->getPathname()) : unlink($f->getPathname());
+        borrar_ruta($f->getPathname(), $f->isDir());
     }
 } else {
     mkdir($dist, 0777, true);
@@ -39,5 +63,12 @@ foreach ($paginas as $p) {
 
 copiar_carpeta("$raiz/js", "$dist/js");
 copiar_carpeta("$raiz/images", "$dist/images");
-copy("$raiz/stylesheet.css", "$dist/stylesheet.css");
-echo "\nListo: subí el contenido de /dist a tu hosting.\n";
+copiar_archivo("$raiz/stylesheet.css", "$dist/stylesheet.css");
+if ($bloqueados) {
+    echo "\nAVISO: estos archivos estaban abiertos en otro programa y no se pudieron actualizar:\n";
+    $n = fn($r) => str_replace('\\', '/', $r);
+    foreach (array_unique(array_map(fn($b) => str_replace($n($dist), 'dist', $n($b)), $bloqueados)) as $b) echo "  - $b\n";
+    echo "Cerrá lo que los tenga abiertos y volvé a correr exportar.bat.\n";
+} else {
+    echo "\nListo: subí el contenido de /dist a tu hosting.\n";
+}

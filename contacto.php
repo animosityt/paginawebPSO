@@ -15,8 +15,8 @@ require __DIR__ . '/includes/head.php';
     <span class="eyebrow">Estamos del otro lado</span>
     <h1>Contacto</h1>
     <p class="subtitle">
-      Para sumarte a los partidos, avisar de un dato mal cargado o proponer algo para el sitio.
-      Lo más rápido siempre es <b>Discord</b>.
+      ¿Querés sumarte a un partido, avisarnos de un dato o acercar una idea para el sitio?
+      Escribinos por <b>Discord</b>, que suele ser lo más rápido.
     </p>
   </header>
 
@@ -43,8 +43,8 @@ require __DIR__ . '/includes/head.php';
         </li>
         <li>
           <span class="k">Horarios de partido</span>
-          <span class="v">Casi todos los dias (en los que este vivo el vc), 22:00 (ARG) <br> <br>
-          Siempre empezamos a las 7:10 p.m. aprox. pero esos partidos son de cancha chica asi que no se cuentan</span>
+          <span class="v">Jugamos casi todos los días, si hay gente en el voice chat. Los partidos que cuentan son a las 22:00 (ARG).<br><br>
+          Cerca de las 19:10 solemos jugar en cancha chica; esos partidos no entran en las estadísticas.</span>
         </li>
       </ul>
     </div>
@@ -85,7 +85,7 @@ require __DIR__ . '/includes/head.php';
 
         <button type="submit" class="btn btn-primary" style="justify-content:center" id="formSubmitBtn">Enviar</button>
         <p class="form-note">
-          Te respondemos por el mail o Discord que nos dejes acá arriba.
+          Te vamos a responder por el mail o Discord que nos dejes.
         </p>
         <p class="form-feedback" id="formFeedback" hidden></p>
       </form>
@@ -95,27 +95,27 @@ require __DIR__ . '/includes/head.php';
 
   <section aria-labelledby="h-antes-de-escribir">
     <h2 class="section-title" id="h-antes-de-escribir">Antes de escribir</h2>
-    <p class="section-lead">Tres cosas que resuelven la mayoría de las consultas.</p>
+    <p class="section-lead">Antes de escribirnos, fijate si tu duda está acá.</p>
 
     <div class="card-grid">
       <article class="info-card">
         <span class="icon">01</span>
         <h3>No aparezco en la tabla</h3>
-        <p>Fijate primero si tu partido está cargado. Si cambiaste el nombre en el juego, decinos el nombre viejo y el nuevo para unificar tu historial.</p>
+        <p>Primero fijate si ya cargamos tu partido. Si cambiaste tu nombre en el juego, pasanos el anterior y el nuevo para juntar tu historial.</p>
         <a class="card-link" href="tabla.php">Revisar la tabla →</a>
       </article>
 
       <article class="info-card">
         <span class="icon">02</span>
         <h3>Mi valoración está mal</h3>
-        <p>La valoración es un promedio por partido comparado con el resto de la temporada. Antes de escribir, leé cómo se calcula.</p>
+        <p>La valoración sale de tus promedios por partido y se compara con los del resto de la temporada. En la página de cartas contamos cómo se calcula.</p>
         <a class="card-link" href="jugadores.php">Cómo se calcula →</a>
       </article>
 
       <article class="info-card">
         <span class="icon">03</span>
         <h3>Nunca jugué a PSO</h3>
-        <p>No hay problema, pero leé la guía primero así llegás al partido sabiendo qué esperar del control y de los puestos.</p>
+        <p>No pasa nada. Pegale una mirada a la guía para familiarizarte con los controles y los puestos antes de jugar.</p>
         <a class="card-link" href="pso.php">Leer la guía →</a>
       </article>
     </div>
@@ -124,7 +124,7 @@ require __DIR__ . '/includes/head.php';
   <section class="cta-panel">
     <h2>¿Querés ayudar con el proyecto?</h2>
     <p><!-- EDITAR -->
-      El sitio es abierto: si sabés diseño, datos o front, hay tarea. Escribinos y te contamos qué falta.
+      El sitio es abierto y siempre hay algo para hacer. Si te interesa el diseño, los datos o el desarrollo, escribinos y vemos cómo podés dar una mano.
     </p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="https://github.com/animosityt">Ver el código</a>

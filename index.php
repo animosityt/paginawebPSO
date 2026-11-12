@@ -33,9 +33,9 @@ require __DIR__ . '/includes/head.php';
       <!-- editar: título y bajada de la página principal -->
       <h1>La casa de las<br><span class="resalte">estadísticas</span> de PSO</h1>
       <p class="subtitle">
-        Cancha Grande junta los partidos que hacemos, los procesa y devuelve
-        <b>promedios reales</b>: quién pasa, quién define, quién recupera y quién ataja.
-        Nada de opiniones de Discord y especulaciones sin fundamento: números sacados de los archivos de cada partido.
+        En Cancha Grande juntamos los partidos que jugamos y usamos sus archivos para armar
+        <b>promedios reales</b>: pases, goles, recuperaciones, atajadas y más.
+        Así podés ver cómo viene cada uno con los números de las partidas, sin depender de opiniones o especulaciones.
       </p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="tabla.php">Ver la tabla</a>
@@ -86,36 +86,36 @@ require __DIR__ . '/includes/head.php';
     <h2 class="section-title" id="h-que-vas-a-encontrar">Qué vas a encontrar</h2>
     <p class="section-lead">
       <!-- editar: descripción corta de las secciones -->
-      Cada sección del sitio arranca del mismo lugar: los partidos que subimos los dos admins.
-      De ahí salen los promedios, las cartas y todo lo otro.
+      Todo parte de los partidos que cargamos los admins. Con esos datos armamos la tabla y las cartas; también
+      vas a encontrar una guía del juego y cómo ponerte en contacto con nosotros.
     </p>
 
     <div class="card-grid">
       <a class="info-card" href="tabla.php">
         <span class="icon">01</span>
         <h3>Tabla de promedios</h3>
-        <p>Arqueros y jugadores de campo, separados porque su puntaje no se mide igual aunque CASI igual. Se puede mirar la temporada actual o cualquiera de las anteriores.</p>
+        <p>Arqueros y jugadores de campo van por separado, porque no se los mide con las mismas estadísticas. Podés elegir la temporada actual o revisar las anteriores.</p>
         <span class="card-link">Ir a la tabla →</span>
       </a>
 
       <a class="info-card" href="jugadores.php">
         <span class="icon">02</span>
         <h3>Cartas de jugador</h3>
-        <p>Cartas tipo FIFA: una carta por jugador, con la valoración y los atributos calculados a partir de sus promedios reales de la temporada.</p>
+        <p>Una carta por jugador, con valoración y atributos calculados a partir de sus promedios de la temporada.</p>
         <span class="card-link">Ver cartas →</span>
       </a>
 
       <a class="info-card" href="pso.php">
         <span class="icon">03</span>
         <h3>Guía de PSO</h3>
-        <p>Qué es Pro Soccer Online, cómo se juega, qué significan las estadísticas del juego y por qué las usamos como las usamos.</p>
+        <p>Una guía para conocer Pro Soccer Online, entender sus estadísticas y saber cómo las usamos en el sitio.</p>
         <span class="card-link">Leer la guía →</span>
       </a>
 
       <a class="info-card" href="contacto.php">
         <span class="icon">04</span>
         <h3>Comunidad</h3>
-        <p>Quiénes están detrás del proyecto, cómo aplicar para sumarte a los partidos y a dónde escribir si encontraste un error en los datos.</p>
+        <p>Conocé quiénes estamos detrás del proyecto, cómo sumarte a los partidos y dónde avisarnos si encontrás un error.</p>
         <span class="card-link">Contacto →</span>
       </a>
     </div>
@@ -124,31 +124,31 @@ require __DIR__ . '/includes/head.php';
   <!-- ===== cómo funciona ===== -->
   <section aria-labelledby="h-como-funciona">
     <h2 class="section-title" id="h-como-funciona">Cómo funciona</h2>
-    <p class="section-lead">De la partida a la tabla, en cuatro pasos.</p>
+    <p class="section-lead">Así pasan las estadísticas del partido a la página.</p>
 
     <div class="steps">
       <div class="step">
         <div>
           <h3>Se juega el partido</h3>
-          <p><!-- editar -->Partido del server en Pro Soccer Online. Al terminar, el juego por si solo genera un archivo con las estadísticas de todos los jugadores.</p>
+          <p><!-- editar -->Jugamos en el server de Pro Soccer Online. Cuando termina el partido, el juego genera un archivo con las estadísticas de todos.</p>
         </div>
       </div>
       <div class="step">
         <div>
           <h3>Se sube el archivo</h3>
-          <p><!-- editar -->Los admins cargamos ese archivo desde la página de la tabla. Si ya estaba cargado, el sistema lo saltea solo: no se duplica nada.</p>
+          <p><!-- editar -->Los admins lo cargamos desde la página de la tabla. Si el archivo ya estaba, el sistema lo reconoce y evita cargar el partido dos veces.</p>
         </div>
       </div>
       <div class="step">
         <div>
           <h3>Se calculan los promedios</h3>
-          <p><!-- editar -->Cada jugador queda identificado por su ID del juego, así que aunque se cambie el nombre, el historial sigue siendo suyo.</p>
+          <p><!-- editar -->El juego identifica a cada jugador con un ID. Así, aunque cambie su nombre, sus partidos siguen apareciendo en el mismo historial.</p>
         </div>
       </div>
       <div class="step">
         <div>
           <h3>Se publica</h3>
-          <p><!-- editar -->La tabla y las cartas se actualizan en el momento. Al cerrar la temporada, todo queda archivado y consultable desde el selector.</p>
+          <p><!-- editar -->La tabla y las cartas se actualizan al cargar el partido. Cuando termina la temporada, queda guardada para consultarla más adelante.</p>
         </div>
       </div>
     </div>
@@ -158,9 +158,9 @@ require __DIR__ . '/includes/head.php';
   <section class="cta-panel">
     <h2>¿Querés contactarnos?</h2>
     <p><!-- editar -->
-      Los partidos los jugamos nosotros en nuestro Discord. No hace falta ser un dios: hace falta aparecer,
-      jugar en el puesto que te toque, no bardear a los demas y no abandonar a los dos minutos.
-      <br>La sala siempre se hostea adentro del juego con nombre "lol" y contraseña "lol".
+      Nos organizamos por Discord. No hace falta ser un crack: alcanza con sumarse, jugar donde haga falta,
+      no bardear a nadie y no desaparecer a los dos minutos.
+      <br>La sala se crea dentro del juego con el nombre "lol" y la contraseña "lol".
     </p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="contacto.php">Contactarte</a>
